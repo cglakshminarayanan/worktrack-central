@@ -7,7 +7,7 @@
 | App renamed WorkTrack, 13 colour-matched logos (default plus your 12) | Done |
 | Sign-in with email and password (Supabase Auth, project `worktrack-central`) | Done |
 | Registration wizard: welcome, accent colour, firm details, location and geofence, hierarchy, review, Drive, done | Done |
-| Designation list (5 values only), working hours, Mon–Sat working days | Done |
+| Designation list (15 values incl. Article Assistant, Audit Assistant, Paid Assistant, Admin Staff), working hours, Mon–Sat working days | Done |
 | Hierarchy mind map: add, edit, delete, change manager, collapse, zoom | Done |
 | Settings (Managing Partner only): details, hours, days, office, geofence, accent, hierarchy, Drive, backups, firm DB | Done |
 | Employee logins created by the Managing Partner (email and password, no Google) | Done |
@@ -66,7 +66,7 @@ Drive is never used as a database. The app can only see files and folders it cre
 3. **Backups cover central records only** (firm, people, hierarchy), not task or timesheet data, because that data is not stored anywhere real yet.
 4. **Scheduled backups, archiving, restore and database usage monitoring are not implemented.** The schedule setting is saved but nothing runs on it. Restore is manual from the JSON in the Backups folder.
 5. **Accent colours:** all 12 logos from your collage are built in, plus the blue-and-green default. Each accent changes the interface colour, sidebar logo, sign-in logo and browser tab icon.
-6. **The sample-data pages still show "CA Arjun Menon"** and demo data, whoever signs in.
+6. **Work pages (tasks, timesheets, invoices, clients, documents, etc.) are empty for a signed-in firm.** Demo data now appears only in "Try with sample data" mode on the sign-in screen. Nothing is pre-filled in your Drive: registration only creates eight empty folders.
 7. **Supabase free projects pause after about a week of inactivity.** A paused central project blocks every sign-in. Keep it active or upgrade before relying on it.
 
 ## What was tested
