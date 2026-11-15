@@ -435,7 +435,7 @@ function wizNext(){wizGrab();const f=W.f;
 async function createFirm(){
  const b=$id("mk");if(b){b.disabled=true;b.textContent="Creating…"}const f=W.f;
  let s=(await SB.auth.getSession()).data.session;
- if(!s){const r=await SB.auth.signUp({email:f.email,password:f.pw});if(r.error){W.step=2;return wiz(/registered/i.test(r.error.message)?"This email already has an account. Use “I already have an account”.":r.error.message)}
+ if(!s){const r=await SB.auth.signUp({email:f.email,password:f.pw,options:{data:{full_name:f.pname}}});if(r.error){W.step=2;return wiz(/registered/i.test(r.error.message)?"This email already has an account. Use “I already have an account”.":r.error.message)}
   s=r.data.session;if(!s){saveDraft();return ov(`<div class="wcard narrow"><img class="wlogo" src="${LG(1)}" alt="" style="height:56px"><h2>Confirm your email</h2><p class="sub">We sent a link to <b>${esc(f.email)}</b>. After you confirm, sign in with your email and password and your firm will be created from the details you entered.</p><div class="wrow"><button class="btn" onclick="authUI()">Go to sign in</button></div></div>`)}}
  wt.user=s.user;
  const {error}=await SB.rpc("register_firm",{p_firm:{name:f.name,address:f.address,accent:W.accent,work_open:f.open,work_close:f.close,work_days:f.days,office_lat:LOC.lat,office_lng:LOC.lng,geofence_m:LOC.r},p_person:{name:f.pname,phone:f.phone,designation:f.desig},p_members:W.nodes});
