@@ -34,8 +34,8 @@
    - `GOOGLE_CLIENT_ID`
    - `GOOGLE_CLIENT_SECRET`
    - `TOKEN_ENC_KEY`: run `openssl rand -base64 32`
-   - `APP_URL`: your Netlify URL (used for the redirect back and CORS)
-5. Upload `worktrack.html` to Netlify (rename it `index.html`).
+   - `APP_URL`: the full address where the app is hosted, including the repo folder on GitHub Pages, e.g. `https://YOUR-USER.github.io/YOUR-REPO/` (used for the redirect back after Drive and for CORS)
+5. Upload `worktrack.html` to your GitHub repo as `index.html` (GitHub Pages), later to Netlify the same way.
 
 The anon key inside the HTML is public by design. The service-role key and Google secret are never in the file.
 
@@ -74,3 +74,20 @@ Drive is never used as a database. The app can only see files and folders it cre
 - Server logic, run in a rolled-back database transaction: firm registration, role assignment, missing-root, loop and invalid-designation rejection, hours validation, settings update.
 - The page in a headless browser with Supabase and the map faked: sign-in screen, full wizard, hierarchy add and delete with re-parenting, Settings, Users, My Day, no script errors.
 - **Not tested:** real sign-up and sign-in against Supabase, the four Edge Functions at runtime, the Google OAuth round trip, and real backup upload. Those need your credentials and a live run.
+
+## Password reset (important one-time Supabase setup)
+
+Supabase's default reset email uses a one-time link that mail scanners and double clicks can use up, which shows as "Email link is invalid or has expired". Make it reliable:
+
+1. **Authentication → URL Configuration**: while testing on GitHub Pages, set Site URL to your Pages address, e.g. `https://YOUR-USER.github.io/YOUR-REPO/`. Under Redirect URLs add `https://YOUR-USER.github.io/**` (and `http://localhost:3000/**` only if you also test locally). When you move to Netlify, add `https://YOUR-SITE.netlify.app/**` and update Site URL and the `APP_URL` secret.
+2. **Authentication → Email Templates → Reset Password**: replace the body with:
+
+```html
+<h2>Reset your WorkTrack password</h2>
+<p>Click the link below to choose a new password.</p>
+<p><a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery">Reset password</a></p>
+<p>If you did not ask for this, you can ignore this email.</p>
+```
+3. Request only one reset email at a time and open the newest one. The app now blocks a second request for 60 seconds.
+
+After you save the new password, the app signs you out and signs you in again with it, so you know it works.
