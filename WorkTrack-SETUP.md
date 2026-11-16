@@ -91,3 +91,13 @@ Supabase's default reset email uses a one-time link that mail scanners and doubl
 3. Request only one reset email at a time and open the newest one. The app now blocks a second request for 60 seconds.
 
 After you save the new password, the app signs you out and signs you in again with it, so you know it works.
+
+## My Day (live) — what it needs
+
+- Edge Function `workday` (new) saves attendance, appointments and task times into the firm's Google Drive
+  (folder `Employee Records / Work Records`, one file per person per month). Every save is read back from Drive before it is shown as done.
+- Drive must be connected for My Day to work. It cannot be disconnected from the app any more, and a reconnect must use the same Google account.
+- Employees mark attendance only within the office geofence (Settings → location). The Managing Partner can mark from anywhere.
+- Hierarchy: add each person's email (and, during registration, a temporary password). Passwords are never shown or stored in the page.
+  For people added later in Settings, a random password is set and they use "Forgot password" on the sign-in page.
+- Database additions: `hierarchy_members.email`, `firms.work_folder_id`, table `work_files`.

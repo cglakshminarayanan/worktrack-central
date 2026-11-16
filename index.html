@@ -31,6 +31,11 @@ h1{margin:0;font-size:24px}.sub{color:var(--mut);margin:2px 0 18px}
 .btn{background:var(--gold);color:var(--goldink);border:0;border-radius:6px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
 .btn:disabled{opacity:.5;cursor:not-allowed}.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}.btn.wa{background:#1f9d55;color:#fff}.btn.sm{padding:5px 10px;font-size:12px}
 select,input{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.hem{display:block;font-size:10px;opacity:.8;margin-top:2px}
+.mdscroll{overflow-x:auto;border:1px solid var(--bd,#e3e3e3);border-radius:10px;background:var(--card,#fff)}.mdtl{position:relative}
+.mdslot{position:absolute;top:0;border-left:1px solid var(--bd,#e3e3e3);cursor:pointer;box-sizing:border-box}.mdslot.h{border-left:2px solid var(--mut,#999)}.mdslot span{font-size:10px;color:var(--mut);padding:3px 4px;display:block}.mdslot:hover{background:rgba(0,0,0,.04)}
+.mdappt{position:absolute;height:34px;box-sizing:border-box;border-radius:7px;background:var(--acc,#1a7f4b);color:#fff;padding:3px 7px;overflow:hidden;cursor:pointer;font-size:12px;line-height:1.15;z-index:2}.mdappt small{display:block;opacity:.85;font-size:10px}
+.mdnow{position:absolute;top:0;width:2px;background:#d33;z-index:3;pointer-events:none}
 .timer{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.timer select{flex:3 1 220px}.timer input{flex:1 1 160px}
 .note{font-size:12px;color:var(--mut);margin-top:8px}
 h2{font-size:16px;margin:18px 0 10px}h2 small{color:var(--mut);font-weight:400;margin-left:6px}
@@ -82,7 +87,7 @@ tr.late{background:var(--badbg)}td.cl{color:var(--gold)}td.due.l{color:var(--bad
 </div>
 <div id="wt-ov"></div>
 <script>
-const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉",1],["time","Timesheets","⏱",4],["leave","Leave","✈",2],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Upload Master Calendar","⇪"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺",6],["settings","Settings","⚙"]];
+const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉"],["time","Timesheets","⏱"],["leave","Leave","✈"],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Upload Master Calendar","⇪"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺"],["settings","Settings","⚙"]];
 const NAV2=[["home","Home","▦"],["dws","Daily Worksheet","▤"],["ts","Task Sheet","☰"]];
 let TODAY=new Date(2026,10,7);
 const staff=[["Anjali T",2],["CA Priya Nair",""],["Divya M",4],["Gopika N",3],["Meera K",3],["Nisha R",""],["Suresh Pillai",""],["Vineeth KS",3]];
@@ -99,7 +104,14 @@ const fmt=d=>{const x=new Date(d);return String(x.getDate()).padStart(2,"0")+"/"
 const days=d=>Math.round((new Date(d)-TODAY)/864e5);
 const inr=n=>"₹"+n.toLocaleString("en-IN");
 const pc=s=>({"In Progress":"","On Hold":"a","Accepted":"","Pending Acceptance":"a"}[s]||"");
-function nav(){const h=a=>a.filter(n=>canSee(n[0])).map(n=>`<button class="nav ${n[0]==cur?"on":""}" onclick="go('${n[0]}')"><span class="ic">${n[2]}</span>${n[1]}${n[3]?`<span class="badge">${n[3]}</span>`:""}</button>`).join("");nav1.innerHTML=h(NAV1);nav2.innerHTML=h(NAV2)}
+/* Sidebar badges: shown only when there is something waiting; computed from real data, never hardcoded */
+function badgeOf(id){try{const mgr=canSee("clients");
+ if(id=="tasks")return tasks.filter(t=>t[0]==ME&&t[5]!=STAT[4]).length;
+ if(id=="time")return mgr?approvals.filter(a=>a[3]=="Submitted").length:0;
+ if(id=="leave")return mgr?lv.filter(r=>r[0]!=ME&&r[6]=="Pending").length:0;
+ if(id=="users")return wt.live?0:users.filter(u=>u[3]=="Invited").length;
+ }catch(e){}return 0}
+function nav(){const h=a=>a.filter(n=>canSee(n[0])).map(n=>`<button class="nav ${n[0]==cur?"on":""}" onclick="go('${n[0]}')"><span class="ic">${n[2]}</span>${n[1]}${(b=>b>0?`<span class="badge">${b}</span>`:"")(badgeOf(n[0]))}</button>`).join("");nav1.innerHTML=h(NAV1);nav2.innerHTML=h(NAV2)}
 function go(v){cur=v;side.classList.remove("open");nav();render()}
 function tbl(h,r){return `<div class="tbl"><table><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr>${r}</table></div>`}
 function myday(){
@@ -107,15 +119,15 @@ function myday(){
  const trows=staff.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s[0]}</b></td><td style="color:var(--mut)">${s[0]=="Anjali T"&&working?"Working":"Not started"}</td><td>${s[0]=="Anjali T"&&working?working:"–"}</td><td></td><td></td><td></td><td class="n">${s[1]}</td></tr>`).join("");
  const orows=tasks.map((t,i)=>{const late=days(t[4])<0;return `<tr class="${late?"late":""}"><td>${i+1}</td><td>${t[0]}</td><td class="cl">${t[1]}</td><td>${t[2]}</td><td>${t[3]}</td><td class="due ${late?"l":""}">${fmt(t[4])}</td><td><span class="pill ${pc(t[5])}">${t[5]}</span></td><td>${t[6]}</td></tr>`}).join("");
  return `<h1>My Day</h1><div class="sub">${esc(ME)} · ${fmt(TODAY)}</div>
- <div class="card row"><div><div class="lbl">Today</div><div class="big" id="dstat">${working?"Working since "+working:"Not started"}</div></div><button class="btn" onclick="startDay()">${working?"End my day":"Start my day"}</button></div>
- <div class="card"><b>⏲ Task timer</b><div class="timer"><select id="tsel"><option value="">Choose the task you are starting…</option>${opts}</select><input id="twork" placeholder="Work performed (e.g. Vouching)"><button class="btn" onclick="startTimer()">Start</button></div><div id="tout" class="note">Only one timer runs at a time. Starting another task stops the current one. Lunch pauses it. Your time goes into the Daily Worksheet, one row per task and work performed each day. If you forget to end your day, it is closed automatically at 6:30 pm and flagged for your reviewer.</div></div>
+ <div class="card row"><div><div class="lbl">Attendance</div><div class="big" id="dstat">${working?"Attendance marked at "+working:"Not marked yet"}</div></div>${working?"":`<button class="btn" onclick="startDay()">Mark attendance</button>`}</div>
+ <div class="card"><b>⏲ Task timer</b><div class="timer"><select id="tsel"><option value="">Choose the task you are starting…</option>${opts}</select><input id="twork" placeholder="Work performed (e.g. Vouching)"><button class="btn" onclick="startTimer()">Start</button></div><div id="tout" class="note">Only one timer runs at a time. Starting another task stops the current one. Lunch pauses it. Your time goes into the Daily Worksheet, one row per task and work performed each day.</div></div>
  <h2>Team today <small>${working?1:0} of 8 working</small></h2>
  <div class="card filters"><select><option>All Employees</option></select><select><option>All Clients</option></select><select><option>All Todays</option></select></div>
  ${tbl(["","Staff","Today","In","Working on","For","On tasks today","Open tasks"],trows)}
  <h2>Their open tasks <small>${tasks.length}</small></h2>
  ${tbl(["","Assigned to","Client","Assignment","Task","Due","Status","Hrs (spent / est.)"],orows)}`}
-function startDay(){working=working?null:new Date().toTimeString().slice(0,5);render()}
-function startTimer(){const s=tsel.value;if(!working){tout.textContent="Start your day first.";return}if(s===""){tout.textContent="Choose a task to start the timer.";return}
+function startDay(){if(!working)working=new Date().toTimeString().slice(0,5);render()}
+function startTimer(){const s=tsel.value;if(!working){tout.textContent="Mark your attendance first.";return}if(s===""){tout.textContent="Choose a task to start the timer.";return}
  clearInterval(timer);const t0=Date.now(),t=tasks.filter(x=>x[0]=="Anjali T")[s];
  timer=setInterval(()=>{const e=Math.floor((Date.now()-t0)/1000);const el=document.getElementById("tout");if(el)el.innerHTML=`<b>Running:</b> ${t[1]} – ${t[3]} · ${String(Math.floor(e/60)).padStart(2,"0")}:${String(e%60).padStart(2,"0")}`},500)}
 function msg(k,d){return k=="inv"?`Dear ${d[0]}, this is a gentle reminder that invoice ${d[1]} for ${inr(d[2])} is pending since ${fmt(d[3])}. Kindly arrange the payment. Thank you. – M/s ABC and Associates`:`Dear ${d[0]}, a reminder that "${d[1]}" is due on ${fmt(d[2])}. Please share the pending documents or confirm payment at the earliest. – M/s ABC and Associates`}
@@ -309,8 +321,8 @@ function tsheetView(){const mgr=canSee('clients');
 function hook(n,pre,ok){const o=window[n];window[n]=function(...a){const s=pre(...a),r=o.apply(this,a);if(!ok||ok(s[1]))logAct(s[0]);return r}}
 const D=id=>{const e=document.getElementById(id);return e?e.value:''};
 [['send',(k,i)=>['Opened a WhatsApp reminder for '+(k=='inv'?invs:comp)[i][0],Object.keys(sent).length],n=>Object.keys(sent).length>n],['submitWk',()=>[tsStatus=='Draft'?'Submitted the timesheet for 02–08 Nov':'Withdrew the timesheet for 02–08 Nov']],['decide',(i,s)=>[s+' the timesheet of '+approvals[i][0]]],['decideLv',(i,s)=>[s+' leave for '+lv[i][0]]],['submitLeave',()=>['Requested '+D('l_type')+' leave from '+D('l_from')+' to '+D('l_to')],()=>lvMsg==''],['addClient',()=>['Onboarded client '+D('c_name')],()=>cmsg==''],['raiseInv',()=>['Raised an invoice for '+D('i_cl')],()=>invMsg==''],['recRcpt',()=>['Recorded a receipt on '+D('r_inv')],()=>invMsg==''],['invite',()=>['Invited '+D('u_email')+' as '+D('u_role')],()=>umsg==''],['setRole',(i,v)=>[users[i][0]+' is now '+v],()=>umsg==''],['toggleUser',i=>[(users[i][3]=='Disabled'?'Enabled':'Disabled')+' the account of '+users[i][0]],()=>umsg==''],['applyUp',r=>[(r?'Replaced':'Added to')+' the master compliance calendar',!!(upRes&&upRes.ok.length)],s=>s],['setTask',(i,k)=>['Moved “'+tasks[i][3]+'” to '+STAT[k]]],['assignTask',()=>['Assigned a task to '+D('t_who')],()=>tkMsg==''],['setRate',i=>['Changed the hourly rate of '+PEOPLE[i]],()=>rmsg==''],['addFee',()=>['Added the fee item '+D('f_n')],()=>rmsg==''],['upDocs',inp=>['Added '+inp.files.length+' document(s) for '+D('d_cl'),inp.files.length],n=>n>0]].forEach(h=>hook(...h));
-const V={myday:()=>myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clientsView(),master:()=>masterView(),upload:()=>uploadView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
-function render(){view.innerHTML=(V[cur]||(()=>stub(cur)))()}
+const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clientsView(),master:()=>masterView(),upload:()=>uploadView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
+function render(){view.innerHTML=(V[cur]||(()=>stub(cur)))();nav()}
 /* ===== WorkTrack: sign-in, firm registration, hierarchy, settings, Drive ===== */
 const SB_URL="https://ozbfdawgrfdlnrvdneoi.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96YmZkYXdncmZkbG5ydmRuZW9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1Nzk0MjksImV4cCI6MjExMDE1NTQyOX0.oVztx6MQkpHUpeJtDe7-bi_O3c8rC9MZGgPZ6OTvjxk";
@@ -322,7 +334,7 @@ const LG=(i,k)=>(LOGOS[k||ACCENT]||LOGOS["blue-green"])[i];
 const DESIG=["Managing Partner","Partner","Director","Senior Manager","Audit Manager","Manager","Assistant Manager","Senior Executive","Executive","Article Assistant","Audit Assistant","Paid Assistant","Accountant","Admin Staff","Office Staff"];
 const DAYN=[[1,"Mon"],[2,"Tue"],[3,"Wed"],[4,"Thu"],[5,"Fri"],[6,"Sat"]];
 const ACC={"blue-green":["Blue & green (default)","#1f6fc9"],red:["Red","#d11a1a"],green:["Green","#1f9d3a"],blue:["Blue","#1f4fd8"],teal:["Teal","#0e9aa0"],pink:["Pink","#d6246e"],purple:["Purple","#6b21c0"],black:["Black","#1a1a1a"],gray:["Grey","#555a60"],gold:["Gold","#b8860b"],maroon:["Maroon","#8f0324"],navy:["Navy","#0b2a7a"],deepteal:["Deep teal","#02545f"]};
-const DRV_ERR={denied:"access was not granted",state:"the sign-in link was invalid or already used",expired:"the sign-in took too long, please retry",forbidden:"only the Managing Partner can connect Drive",exchange:"Google did not accept the authorisation",norefresh:"Google did not issue offline access; remove WorkTrack at myaccount.google.com/permissions and retry",scope:"the Drive permission was not ticked on Google's screen",verify:"the folders could not be verified after creation",server:"a server error occurred (check that the Google OAuth secrets are configured)"};
+const DRV_ERR={denied:"access was not granted",state:"the sign-in link was invalid or already used",expired:"the sign-in took too long, please retry",forbidden:"only the Managing Partner can connect Drive",exchange:"Google did not accept the authorisation",norefresh:"Google did not issue offline access; remove WorkTrack at myaccount.google.com/permissions and retry",scope:"the Drive permission was not ticked on Google's screen",verify:"the folders could not be verified after creation",account:"a different Google account was used; this firm’s records live in the first account, so reconnect with that same account",server:"a server error occurred (check that the Google OAuth secrets are configured)"};
 const wt={live:false,user:null,profile:null,firm:null,hier:[],users:[],usersLoaded:0};
 const uuid=()=>crypto.randomUUID();
 function pwTog(b){const i=b.parentNode.querySelector("input"),show=i.type=="password";i.type=show?"text":"password";b.textContent=show?"Hide":"Show";b.setAttribute("aria-pressed",show)}
@@ -365,7 +377,7 @@ async function wtSignOut(){try{await SB.auth.signOut()}catch(_){}location.reload
 
 /* ---------- load session data ---------- */
 async function loadFirm(){const {data}=await SB.from("firms").select("*").maybeSingle();wt.firm=data}
-async function loadHier(){const {data}=await SB.from("hierarchy_members").select("id,name,designation,parent_id").order("created_at");wt.hier=data||[]}
+async function loadHier(){const {data}=await SB.from("hierarchy_members").select("id,name,designation,parent_id,user_id,email").order("created_at");wt.hier=data||[]}
 async function enter(session){
  wt.user=session.user;
  const {data:p,error}=await SB.from("profiles").select("*").eq("user_id",session.user.id).maybeSingle();
@@ -391,7 +403,7 @@ function goLive(){
  refreshBrand();
  $id("topname").textContent=f.name;$id("prevLbl").style.display="none";
  viewAs={managing_partner:"Partner",partner:"Partner",manager:"Manager",staff:"Staff"}[wt.profile.app_role];
- $id("demoNote").textContent="Signed in as "+wt.profile.full_name+". Sign-in, firm settings, hierarchy, Drive and employee accounts are live. Task, timesheet, invoice and other work pages still show sample data until the firm database is connected.";
+ $id("demoNote").textContent="Signed in as "+wt.profile.full_name+". Sign-in, firm settings, hierarchy, Drive, employee logins and My Day are live. Task, timesheet, invoice and other work pages still show sample data until the firm database is connected.";
  const h=location.hash.match(/drive=(\w+)(?:&reason=(\w+))?/);let note=null;
  if(h){note=h[1]=="connected"?["Google Drive connected and verified.",0]:["Drive was not connected: "+(DRV_ERR[h[2]]||"unknown error")+".",1];history.replaceState(null,"",location.pathname+location.search)}
  cur=(h&&canSee("settings"))?"settings":"myday";ovHide();nav();render();if(note)toast(note[0],note[1])}
@@ -400,7 +412,7 @@ function goLive(){
 const W={step:0,signed:false,accent:"blue-green",f:{name:"",address:"",pname:"",phone:"",desig:"Managing Partner",email:"",pw:"",open:"09:30",close:"18:00",days:[1,2,3,4,5,6]},loc:{lat:null,lng:null,r:150},nodes:[],hadDraft:false};
 let LOC=W.loc;
 const STEPS=["Welcome","Colour","Firm","Location","Hierarchy","Review","Drive","Done"];
-function saveDraft(){try{const f={...W.f};delete f.pw;localStorage.setItem("wt_draft",JSON.stringify({accent:W.accent,f,loc:W.loc,nodes:W.nodes}))}catch(_){}}
+function saveDraft(){try{const f={...W.f};delete f.pw;localStorage.setItem("wt_draft",JSON.stringify({accent:W.accent,f,loc:W.loc,nodes:W.nodes.map(({pw,...n})=>n)}))}catch(_){}}
 function loadDraft(){try{const d=JSON.parse(localStorage.getItem("wt_draft")||"null");if(d){W.accent=d.accent;Object.assign(W.f,d.f);W.loc=d.loc;LOC=W.loc;W.nodes=d.nodes||[];W.hadDraft=true}}catch(_){}}
 function dots(){return `<div class="dots">${STEPS.map((s,i)=>`<i class="${i==W.step?"on":i<W.step?"done":""}" title="${s}"></i>`).join("")}</div>`}
 function wiz(err){
@@ -430,7 +442,7 @@ function wizBack(){wizGrab();W.step--;wiz()}
 function wizNext(){wizGrab();const f=W.f;
  if(W.step==2){const e=f.name.length<2?"Enter the firm name.":f.pname.length<2?"Enter your name.":!ok_email(f.email)?"Enter a valid email address.":(!W.signed&&f.pw.length<8)?"Choose a password of at least 8 characters.":f.open>=f.close?"Closing time must be after opening time.":!f.days.length?"Select at least one working day.":"";if(e)return wiz(e)}
  W.step++;
- if(W.step==4){const r=W.nodes.find(n=>!n.parent_id);if(!r)W.nodes=[{id:uuid(),name:f.pname,designation:f.desig,parent_id:null}];else{r.name=f.pname;r.designation=f.desig}HS.nodes=W.nodes;HS.edit=null;HS.zoom=1;HS.col={};HS.addUnder=null}
+ if(W.step==4){const r=W.nodes.find(n=>!n.parent_id);if(!r)W.nodes=[{id:uuid(),name:f.pname,designation:f.desig,parent_id:null}];else{r.name=f.pname;r.designation=f.desig}HS.nodes=W.nodes;HS.wiz=1;HS.edit=null;HS.zoom=1;HS.col={};HS.addUnder=null}
  saveDraft();wiz()}
 async function createFirm(){
  const b=$id("mk");if(b){b.disabled=true;b.textContent="Creating…"}const f=W.f;
@@ -438,10 +450,12 @@ async function createFirm(){
  if(!s){const r=await SB.auth.signUp({email:f.email,password:f.pw,options:{data:{full_name:f.pname}}});if(r.error){W.step=2;return wiz(/registered/i.test(r.error.message)?"This email already has an account. Use “I already have an account”.":r.error.message)}
   s=r.data.session;if(!s){saveDraft();return ov(`<div class="wcard narrow"><img class="wlogo" src="${LG(1)}" alt="" style="height:56px"><h2>Confirm your email</h2><p class="sub">We sent a link to <b>${esc(f.email)}</b>. After you confirm, sign in with your email and password and your firm will be created from the details you entered.</p><div class="wrow"><button class="btn" onclick="authUI()">Go to sign in</button></div></div>`)}}
  wt.user=s.user;
- const {error}=await SB.rpc("register_firm",{p_firm:{name:f.name,address:f.address,accent:W.accent,work_open:f.open,work_close:f.close,work_days:f.days,office_lat:LOC.lat,office_lng:LOC.lng,geofence_m:LOC.r},p_person:{name:f.pname,phone:f.phone,designation:f.desig},p_members:W.nodes});
+ const {error}=await SB.rpc("register_firm",{p_firm:{name:f.name,address:f.address,accent:W.accent,work_open:f.open,work_close:f.close,work_days:f.days,office_lat:LOC.lat,office_lng:LOC.lng,geofence_m:LOC.r},p_person:{name:f.pname,phone:f.phone,designation:f.desig},p_members:W.nodes.map(n=>({id:n.id,name:n.name,designation:n.designation,parent_id:n.parent_id,email:n.email||null}))});
  if(error){W.step=5;return wiz(rpcErr(error))}
+ const pfail=[];for(const n of W.nodes){if(n.parent_id&&n.email){const pr=await fn("create-employee",{action:"provision",member_id:n.id,email:n.email,password:n.pw||""});if(pr.error)pfail.push(pr.error)}}
+ W.nodes.forEach(n=>delete n.pw);
  try{localStorage.removeItem("wt_draft")}catch(_){}
- const {data:p}=await SB.from("profiles").select("*").eq("user_id",s.user.id).maybeSingle();wt.profile=p;await loadFirm();await loadHier();W.step=6;wiz()}
+ const {data:p}=await SB.from("profiles").select("*").eq("user_id",s.user.id).maybeSingle();wt.profile=p;await loadFirm();await loadHier();W.step=6;wiz();if(pfail.length)toast("Firm created, but some logins were not: "+pfail.join(" "),1)}
 async function finishWiz(){const s=(await SB.auth.getSession()).data.session;if(s)await enter(s);else authUI()}
 const drvPill=s=>`<span class="pill ${{connected:"g",pending:"a",disconnected:"r"}[s]||"a"}">${{connected:"Connected",pending:"Pending",disconnected:"Disconnected"}[s]||s}</span>`;
 
@@ -463,18 +477,26 @@ function locGps(){if(!navigator.geolocation||!MAP)return toast("Location is not 
 const HS={nodes:[],col:{},zoom:1,edit:null,addUnder:null,init:0};
 const kids=id=>HS.nodes.filter(n=>n.parent_id===id);
 function desc(id){const o=new Set([id]);let c=true;while(c){c=false;HS.nodes.forEach(n=>{if(n.parent_id&&o.has(n.parent_id)&&!o.has(n.id)){o.add(n.id);c=true}})}return o}
-function hNode(n){const k=kids(n.id),c=HS.col[n.id];return `<div class="hn"><div class="hcard ${HS.edit==n.id?"sel":""} ${!n.parent_id?"root":""}"><b>${esc(n.name)}</b><span>${esc(n.designation)}</span><div class="hbt">${k.length?`<button title="${c?"Expand":"Collapse"}" onclick="hTog('${n.id}')">${c?"▸ "+k.length:"▾"}</button>`:""}<button title="Add a report" onclick="hAddUnder('${n.id}')">＋</button><button title="Edit" onclick="hEdit('${n.id}')">✎</button>${n.parent_id?`<button title="Delete" onclick="hDel('${n.id}')">✕</button>`:""}</div></div>${k.length&&!c?`<div class="hc">${k.map(x=>`<div class="hw">${hNode(x)}</div>`).join("")}</div>`:""}</div>`}
+function hNode(n){const k=kids(n.id),c=HS.col[n.id];return `<div class="hn"><div class="hcard ${HS.edit==n.id?"sel":""} ${!n.parent_id?"root":""}"><b>${esc(n.name)}</b><span>${esc(n.designation)}</span>${n.parent_id&&n.email?`<small class="hem">${esc(n.email)}${n.user_id?" ✓":" · login pending"}</small>`:""}<div class="hbt">${k.length?`<button title="${c?"Expand":"Collapse"}" onclick="hTog('${n.id}')">${c?"▸ "+k.length:"▾"}</button>`:""}<button title="Add a report" onclick="hAddUnder('${n.id}')">＋</button><button title="Edit" onclick="hEdit('${n.id}')">✎</button>${n.parent_id?`<button title="Delete" onclick="hDel('${n.id}')">✕</button>`:""}</div></div>${k.length&&!c?`<div class="hc">${k.map(x=>`<div class="hw">${hNode(x)}</div>`).join("")}</div>`:""}</div>`}
 function hRender(){const m=$id("hmount");if(!m)return;const root=HS.nodes.find(n=>!n.parent_id),e=HS.nodes.find(n=>n.id===HS.edit),bad=new Set(e?desc(e.id):[]);
  m.innerHTML=`<div class="hbar"><button class="btn ghost sm" onclick="hZoom(-.1)">−</button><span id="hz">${Math.round(HS.zoom*100)}%</span><button class="btn ghost sm" onclick="hZoom(.1)">+</button><button class="btn ghost sm" onclick="hZoom(0)">Reset</button><button class="btn ghost sm" onclick="hAll(1)">Collapse all</button><button class="btn ghost sm" onclick="hAll(0)">Expand all</button></div><div class="hscroll"><div class="hview" id="hview" style="zoom:${HS.zoom}">${root?hNode(root):""}</div></div>
- <div class="card" style="margin-top:10px"><b>${e?"Edit member":"Add a member"}</b><div class="grid" style="margin-top:8px"><label>Name<input id="h_name" value="${e?esc(e.name):""}"></label><label>Designation<select id="h_des">${DESIG.map(d=>`<option ${e&&e.designation==d?"selected":""}>${d}</option>`).join("")}</select></label><label>Reports to<select id="h_par" ${e&&!e.parent_id?"disabled":""}>${HS.nodes.filter(n=>!bad.has(n.id)).map(n=>`<option value="${n.id}" ${(e?e.parent_id:(HS.addUnder||(root&&root.id)))===n.id?"selected":""}>${esc(n.name)} (${esc(n.designation)})</option>`).join("")}</select></label></div><div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="hSave()">${e?"Save changes":"Add member"}</button>${e?`<button class="btn ghost sm" onclick="HS.edit=null;hRender()">Cancel</button>`:""}</div><div id="h_err" class="err"></div></div>`;
+ <div class="card" style="margin-top:10px"><b>${e?"Edit member":"Add a member"}</b><div class="grid" style="margin-top:8px"><label>Name<input id="h_name" value="${e?esc(e.name):""}"></label><label>Designation<select id="h_des">${DESIG.map(d=>`<option ${e&&e.designation==d?"selected":""}>${d}</option>`).join("")}</select></label><label>Reports to<select id="h_par" ${e&&!e.parent_id?"disabled":""}>${HS.nodes.filter(n=>!bad.has(n.id)).map(n=>`<option value="${n.id}" ${(e?e.parent_id:(HS.addUnder||(root&&root.id)))===n.id?"selected":""}>${esc(n.name)} (${esc(n.designation)})</option>`).join("")}</select></label>${(e&&!e.parent_id)?"":`<label>Login email<input id="h_email" type="email" value="${e?esc(e.email||""):""}" ${e&&e.user_id?"disabled":""} placeholder="name@example.com" autocomplete="off"></label>${HS.wiz&&!(e&&e.user_id)?`<label>Temporary password<input id="h_pw" type="password" autocomplete="new-password" placeholder="At least 8 characters"><span class="sub" style="cursor:pointer" onclick="const i=$id('h_pw');i.type=i.type=='password'?'text':'password'">Show / hide</span></label>`:""}`}</div>${(e&&!e.parent_id)?"":`<div class="sub" style="margin-top:6px">${HS.wiz?"Optional. If you give an email, set a temporary password and tell the employee yourself: no email is sent. The password is never shown again.":"Add the email to create this person’s login when you save. No email is sent: tell them, and they set their own password with “Forgot password” on the sign-in page."}</div>`}<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="hSave()">${e?"Save changes":"Add member"}</button>${e?`<button class="btn ghost sm" onclick="HS.edit=null;hRender()">Cancel</button>`:""}</div><div id="h_err" class="err"></div></div>`;
  m.onwheel=ev=>{if(ev.ctrlKey){ev.preventDefault();hZoom(ev.deltaY<0?.1:-.1)}}}
 function hZoom(d){HS.zoom=d===0?1:Math.min(1.6,Math.max(.4,+(HS.zoom+d).toFixed(2)));$id("hview").style.zoom=HS.zoom;$id("hz").textContent=Math.round(HS.zoom*100)+"%"}
 function hTog(id){HS.col[id]=!HS.col[id];hRender()}
 function hAll(c){HS.col={};if(c)HS.nodes.forEach(n=>{if(n.parent_id&&kids(n.id).length)HS.col[n.id]=true});hRender()}
 function hAddUnder(id){HS.addUnder=id;HS.edit=null;HS.col[id]=false;hRender();const e=$id("h_name");if(e){e.scrollIntoView({block:"center"});e.focus()}}
 function hEdit(id){HS.edit=id;hRender();const e=$id("h_name");if(e){e.scrollIntoView({block:"center"});e.focus()}}
-function hSave(){const name=$id("h_name").value.trim(),des=$id("h_des").value,par=$id("h_par").value,e=HS.nodes.find(n=>n.id===HS.edit);if(name.length<2)return $id("h_err").textContent="Enter the member’s name.";
- if(e){e.name=name;e.designation=des;if(e.parent_id)e.parent_id=par}else{HS.nodes.push({id:uuid(),name,designation:des,parent_id:par});HS.col[par]=false}HS.edit=null;HS.addUnder=null;hRender()}
+function hSave(){const name=$id("h_name").value.trim(),des=$id("h_des").value,par=$id("h_par").value,e=HS.nodes.find(n=>n.id===HS.edit),root=!!(e&&!e.parent_id),locked=!!(e&&e.user_id),er=$id("h_err");
+ if(name.length<2)return er.textContent="Enter the member’s name.";
+ const em=(root||locked||!$id("h_email"))?"":$id("h_email").value.trim().toLowerCase(),pw=$id("h_pw")?$id("h_pw").value:"";
+ if(!root&&!locked){
+  if(em&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er.textContent="Enter a valid email address.";
+  if(em&&HS.nodes.some(n=>n.id!==(e&&e.id)&&(n.email||"").toLowerCase()==em))return er.textContent="That email is already used for another person.";
+  if(HS.wiz){if(pw&&!em)return er.textContent="Enter the email this password is for.";if(em&&!(e&&e.email==em&&e.pw&&!pw)&&pw.length<8)return er.textContent="Set a temporary password of at least 8 characters for "+name+"."}}
+ if(e){e.name=name;e.designation=des;if(e.parent_id)e.parent_id=par;if(!root&&!locked){if(em)e.email=em;else{delete e.email;delete e.pw}if(HS.wiz&&pw)e.pw=pw}}
+ else{const n={id:uuid(),name,designation:des,parent_id:par};if(em){n.email=em;if(HS.wiz)n.pw=pw}HS.nodes.push(n);HS.col[par]=false}
+ HS.edit=null;HS.addUnder=null;hRender()}
 function hDel(id){const n=HS.nodes.find(x=>x.id===id);if(!n||!n.parent_id)return;const k=kids(id).length,p=HS.nodes.find(x=>x.id===n.parent_id);if(!confirm(`Remove ${n.name}?${k?` Their ${k} direct report(s) will move up to ${p.name}.`:""}`))return;HS.nodes.forEach(x=>{if(x.parent_id===id)x.parent_id=n.parent_id});HS.nodes=HS.nodes.filter(x=>x.id!==id);if(HS.edit===id)HS.edit=null;hRender()}
 
 /* ---------- Settings (Managing Partner only) ---------- */
@@ -483,7 +505,11 @@ function sDetails(){const n=$id("s_name").value.trim();if(n.length<2)return toas
 function sHours(){const o=$id("s_open").value,c=$id("s_close").value,d=DAYN.map(x=>x[0]).filter(x=>$id("s_d"+x).checked);if(!o||!c||o>=c)return toast("Closing time must be after opening time.",1);if(!d.length)return toast("Select at least one working day.",1);saveFirm({work_open:o,work_close:c,work_days:d},"Working hours and days saved")}
 function sLoc(){if(LOC.lat==null)return toast("Pin the office on the map first.",1);saveFirm({office_lat:LOC.lat,office_lng:LOC.lng,geofence_m:LOC.r},"Office location and geofence saved")}
 function sAccent(k){applyAccent(k);saveFirm({accent:k},"Accent colour saved")}
-async function sHier(){const {error}=await SB.rpc("save_hierarchy",{p_members:HS.nodes});if(error)return toast(rpcErr(error),1);await loadHier();HS.init=0;toast("Hierarchy saved");render()}
+async function sHier(){const {error}=await SB.rpc("save_hierarchy",{p_members:HS.nodes.map(n=>({id:n.id,name:n.name,designation:n.designation,parent_id:n.parent_id,email:n.email||null}))});if(error)return toast(rpcErr(error),1);
+ const todo=HS.nodes.filter(n=>n.parent_id&&n.email&&!n.user_id);let ok=0;const bad=[];
+ for(const n of todo){const r=await fn("create-employee",{action:"provision",member_id:n.id,email:n.email});r.error?bad.push(r.error):ok++}
+ await loadHier();HS.init=0;wt.usersLoaded=0;
+ toast(bad.length?"Hierarchy saved, but: "+bad.join(" "):ok?"Hierarchy saved. "+ok+" login"+(ok>1?"s":"")+" created. Each person sets a password with “Forgot password” on the sign-in page.":"Hierarchy saved",!!bad.length);render()}
 function sDb(){saveFirm({firm_db_url:$id("s_dburl").value,firm_db_anon_key:$id("s_dbkey").value},"Firm database details saved")}
 async function dConnect(){toast("Opening Google…");const r=await fn("drive-connect",{});if(r.error)return toast(r.error,1);location.href=r.data.url}
 async function dVerify(){toast("Checking with Google Drive…");const r=await fn("drive-manage",{action:"verify"});await loadFirm();r.error?toast(r.error,1):toast("Verified: the WorkTrack folder is reachable.");render()}
@@ -493,7 +519,7 @@ async function loadBackups(){const el=$id("bk");if(!el)return;const {data}=await
  el.innerHTML=(data&&data.length)?tbl(["When","Type","Result","Size"],data.map(b=>`<tr><td>${new Date(b.created_at).toLocaleString("en-IN")}</td><td>${b.kind}</td><td><span class="pill ${b.status=="verified"?"g":b.status=="failed"?"r":"a"}">${b.status=="verified"?"Verified":b.status=="failed"?"Failed":"Running"}</span>${b.error?` <small>${esc(b.error)}</small>`:""}</td><td>${b.bytes?(b.bytes/1024).toFixed(1)+" KB":"–"}</td></tr>`).join("")):`<div class="note">No backups yet.</div>`}
 function settingsHtml(){
  if(!wt.firm||wt.profile.app_role!=="managing_partner")return `<h1>Settings</h1><div class="card">Only the Managing Partner can open Settings.</div>`;
- const f=wt.firm;if(!HS.init){HS.nodes=JSON.parse(JSON.stringify(wt.hier));HS.init=1;HS.edit=null;HS.col={};HS.addUnder=null}
+ const f=wt.firm;if(!HS.init){HS.nodes=JSON.parse(JSON.stringify(wt.hier));HS.wiz=0;HS.init=1;HS.edit=null;HS.col={};HS.addUnder=null}
  LOC={lat:f.office_lat,lng:f.office_lng,r:f.geofence_m};setTimeout(()=>{mapInit("loc_map",LOC,locSync);locSync();hRender();loadBackups()},0);
  const vt=f.drive_verified_at?new Date(f.drive_verified_at).toLocaleString("en-IN"):"never";
  return `<h1>Settings</h1><div class="sub">Only the Managing Partner can see and change these.</div>
@@ -502,7 +528,7 @@ function settingsHtml(){
  <div class="card"><b>Office location and geofence</b>${locPanel()}<div style="margin-top:12px"><button class="btn" onclick="sLoc()">Save location and geofence</button></div><div class="note">The location and radius are stored now. Attendance does not use the geofence yet because the attendance module is not built.</div></div>
  <div class="card"><b>Accent colour</b><div class="sw" style="margin-top:10px">${Object.entries(ACC).map(([k,v])=>`<button class="swb ${f.accent==k?"on":""}" style="--c:${v[1]}" onclick="sAccent('${k}')"><i></i>${v[0]}</button>`).join("")}</div></div>
  <div class="card"><b>Firm hierarchy</b><div id="hmount" style="margin-top:10px"></div><div style="margin-top:12px"><button class="btn" onclick="sHier()">Save hierarchy</button></div></div>
- <div class="card"><b>Google Drive</b> ${drvPill(f.drive_status)}<div class="sub" style="margin:8px 0">${f.drive_status=="connected"?`Account: ${esc(f.drive_email||"")} · last verified ${vt}`:f.drive_status=="pending"?"Not connected yet. Documents and backups need Drive.":"Disconnected. WorkTrack has no access to the firm’s Drive."}</div><div class="wrow"><button class="btn" onclick="dConnect()">${f.drive_status=="connected"?"Reconnect":"Connect Google Drive"}</button>${f.drive_status=="connected"?`<button class="btn ghost" onclick="dVerify()">Verify now</button><button class="btn ghost" onclick="dDisc()">Disconnect</button>`:""}</div><div class="note">WorkTrack asks only for access to files and folders it creates itself. The refresh token is encrypted on the server and never reaches this page. Employees do not need Google accounts.</div></div>
+ <div class="card"><b>Google Drive</b> ${drvPill(f.drive_status)}<div class="sub" style="margin:8px 0">${f.drive_status=="connected"?`Account: ${esc(f.drive_email||"")} · last verified ${vt}`:f.drive_status=="pending"?"Not connected yet. Documents and backups need Drive.":"Disconnected. WorkTrack has no access to the firm’s Drive."}</div><div class="wrow"><button class="btn" onclick="dConnect()">${f.drive_status=="connected"?"Reconnect":"Connect Google Drive"}</button>${f.drive_status=="connected"?`<button class="btn ghost" onclick="dVerify()">Verify now</button>`:""}</div><div class="note">WorkTrack asks only for access to files and folders it creates itself. The refresh token is encrypted on the server and never reaches this page. Employees do not need Google accounts. Once Drive is connected it stays connected for good, because My Day, attendance and task records are stored there; if you reconnect, use the same Google account.</div></div>
  <div class="card"><b>Backup schedule and archives</b><div class="add" style="margin-top:10px"><select onchange="saveFirm({backup_schedule:this.value},'Backup preference saved')"><option value="off" ${f.backup_schedule=="off"?"selected":""}>Schedule: off</option><option value="daily" ${f.backup_schedule=="daily"?"selected":""}>Schedule: daily</option><option value="weekly" ${f.backup_schedule=="weekly"?"selected":""}>Schedule: weekly</option></select><button class="btn" onclick="dBackup()" ${f.drive_status!="connected"?"disabled":""}>Back up now</button></div><div class="note">Automatic runs are not switched on yet; only “Back up now” runs. A backup is marked Verified only after it is read back from Drive and its checksum matches. It covers firm, people and hierarchy records held in the central project.</div><div id="bk" style="margin-top:10px"></div></div>
  <div class="card"><b>Firm database connection</b><div class="grid" style="margin-top:10px"><label>Supabase project URL<input id="s_dburl" value="${esc(f.firm_db_url||"")}" placeholder="https://xxxx.supabase.co"></label><label>Anon (publishable) key<input id="s_dbkey" value="${esc(f.firm_db_anon_key||"")}"></label></div><div style="margin-top:12px"><button class="btn" onclick="sDb()">Save</button></div><div class="note">Only the public URL and anon key belong here. Never paste a service-role key.</div></div>`}
 
@@ -525,6 +551,96 @@ async function uToggle(id,s){const r=await fn("create-employee",{action:"set_sta
 async function uReset(id){const p=prompt("New temporary password (8+ characters):");if(!p)return;const r=await fn("create-employee",{action:"reset_password",user_id:id,password:p});r.error?toast(r.error,1):toast("Password reset. Share it with the employee.")}
 
 /* ---------- start ---------- */
+/* ---------- My Day (live firm): attendance, appointments timeline, task timer, team ---------- */
+const MD={s:null,loaded:0,err:"",busy:0,day:"",chan:null,poll:null,tick:null,showForm:0,form:{id:"",t:"",s:"",e:""},sl:null,tbusy:0,vis:0};
+const mdp=n=>String(n).padStart(2,"0");
+const lDay=(d=new Date())=>d.getFullYear()+"-"+mdp(d.getMonth()+1)+"-"+mdp(d.getDate());
+const lHM=(d=new Date())=>mdp(d.getHours())+":"+mdp(d.getMinutes());
+const hmMin=s=>{const [h,m]=String(s).split(":").map(Number);return h*60+m};
+const MDW=64; /* pixels per 30-minute slot */
+async function mdLoad(){
+ MD.busy=1;MD.day=lDay();
+ const r=await fn("workday",{action:"state",day:MD.day});
+ MD.busy=0;MD.loaded=1;
+ if(r.error){MD.err=r.error}else{MD.err="";MD.s=r.data;mdSub()}
+ if(cur=="myday")render()}
+function mdLive(){
+ const p=wt.profile,mp=p.app_role=="managing_partner";
+ const head=`<h1>My Day</h1><div class="sub">${esc(p.full_name)} · ${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div>`;
+ if(!MD.loaded){if(!MD.busy)mdLoad();return head+`<div class="card">Loading your day…</div>`}
+ if(MD.err)return head+`<div class="card"><b>My Day could not be loaded</b><div class="sub" style="margin:8px 0">${esc(MD.err)}</div><button class="btn" onclick="MD.loaded=0;render()">Try again</button></div>`;
+ const s=MD.s;
+ if(!s.drive)return head+`<div class="card"><b>Google Drive must be connected first</b><div class="sub" style="margin:8px 0">${mp?"Attendance, task times and appointments are saved straight into your firm’s Google Drive, so My Day works only once Drive is connected. Once connected it stays connected.":"Attendance, task times and appointments are saved straight into the firm’s Google Drive. Please ask the Managing Partner to connect Drive in Settings."}${s.reason?`<br><br>${esc(s.reason)}`:""}</div>${mp?`<button class="btn" onclick="dConnect()">Connect Google Drive</button>`:""}</div>`;
+ const att=s.me.att,rule=mp?"As Managing Partner you can mark attendance from any place. Your current location is recorded.":(s.firm.hasOffice?`You must be within ${s.firm.r} m of the office. Your location is checked when you mark attendance.`:"The Managing Partner has not pinned the office location yet, so attendance cannot be verified.");
+ const top=att?"":`<div class="card row"><div><div class="lbl">Attendance</div><div class="big">Not marked yet</div><div class="sub" style="margin:4px 0 0">${rule}</div></div><button class="btn" id="attbtn" onclick="mdAtt()">Mark attendance</button></div>`;
+ const tm=s.team&&s.team.lead?`<div id="mdteam">${mdTeamHtml()}</div>`:"";
+ const bottom=att?`<div class="card"><b>✔ Attendance marked at ${esc(att.hm)}</b>${att.dist!=null?`<div class="sub" style="margin:4px 0 0">${att.dist} m from the office${att.inside?"":" (outside the geofence)"}</div>`:""}</div>`:"";
+ setTimeout(()=>{const e=$id("mdscroll");if(e){e.scrollLeft=MD.sl!=null?MD.sl:Math.max(0,(hmMin(lHM())/30)*MDW-140);e.onscroll=()=>{MD.sl=e.scrollLeft}}},0);
+ return head+top+mdTimeline()+mdTimer(att)+tm+bottom}
+function mdTimeline(){
+ const tl=[...MD.s.me.tl].sort((a,b)=>hmMin(a.s)-hmMin(b.s)),lanes=[];
+ const blocks=tl.map(x=>{let l=0;while(lanes[l]!==undefined&&lanes[l]>hmMin(x.s))l++;lanes[l]=hmMin(x.e);return {x,l}});
+ const H=30+Math.max(1,lanes.length)*40+8;
+ let slots="";for(let i=0;i<48;i++){const m=i%2?"30":"00";slots+=`<div class="mdslot${m=="00"?" h":""}" style="left:${i*MDW}px;width:${MDW}px;height:${H}px" onclick="mdSlot(${i*30})"><span>${m=="00"?mdp(i/2)+":00":m}</span></div>`}
+ const bl=blocks.map(({x,l})=>`<div class="mdappt" style="left:${hmMin(x.s)/30*MDW+2}px;width:${Math.max(30,(hmMin(x.e)-hmMin(x.s))/30*MDW-4)}px;top:${30+l*40}px" title="${esc(x.t)} · ${x.s}–${x.e}" onclick="mdEdit('${x.id}')"><b>${esc(x.t)}</b><small>${x.s}–${x.e}</small></div>`).join("");
+ const now=`<div class="mdnow" style="left:${hmMin(lHM())/30*MDW}px;height:${H}px"></div>`;
+ const f=MD.form,list=tl.map(x=>`<tr><td>${x.s}–${x.e}</td><td>${esc(x.t)}</td><td style="text-align:right"><button class="btn ghost sm" onclick="mdEdit('${x.id}')">Edit</button> <button class="btn ghost sm" onclick="mdDel('${x.id}')">Remove</button></td></tr>`).join("");
+ const form=MD.showForm?`<div class="grid" style="margin-top:10px"><label>Appointment / meeting<input id="mdt" maxlength="120" value="${esc(f.t)}" placeholder="e.g. Audit meeting with client"></label><label>From<input id="mds" type="time" value="${f.s}"></label><label>To<input id="mde" type="time" value="${f.e}"></label></div><div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdTlSave()">${f.id?"Save changes":"Add to timeline"}</button><button class="btn ghost sm" onclick="MD.showForm=0;render()">Cancel</button></div><div id="mderr" class="err"></div>`:`<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdSlot(Math.ceil(hmMin(lHM())/30)*30)">＋ Add appointment</button></div>`;
+ return `<div class="card"><b>Today’s appointments</b><div class="sub" style="margin:4px 0 8px">Each box is 30 minutes. Tap a time to add a meeting there, or tap an appointment to change it.</div><div class="mdscroll" id="mdscroll"><div class="mdtl" style="width:${48*MDW}px;height:${H}px">${slots}${bl}${now}</div></div>${list?`<div class="tbl" style="margin-top:10px"><table>${list}</table></div>`:`<div class="note" style="margin-top:8px">No appointments scheduled today.</div>`}${form}</div>`}
+function mdTimer(att){
+ const run=MD.s.me.run,locked=!att;
+ const cur=run?`<div class="note" style="margin:10px 0;background:var(--acc-bg,#eef6f1)"><b>Working on:</b> ${esc(run.t)}${run.c?" · "+esc(run.c):""}${run.k?" · "+esc(run.k):""}<br>Started ${new Date(run.s).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}${run.day!=MD.day?" (yesterday)":""} · <b id="runel">00:00:00</b> <button class="btn ghost sm" onclick="mdStop()">Stop</button></div>`:"";
+ return `<div class="card"><b>⏲ Task timer</b>${cur}<div class="timer"><input id="mdcl" placeholder="Client" maxlength="80"><input id="mdtk" placeholder="Task (e.g. GST return – October)" maxlength="120"><input id="mdwk" placeholder="Work performed (e.g. Vouching)" maxlength="200"><button class="btn" onclick="mdStart()" ${locked?"disabled":""}>${run?"Switch to this task":"Start"}</button></div><div id="tout" class="note">${locked?"Mark your attendance first, then you can start the timer. ":""}Only one timer runs at a time; starting another task stops the current one. There is no cut-off time, so you can keep working past midnight in busy season. Your current task is visible to the people above you in the firm.</div></div>`}
+function mdTeamHtml(){
+ const t=MD.s.team,day=MD.day,open=n=>(typeof tasks!="undefined"?tasks.filter(x=>x[0]==n&&x[5]!=STAT[4]).length:0);
+ const isToday=m=>m.s&&m.s.d==day;
+ const working=t.members.filter(m=>m.s&&m.s.w).length;
+ const rows=t.members.map((m,i)=>{const s=m.s;let st,c="";
+  if(!m.login){st="No login yet";c="color:var(--amb,#b7791f)"}else if(s&&s.w){st="Working";c="color:var(--grn,#1a7f4b);font-weight:600"}else if(isToday(m)&&s.in){st="Present"}else{st="Not started";c="color:var(--mut)"}
+  return `<tr><td>${i+1}</td><td><b>${esc(m.name)}</b><br><small style="color:var(--mut)">${esc(m.designation)}</small></td><td style="${c}">${st}</td><td>${isToday(m)&&s.in?s.in+(s.io===0?" (away)":""):"–"}</td><td>${s&&s.w?esc(s.w.t):""}</td><td>${s&&s.w?esc(s.w.c):""}</td><td class="n">${isToday(m)?s.n:0}</td><td class="n">${open(m.name)}</td></tr>`}).join("");
+ const names=new Set(t.members.map(m=>m.name)),ot=typeof tasks!="undefined"?tasks.filter(x=>names.has(x[0])&&x[5]!=STAT[4]):[];
+ const orows=ot.map((x,i)=>{const late=days(x[4])<0;return `<tr class="${late?"late":""}"><td>${i+1}</td><td>${x[0]}</td><td class="cl">${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td><td class="due ${late?"l":""}">${fmt(x[4])}</td><td><span class="pill ${pc(x[5])}">${x[5]}</span></td><td>${x[6]}</td></tr>`}).join("");
+ return `<h2>Team today <small>${working} of ${t.members.length} working</small></h2>${tbl(["","Staff","Today","In","Working on","For","On tasks today","Open tasks"],rows)}<h2>Their open tasks <small>${ot.length}</small></h2>${ot.length?tbl(["","Assigned to","Client","Assignment","Task","Due","Status","Hrs (spent / est.)"],orows):`<div class="card note">No open tasks are assigned to your team yet.</div>`}`}
+/* actions: each one is saved to Google Drive and read back by the server before it is shown as done */
+async function mdCall(body,btn){
+ if(MD.busy)return null;MD.busy=1;if(btn){btn.disabled=true}
+ const r=await fn("workday",{day:lDay(),...body});MD.busy=0;if(btn)btn.disabled=false;
+ if(r.error){toast(r.error,1);return null}
+ if(r.data&&r.data.me)MD.s.me=r.data.me;mdPing();return r.data}
+async function mdAtt(){
+ const b=$id("attbtn");if(b){b.disabled=true;b.textContent="Getting your location…"}
+ const back=()=>{const e=$id("attbtn");if(e){e.disabled=false;e.textContent="Mark attendance"}};
+ let pos;
+ try{pos=await new Promise((ok,no)=>navigator.geolocation?navigator.geolocation.getCurrentPosition(ok,no,{enableHighAccuracy:true,timeout:20000,maximumAge:0}):no({code:0}))}
+ catch(e){back();return toast("Your location is needed to mark attendance. Allow location access for this site in the browser and try again.",1)}
+ if(b)b.textContent="Saving to Drive…";MD.busy=0;
+ const d=await mdCall({action:"attendance",hm:lHM(),at:new Date().toISOString(),lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy});
+ if(!d){back();return}toast("Attendance marked at "+MD.s.me.att.hm);render()}
+function mdSlot(min){const a=Math.min(min,23*60+30),e=Math.min(a+30,23*60+59),f=m=>mdp(Math.floor(m/60))+":"+mdp(m%60);MD.form={id:"",t:"",s:f(a),e:f(e)};MD.showForm=1;render();const i=$id("mdt");if(i)i.focus()}
+function mdEdit(id){const x=MD.s.me.tl.find(y=>y.id==id);if(!x)return;MD.form={id:x.id,t:x.t,s:x.s,e:x.e};MD.showForm=1;render();const i=$id("mdt");if(i)i.focus()}
+async function mdTlSave(){
+ const t=$id("mdt").value.trim(),s=$id("mds").value,e=$id("mde").value,er=$id("mderr");
+ if(!t)return er.textContent="Enter what the appointment is.";if(!s||!e)return er.textContent="Enter the start and end time.";if(e<=s)return er.textContent="The end time must be after the start time.";
+ const id=MD.form.id,items=MD.s.me.tl.filter(x=>x.id!=id).concat([{id:id||uuid(),s,e,t}]);
+ const d=await mdCall({action:"timeline_set",items},null);if(d){MD.showForm=0;toast("Appointment saved");render()}}
+async function mdDel(id){if(!confirm("Remove this appointment?"))return;const d=await mdCall({action:"timeline_set",items:MD.s.me.tl.filter(x=>x.id!=id)});if(d)render()}
+async function mdStart(){
+ const cl=$id("mdcl").value.trim(),tk=$id("mdtk").value.trim(),wk=$id("mdwk").value.trim();
+ if(!tk)return $id("tout").textContent="Enter the task you are starting.";
+ const d=await mdCall({action:"timer_start",client:cl,task:tk,work:wk,at:new Date().toISOString()});if(d){toast("Timer started");render()}}
+async function mdStop(){const d=await mdCall({action:"timer_stop",at:new Date().toISOString()});if(d){toast("Timer stopped");render()}}
+/* live updates: a ping is broadcast after every save; the team list is also refreshed every few seconds as a fallback */
+function mdSub(){
+ if(!MD.chan&&wt.firm&&SB.channel){try{MD.chan=SB.channel("wt-day-"+wt.firm.id).on("broadcast",{event:"ping"},()=>mdTeamRefresh()).subscribe()}catch(_){}}
+ if(!MD.poll)MD.poll=setInterval(()=>{if(document.hidden)return;if(MD.day&&MD.day!=lDay()){MD.loaded=0;MD.sl=null;if(cur=="myday")render();return}mdTeamRefresh()},8000);
+ if(!MD.tick)MD.tick=setInterval(()=>{const e=$id("runel"),r=MD.s&&MD.s.me&&MD.s.me.run;if(e&&r){const x=Math.max(0,Math.floor((Date.now()-Date.parse(r.s))/1000));e.textContent=mdp(Math.floor(x/3600))+":"+mdp(Math.floor(x%3600/60))+":"+mdp(x%60)}},1000);
+ if(!MD.vis){MD.vis=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden)mdTeamRefresh()})}}
+function mdPing(){try{if(MD.chan)MD.chan.send({type:"broadcast",event:"ping",payload:{}})}catch(_){}}
+async function mdTeamRefresh(){
+ if(!wt.live||cur!="myday"||!MD.s||!MD.s.drive||!MD.s.team||!MD.s.team.lead||MD.tbusy)return;
+ MD.tbusy=1;const r=await fn("workday",{action:"team",day:lDay()});MD.tbusy=0;
+ if(r.data&&r.data.team&&r.data.team.lead){MD.s.team=r.data.team;const el=$id("mdteam");if(el)el.innerHTML=mdTeamHtml()}}
+
 async function boot(){
  applyAccent("blue-green");
  SB.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY"){RECOVERING=true;setTimeout(recoverUI,0)}});
