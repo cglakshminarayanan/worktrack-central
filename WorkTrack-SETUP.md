@@ -101,3 +101,10 @@ After you save the new password, the app signs you out and signs you in again wi
 - Hierarchy: add each person's email (and, during registration, a temporary password). Passwords are never shown or stored in the page.
   For people added later in Settings, a random password is set and they use "Forgot password" on the sign-in page.
 - Database additions: `hierarchy_members.email`, `firms.work_folder_id`, table `work_files`.
+
+## Clients (live)
+
+- Edge Function `clients` keeps the whole client list in the firm's Drive (`Client Documents / wt-clients.json`).
+  Each add is read back from Drive before it is shown as saved; simultaneous adds are queued with a short database lock (`drive_locks`).
+- Nothing about clients is stored in Supabase. Partners and managers can onboard; staff see only clients where they are in-charge.
+- The country dropdown uses flag images from flagcdn.com, so the page needs internet access (it already does for Supabase).
