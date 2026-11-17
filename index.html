@@ -573,7 +573,7 @@ function phCheck(iso,raw){const d=String(raw||"").replace(/\D/g,"");let n=d.repl
 const CL_TYPES=["Individual","Sole proprietor","Hindu Undivided Family (HUF)","Partnership firm","LLP","Private Co.","Unlisted Public Co.","Listed Public Co.","Startup","NBFC","Scheduled Bank","Private Bank","Offshore Banking Unit (OBU)","PSUs","Foreign Co.","Real Estate Investment Trust (REIT)","Infrastructure Investment Trust (InvIT)","Securitisation Trust","Alternative Investment Fund (AIF)","Trust (Private / Charitable)","Co-operative Society","Co-operative Bank","Association of Persons (AOP)","Body of Individuals (BOI)","Local Authority","Artificial Juridical Person (AJP)","Govt. Body / Agency","Embassy / Consulate / High Commission","UN Bodies / International Agencies"];
 const T4={"Individual":"P","Sole proprietor":"P","Hindu Undivided Family (HUF)":"H","Partnership firm":"F","LLP":"F","Private Co.":"C","Unlisted Public Co.":"C","Listed Public Co.":"C","Startup":"CF","NBFC":"C","Scheduled Bank":"CJ","Private Bank":"CJ","Offshore Banking Unit (OBU)":"CJ","PSUs":"CG","Foreign Co.":"C","Real Estate Investment Trust (REIT)":"T","Infrastructure Investment Trust (InvIT)":"T","Securitisation Trust":"T","Alternative Investment Fund (AIF)":"TFCJ","Trust (Private / Charitable)":"T","Co-operative Society":"AB","Co-operative Bank":"AB","Association of Persons (AOP)":"A","Body of Individuals (BOI)":"B","Local Authority":"L","Artificial Juridical Person (AJP)":"J","Govt. Body / Agency":"G","Embassy / Consulate / High Commission":"GJ","UN Bodies / International Agencies":"GJ"};
 const ANYWORD=["Individual","Sole proprietor","Hindu Undivided Family (HUF)"];
-const CL_CMP=["GST - Monthly Return","GST - Quarterly Return","GSTR 9/9C","GST - OIDAR","GST - CTP/NRTP","GST - TDS/TCS","GST - Notice","Income Tax - Return","Income Tax - Notice","Income Tax - TDS/TCS","Income Tax - Form 128 (earlier Form 13)","Monthly Accounting","Compilation Report","ESG Report","Review","Statutory Audit","Income Tax - Tax Audit","Monthly Payroll","Payroll Audit","Stock Audit","Forensic Audit","MIS Implementation","Transition from AS to IND AS","International Taxation - DTAA","Transfer Pricing (Form 145/146)","GST - Registration","PAN Registration","GST - Refund","GST - LUT","Company Incorporation","ROC/MCA Filing","Company Restructuring/Winding up","MIS Reporting","Share Valuation","Due Diligence","FEMA & RBI Compliance (FDI/ODI/FC-GPR/FLA)","Certifications","Black Money Act","Others"];
+const CL_CMP=["GST - Monthly Return","GST - Quarterly Return","GSTR 9/9C","GST - OIDAR","GST - CTP/NRTP","GST - TDS/TCS","GST - Notice","Income Tax - Return","Income Tax - Notice","Income Tax - TDS/TCS","Income Tax - Form 128 (earlier Form 13)","Monthly Accounting","Compilation Report","ESG Report","Review","Statutory Audit","Income Tax - Tax Audit","Monthly Payroll","Payroll Audit","Stock Audit","Forensic Audit","MIS Implementation","Transition from AS to IND AS","International Taxation - DTAA","Transfer Pricing","GST - Registration","PAN Registration","GST - Refund","GST - LUT","Company Incorporation","ROC/MCA Filing","Company Restructuring/Winding up","MIS Reporting","Share Valuation","Due Diligence","FEMA & RBI Compliance (FDI/ODI/FC-GPR/FLA)","Certifications","Black Money Act","Others"];
 const CL_DES=["Accounts Manager","Accounting Staff","Authorised Signatory","Director","Karta","Managing Director","Partner","Proprietor","Individual","Trustee","Other"];
 const GSTST=[["01","Jammu & Kashmir"],["02","Himachal Pradesh"],["03","Punjab"],["04","Chandigarh"],["05","Uttarakhand"],["06","Haryana"],["07","Delhi"],["08","Rajasthan"],["09","Uttar Pradesh"],["10","Bihar"],["11","Sikkim"],["12","Arunachal Pradesh"],["13","Nagaland"],["14","Manipur"],["15","Mizoram"],["16","Tripura"],["17","Meghalaya"],["18","Assam"],["19","West Bengal"],["20","Jharkhand"],["21","Odisha"],["22","Chhattisgarh"],["23","Madhya Pradesh"],["24","Gujarat"],["25","Daman & Diu (old)"],["26","Dadra & Nagar Haveli and Daman & Diu"],["27","Maharashtra"],["28","Andhra Pradesh (old)"],["29","Karnataka"],["30","Goa"],["31","Lakshadweep"],["32","Kerala"],["33","Tamil Nadu"],["34","Puducherry"],["35","Andaman & Nicobar Islands"],["36","Telangana"],["37","Andhra Pradesh"],["38","Ladakh"],["97","Other Territory"],["99","Centre Jurisdiction"]];
 const B36="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -597,7 +597,7 @@ function panReq(d){if(d.country!="IN")return false;const c=clAllCmp(d),sole=d.ty
 const clBlankRow=()=>({sc:"",l3:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[]});
 const clBlankReg=()=>({no:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:""});
 const clNew=()=>({name:"",type:"Private Co.",pan:"",tan:"",tmulti:0,trows:[],gst:"",gmulti:0,grows:[],tds:"",dmulti:0,drows:[],tcs:"",cmulti:0,crows:[],contact:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[]});
-const CL={list:[],loaded:0,busy:0,q:"",show:0,d:clNew(),msg:"",warnOk:0,drive:true,reason:""};
+const CL={editId:null,list:[],loaded:0,busy:0,q:"",show:0,d:clNew(),msg:"",warnOk:0,drive:true,reason:""};
 const clPeople=()=>wt.live?wt.hier.map(h=>({id:h.id,name:h.name,sub:h.designation})):staff.map(s=>({id:s[0],name:s[0],sub:""}));
 const clPath=(p)=>p.split(":");
 function clGet(p){const a=clPath(p);return a.length==1?CL.d[a[0]]:CL.d[a[0]][+a[1]][a[2]]}
@@ -619,7 +619,8 @@ function clCh(p,v){const k=clPath(p).pop();if(k=="pan"||k=="tan"||k=="tds"||k=="
  if(p=="pan"||p=="type")setTimeout(()=>{clRegs();clPanLbl()},0);
  if(/^grows:\d+:(sc|l3)$/.test(p)){const i=+p.split(":")[1],r=CL.d.grows[i],e=$id("clg"+i);if(e)e.textContent=clGstin(r)}
 }
-function clPanLbl(){const e=$id("clpanl");if(e)e.textContent="PAN"+(panReq(CL.d)?" *":" (optional)");const h=$id("clpanh");if(h)h.textContent=CL.d.country=="IN"?"":"PAN is mandatory only when the client’s country is India."}
+const addrReq=cm=>!cm.includes("GST - Registration");
+function clPanLbl(){const a=$id("cladl");if(a)a.textContent="Address"+(addrReq(CL.d.cmp)?" *":" (optional)");const e=$id("clpanl");if(e)e.textContent="PAN"+(panReq(CL.d)?" *":" (optional)");const h=$id("clpanh");if(h)h.textContent=CL.d.country=="IN"?"":"PAN is mandatory only when the client’s country is India."}
 const clGstin=r=>r.sc&&CL.d.pan&&r.l3.length==3?r.sc+CL.d.pan+r.l3:"…";
 function clCombo(p,kind){const c=CTM[clGet(p)]||CTM.IN;return `<button type="button" class="cbb" data-p="${p}" data-kind="${kind}" onclick="cbOpen(this)">${flag(c[0])}<span>${kind=="dial"?"+"+c[2]:esc(c[1])}</span> ▾</button>`}
 function cbOpen(btn){cbClose();const r=btn.getBoundingClientRect(),el=document.createElement("div");el.className="cbp";el.id="cbpanel";
@@ -661,7 +662,7 @@ function clGstTable(){const rows=CL.d.grows;
 function clRest(){const e=$id("clrest");if(!e)return;const d=CL.d;clKeep(e,()=>{
  e.innerHTML=d.gmulti?`<div class="note">Contact, WhatsApp, in-charge, address, country and compliances are entered for each GSTIN in the table above.</div>`:`<div class="grid"><label>Contact person${clI("contact","")}</label><label>WhatsApp country<br>${clCombo("cc","dial")}</label><label>WhatsApp number *${clI("ph","","type=tel inputmode=tel")}</label></div>
  <div class="lbl" style="margin-top:12px">In-charge * <span class="note">(select one or more employees)</span></div>${clCloud("inc","inc")}
- <div class="grid" style="margin-top:12px"><label>Address${clI("addr","Street, city, PIN")}</label><label>Country *<br>${clCombo("country","country")}</label></div>
+ <div class="grid" style="margin-top:12px"><label><span id="cladl">Address *</span>${clI("addr","Street, city, PIN")}</label><label>Country *<br>${clCombo("country","country")}</label></div>
  <div class="lbl" style="margin-top:12px">Compliances that apply</div>${clCloud("cmp","cmp")}`})}
 /* ---- validation and save ---- */
 function clValidate(){const d=CL.d,er=[];let warn="";
@@ -678,11 +679,11 @@ function clValidate(){const d=CL.d,er=[];let warn="";
    else if(r.sc){const m=regCheck(r.sc+d.pan+r.l3,d.pan,"Z","GSTIN");if(m)er.push(n+m.replace(/^GSTIN: ?/,""))}
    if(!r.contact.trim())er.push(n+"enter the contact person.");if(!r.desig)er.push(n+"select the designation.");
    const p=phCheck(r.cc,r.ph);if(!r.ph||!p.ok)er.push(n+(r.ph?p.msg:"enter the WhatsApp number."));
-   if(!r.inc.length)er.push(n+"select at least one in-charge.");if(!r.addr.trim())er.push(n+"enter the address.");if(!r.cmp.length)er.push(n+"select the compliances.")})}
+   if(!r.inc.length)er.push(n+"select at least one in-charge.");if(!r.addr.trim()&&addrReq(r.cmp))er.push(n+"enter the address.");if(!r.cmp.length)er.push(n+"select the compliances.")})}
  [["tds","dmulti","drows","D","GST TDS deductor number"],["tcs","cmulti","crows","C","GST TCS collector number"]].forEach(([k,mk,rk,mid,lb])=>{
   if(d[k]&&!d[mk]){const m=regCheck(d[k],d.pan,mid,lb);if(m)er.push(m)}
   if(d[mk])d[rk].forEach((r,i)=>{const m=regCheck(r.no,d.pan,mid,`${lb} row ${i+1}`);if(m)er.push(m);if(!r.addr.trim())er.push(`${lb} row ${i+1}: enter the address.`);const p=r.ph?phCheck(r.cc,r.ph):{ok:1};if(!p.ok)er.push(`${lb} row ${i+1}: ${p.msg}`)})});
- if(!d.gmulti){const p=phCheck(d.cc,d.ph);if(!d.ph)er.push("Enter the client’s WhatsApp number.");else if(!p.ok)er.push(p.msg);if(!d.inc.length)er.push("Select at least one in-charge.");if(!d.country)er.push("Select the country.")}
+ if(!d.gmulti){if(!d.addr.trim()&&addrReq(d.cmp))er.push("Enter the client’s address (it is optional only when the compliance is GST registration).");const p=phCheck(d.cc,d.ph);if(!d.ph)er.push("Enter the client’s WhatsApp number.");else if(!p.ok)er.push(p.msg);if(!d.inc.length)er.push("Select at least one in-charge.");if(!d.country)er.push("Select the country.")}
  return {er,warn}}
 function clRecord(){const d=CL.d,fix=r=>({...r,ph:r.ph?phCheck(r.cc,r.ph).num:""});
  const rec={name:d.name.trim(),type:d.type,pan:d.pan,tan:d.tmulti?"":d.tan,tmulti:d.tmulti,tanRows:d.tmulti?d.trows.map(fix):[],gst:d.gmulti?"":d.gst,gmulti:d.gmulti,
@@ -693,16 +694,24 @@ async function clSave(){if(CL.busy)return;const {er,warn}=clValidate();CL.msg=er
  const box=$id("clmsg");
  if(er.length){box.innerHTML=er.slice(0,6).map(x=>"• "+esc(x)).join("<br>")+(er.length>6?`<br>…and ${er.length-6} more`:"");box.scrollIntoView({block:"center"});return}
  if(warn&&!confirm(warn+"\n\nSave anyway?"))return;
- const rec=clRecord(),dup=CL.list.some(c=>c.name.toLowerCase()==rec.name.toLowerCase());
+ const eid=CL.editId,rec=clRecord(),dup=CL.list.some(c=>c.id!=eid&&c.name.toLowerCase()==rec.name.toLowerCase());
  if(dup){box.textContent="A client with this name already exists.";return}
  CL.busy=1;const b=$id("clsave");if(b){b.disabled=true;b.textContent="Saving to Drive…"}
  let saved=rec;
- if(wt.live){let r=await fn("clients",{action:"add",client:rec});
-  if(r.error==="dup_pan"){if(confirm("Another client already has this PAN. Add this client anyway?"))r=await fn("clients",{action:"add",client:rec,allow_dup_pan:true});else{CL.busy=0;if(b){b.disabled=false;b.textContent="Add client"}return}}
-  if(r.error){CL.busy=0;if(b){b.disabled=false;b.textContent="Add client"}box.textContent=r.error==="dup_pan"?"Another client already has this PAN.":r.error;return}
-  saved=r.data.client}else saved={...rec,id:uuid()};
- CL.busy=0;CL.list.push(saved);clBridge();CL.show=0;CL.d=clNew();toast("Client added"+(wt.live?" and saved to Drive":""));render()}
-function clOpen(){CL.show=!CL.show;CL.msg="";if(CL.show&&CL.d.name==""){CL.d=clNew()}render()}
+ const lbl=eid?"Save changes":"Add client",call=x=>fn("clients",eid?{action:"update",id:eid,client:rec,...x}:{action:"add",client:rec,...x});
+ if(wt.live){let r=await call({});
+  if(r.error==="dup_pan"){if(confirm("Another client already has this PAN. Save this client anyway?"))r=await call({allow_dup_pan:true});else{CL.busy=0;if(b){b.disabled=false;b.textContent=lbl}return}}
+  if(r.error){CL.busy=0;if(b){b.disabled=false;b.textContent=lbl}box.textContent=r.error==="dup_pan"?"Another client already has this PAN.":r.error;return}
+  saved=r.data.client}else saved={...rec,id:eid||uuid()};
+ CL.busy=0;if(eid){const i=CL.list.findIndex(x=>x.id==eid);if(i>=0)CL.list[i]=saved;else CL.list.push(saved)}else CL.list.push(saved);
+ clBridge();CL.show=0;CL.editId=null;CL.d=clNew();toast((eid?"Client updated":"Client added")+(wt.live?" and saved to Drive":""));render()}
+function clOpen(){CL.msg="";CL.editId=null;CL.d=clNew();CL.show=!CL.show;render()}
+function clFromRec(c){const R=(a,b)=>(a||[]).map(r=>({...b(),...r}));
+ return {...clNew(),name:c.name,type:c.type,pan:c.pan||"",tan:c.tan||"",tmulti:c.tmulti?1:0,trows:R(c.tanRows,clBlankReg),gst:c.gst||"",gmulti:c.gmulti?1:0,grows:R(c.gstRows,clBlankRow),tds:c.tds||"",dmulti:c.dmulti?1:0,drows:R(c.tdsRows,clBlankReg),tcs:c.tcs||"",cmulti:c.cmulti?1:0,crows:R(c.tcsRows,clBlankReg),contact:c.contact||"",cc:c.cc||"IN",ph:c.ph||"",inc:c.incharge||[],addr:c.addr||"",country:c.country||"IN",cmp:c.cmp||[]}}
+function clEdit(id){const c=CL.list.find(x=>x.id==id);if(!c)return;CL.d=clFromRec(c);CL.editId=id;CL.msg="";CL.show=1;render();setTimeout(()=>{const f=$id("clform");if(f)f.scrollIntoView({block:"start"})},50)}
+async function clDel(id){const c=CL.list.find(x=>x.id==id);if(!c||!confirm(`Delete ${c.name}?\n\nIt is removed from the client list. In Google Drive a copy is kept inside the clients file, so it can be recovered.`))return;
+ if(wt.live){const r=await fn("clients",{action:"delete",id});if(r.error)return toast(r.error,1)}
+ CL.list=CL.list.filter(x=>x.id!=id);if(CL.editId==id){CL.editId=null;CL.show=0;CL.d=clNew()}clBridge();toast("Client deleted");render()}
 function clSearch(v){CL.q=v;render();const e=$id("q");e.focus();e.setSelectionRange(v.length,v.length)}
 function clView(){
  clSeed();
@@ -712,13 +721,13 @@ function clView(){
  const q=CL.q.toLowerCase(),sub="color:var(--mut);font-size:12px",canAdd=!wt.live||["managing_partner","partner","manager"].includes(wt.profile.app_role);
  const all=c=>c.gmulti?c.gstRows.map(r=>r.gstin):[c.gst].filter(Boolean);
  const rows=CL.list.filter(c=>!q||(c.name+" "+(c.pan||"")+" "+all(c).join(" ")).toLowerCase().includes(q)).map(c=>{const g=all(c),r0=c.gmulti?c.gstRows[0]:c,pp=(CTM[r0.cc]||CTM.IN)[2],cm=c.gmulti?clAllCmpOf(c):c.cmp,inc=(c.gmulti?c.gstRows.flatMap(r=>r.inc):c.incharge).filter((x,i,a)=>a.findIndex(y=>y.id==x.id)==i);
-  return `<tr><td class="cl"><b>${esc(c.name)}</b><br><span style="${sub}">${esc(c.type)}</span></td><td>${esc(c.pan)||"–"}<br><span style="${sub}">${g.length>1?g.length+" GSTINs":g[0]||"No GSTIN"}</span></td><td>${esc(r0.contact)||"–"}${c.gmulti&&c.gstRows.length>1?` <span style="${sub}">(+${c.gstRows.length-1} more)</span>`:""}<br><span style="${sub}">+${pp} ${esc(r0.ph)}</span></td><td>${cm.map(x=>`<span class="pill" style="margin:0 4px 4px 0">${esc(x)}</span>`).join("")||"–"}</td><td>${esc(inc.map(x=>x.name).join(", "))||"–"}</td></tr>`}).join("")||`<tr><td colspan="5">${CL.list.length?"No clients match your search.":"No clients yet. Use “Onboard a client” to add the first one."}</td></tr>`;
- const d=CL.d,form=CL.show?`<div class="card" id="clform"><b>Onboard a client</b>
+  return `<tr><td class="cl"><b>${esc(c.name)}</b><br><span style="${sub}">${esc(c.type)}</span></td><td>${esc(c.pan)||"–"}<br><span style="${sub}">${g.length>1?g.length+" GSTINs":g[0]||"No GSTIN"}</span></td><td>${esc(r0.contact)||"–"}${c.gmulti&&c.gstRows.length>1?` <span style="${sub}">(+${c.gstRows.length-1} more)</span>`:""}<br><span style="${sub}">+${pp} ${esc(r0.ph)}</span></td><td>${cm.map(x=>`<span class="pill" style="margin:0 4px 4px 0">${esc(x)}</span>`).join("")||"–"}</td><td>${esc(inc.map(x=>x.name).join(", "))||"–"}</td>${canAdd?`<td style="white-space:nowrap"><button class="btn ghost sm" onclick="clEdit('${c.id}')">Edit</button> <button class="btn ghost sm" onclick="clDel('${c.id}')">Delete</button></td>`:""}</tr>`}).join("")||`<tr><td colspan="6">${CL.list.length?"No clients match your search.":"No clients yet. Use “Onboard a client” to add the first one."}</td></tr>`;
+ const d=CL.d,form=CL.show?`<div class="card" id="clform"><b>${CL.editId?"Edit client":"Onboard a client"}</b>
   <div class="grid" style="margin-top:10px"><label>Client name *<input data-p="name" value="${esc(d.name)}" onchange="clCh('name',this.value)"></label><label>Type<select onchange="clCh('type',this.value)">${CL_TYPES.map(t=>`<option ${t==d.type?"selected":""}>${t}</option>`).join("")}</select></label><label><span id="clpanl">PAN${panReq(d)?" *":" (optional)"}</span><input data-p="pan" value="${esc(d.pan)}" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase" onchange="clCh('pan',this.value)"><span id="clpanh" class="note">${d.country=="IN"?"":"PAN is mandatory only when the client’s country is India."}</span></label></div>
   <div id="clregs" style="margin-top:10px"></div><div id="clrest" style="margin-top:6px"></div>
-  <div id="clmsg" class="err" style="margin-top:10px">${esc(CL.msg)}</div><div style="margin-top:12px"><button class="btn" id="clsave" onclick="clSave()">Add client</button> <button class="btn ghost" onclick="clOpen()">Close form</button></div></div>`:"";
+  <div id="clmsg" class="err" style="margin-top:10px">${esc(CL.msg)}</div><div style="margin-top:12px"><button class="btn" id="clsave" onclick="clSave()">${CL.editId?"Save changes":"Add client"}</button> <button class="btn ghost" onclick="clOpen()">Close form</button></div></div>`:"";
  if(CL.show)setTimeout(()=>{clRegs();clRest();clPanLbl()},0);
- return `<h1>Clients</h1><div class="sub">${CL.list.length} client${CL.list.length==1?"":"s"}</div><div class="card row"><input id="q" type="search" placeholder="Search by name, PAN or GSTIN" value="${esc(CL.q)}" oninput="clSearch(this.value)" style="flex:1 1 220px">${canAdd?`<button class="btn" onclick="clOpen()">${CL.show?"Close form":"Onboard a client"}</button>`:""}</div>${form}${tbl(["Client","PAN / GSTIN","Contact / WhatsApp","Compliances","In-charge"],rows)}`}
+ return `<h1>Clients</h1><div class="sub">${CL.list.length} client${CL.list.length==1?"":"s"}</div><div class="card row"><input id="q" type="search" placeholder="Search by name, PAN or GSTIN" value="${esc(CL.q)}" oninput="clSearch(this.value)" style="flex:1 1 220px">${canAdd?`<button class="btn" onclick="clOpen()">${CL.show?"Close form":"Onboard a client"}</button>`:""}</div>${form}${tbl(["Client","PAN / GSTIN","Contact / WhatsApp","Compliances","In-charge"].concat(canAdd?[""]:[]),rows)}`}
 
 /* ---------- My Day (live firm): attendance, appointments timeline, task timer, team ---------- */
 const MD={s:null,loaded:0,err:"",busy:0,day:"",chan:null,poll:null,tick:null,showForm:0,form:{id:"",t:"",s:"",e:""},sl:null,tbusy:0,vis:0};
