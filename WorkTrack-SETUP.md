@@ -108,3 +108,11 @@ After you save the new password, the app signs you out and signs you in again wi
   Add, edit and delete are each read back from Drive before it is shown as saved; simultaneous adds are queued with a short database lock (`drive_locks`).
 - Nothing about clients is stored in Supabase. A deleted client is moved to a "deleted" list inside the same Drive file, so it can be recovered. Partners and managers can onboard; staff see only clients where they are in-charge.
 - The country dropdown uses flag images from flagcdn.com, so the page needs internet access (it already does for Supabase).
+
+## Masters: business sector / description and compliance list
+
+- Defaults ship inside the page (494 business descriptions in 26 sectors from `business_description.docx`, and the 39 compliances in 7 categories).
+  A firm's edited copy is kept in Drive, inside `wt-clients.json` under `masters`. Edit it from Clients → "Business master" / "Compliance list" (Managing Partner and partners).
+- Clients store IDs only (`bd…` for descriptions, e.g. `gst-monthly` for compliances), so renaming or moving an entry never changes a client.
+  Entries can be deactivated but never removed; the server refuses a save that drops an existing entry.
+- Older client records that stored compliance names are converted to IDs when loaded, and saved in the new form the next time that client is edited.
