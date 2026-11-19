@@ -44,6 +44,11 @@ select,input{font:inherit;color:var(--ink);background:var(--card);border:1px sol
 .bizo{display:flex;gap:8px;margin-top:8px}.bizo input{flex:1}.chk{display:flex;align-items:center;gap:6px;font-size:13px}
 .mdc.wide{max-width:900px}.melist{max-height:52vh;overflow:auto;margin-top:8px}.mec{border:1px solid var(--line);border-radius:10px;margin-top:6px;padding:6px}.mec.off,.mer.off{opacity:.55}.mer{display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap}.mer input:not([type=checkbox]){flex:1 1 200px;min-width:0}.mer select{flex:0 1 180px;max-width:100%}.mer small{color:var(--mut)}.meb{margin:4px 0 4px 18px}
 @media(max-width:640px){.mpb{grid-template-columns:1fr}.mdc{padding:12px}}
+.seg{display:inline-flex;gap:4px}.calg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.cdh{font-size:11px;color:var(--mut);text-align:center;padding:2px}
+.cd{min-height:88px;border:1px solid var(--line);border-radius:8px;padding:4px;background:var(--card);font-size:12px;overflow:hidden}.cd.td{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}.cd.off{background:transparent;border-style:dashed;opacity:.35}
+.cpl{display:block;margin-top:3px;padding:2px 6px;border-radius:6px;background:var(--blue);font-size:11px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cmore{display:block;margin-top:3px;font-size:10px;color:var(--mut)}
+.calw{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px}.cd.wk{min-height:150px}.cd.wk .cpl{white-space:normal}.chips{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0}
+@media(max-width:640px){.cd{min-height:58px;padding:2px;font-size:10px}.cpl{font-size:9px;padding:1px 3px}.calg{gap:2px}}
 .hem{display:block;font-size:10px;opacity:.8;margin-top:2px}
 .mdscroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card,#fff)}.mdtl{position:relative}
 .mdslot{position:absolute;top:0;border-left:1px solid var(--line);cursor:pointer;box-sizing:border-box}.mdslot.h{border-left:2px solid var(--mut,#999)}.mdslot span{font-size:10px;color:var(--mut);padding:3px 4px;display:block}.mdslot:hover{background:rgba(0,0,0,.04)}
@@ -100,7 +105,7 @@ tr.late{background:var(--badbg)}td.cl{color:var(--gold)}td.due.l{color:var(--bad
 </div>
 <div id="wt-ov"></div>
 <script>
-const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉"],["time","Timesheets","⏱"],["leave","Leave","✈"],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Upload Master Calendar","⇪"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺"],["settings","Settings","⚙"]];
+const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉"],["time","Timesheets","⏱"],["leave","Leave","✈"],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Master Calendar","▦"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺"],["settings","Settings","⚙"]];
 const NAV2=[["home","Home","▦"],["dws","Daily Worksheet","▤"],["ts","Task Sheet","☰"]];
 let TODAY=new Date(2026,10,7);
 const staff=[["Anjali T",2],["CA Priya Nair",""],["Divya M",4],["Gopika N",3],["Meera K",3],["Nisha R",""],["Suresh Pillai",""],["Vineeth KS",3]];
@@ -254,7 +259,7 @@ function inv(){const dueRows=ledger.filter(r=>balOf(r)>0),od=r=>-days(dueOf(r));
  <h2>All invoices</h2>${tbl(["Invoice","Client","Raised","Due","Total","Received","Balance","Status"],rows)}
  <h2>Payment reminders <small>overdue invoices</small></h2><div class="card">${rem||"No overdue invoices."}</div>`}
 let users=[["CA Arjun Menon","arjun@example.com","Partner","Active"],["CA Priya Nair","priya@example.com","Manager","Active"],["Divya M","divya@example.com","Staff","Active"],["Meera K","meera@example.com","Staff","Active"],["Gopika N","gopika@example.com","Staff","Invited"]],umsg="",uD={name:"",email:"",role:"Staff"},viewAs="Partner";
-const ROLES=["Partner","Manager","Staff"],PR={rates:["Partner"],users:["Partner"],upload:["Partner"],inv:["Partner","Manager"],mon:["Partner","Manager"],log:["Partner","Manager"],master:["Partner","Manager"],clients:["Partner","Manager"]};
+const ROLES=["Partner","Manager","Staff"],PR={rates:["Partner"],users:["Partner"],inv:["Partner","Manager"],mon:["Partner","Manager"],log:["Partner","Manager"],clients:["Partner","Manager"]};
 const canSee=id=>id=="settings"?!!(wt.live&&wt.profile&&wt.profile.app_role=="managing_partner"):(!PR[id]||PR[id].includes(viewAs));
 const PM=[["See all clients",1,1,0],["Raise invoices and record receipts",1,1,0],["Approve timesheets and leave",1,1,0],["Upload the master compliance calendar",1,0,0],["See rates and fees",1,0,0],["Manage users and roles",1,0,0],["Enter own timesheet, leave and tasks",1,1,1]];
 function setView(r){viewAs=r;if(!canSee(cur))cur="myday";nav();render()}
@@ -334,7 +339,7 @@ function tsheetView(){const mgr=canSee('clients');
 function hook(n,pre,ok){const o=window[n];window[n]=function(...a){const s=pre(...a),r=o.apply(this,a);if(!ok||ok(s[1]))logAct(s[0]);return r}}
 const D=id=>{const e=document.getElementById(id);return e?e.value:''};
 [['send',(k,i)=>['Opened a WhatsApp reminder for '+(k=='inv'?invs:comp)[i][0],Object.keys(sent).length],n=>Object.keys(sent).length>n],['submitWk',()=>[tsStatus=='Draft'?'Submitted the timesheet for 02–08 Nov':'Withdrew the timesheet for 02–08 Nov']],['decide',(i,s)=>[s+' the timesheet of '+approvals[i][0]]],['decideLv',(i,s)=>[s+' leave for '+lv[i][0]]],['submitLeave',()=>['Requested '+D('l_type')+' leave from '+D('l_from')+' to '+D('l_to')],()=>lvMsg==''],['addClient',()=>['Onboarded client '+D('c_name')],()=>cmsg==''],['raiseInv',()=>['Raised an invoice for '+D('i_cl')],()=>invMsg==''],['recRcpt',()=>['Recorded a receipt on '+D('r_inv')],()=>invMsg==''],['invite',()=>['Invited '+D('u_email')+' as '+D('u_role')],()=>umsg==''],['setRole',(i,v)=>[users[i][0]+' is now '+v],()=>umsg==''],['toggleUser',i=>[(users[i][3]=='Disabled'?'Enabled':'Disabled')+' the account of '+users[i][0]],()=>umsg==''],['applyUp',r=>[(r?'Replaced':'Added to')+' the master compliance calendar',!!(upRes&&upRes.ok.length)],s=>s],['setTask',(i,k)=>['Moved “'+tasks[i][3]+'” to '+STAT[k]]],['assignTask',()=>['Assigned a task to '+D('t_who')],()=>tkMsg==''],['setRate',i=>['Changed the hourly rate of '+PEOPLE[i]],()=>rmsg==''],['addFee',()=>['Added the fee item '+D('f_n')],()=>rmsg==''],['upDocs',inp=>['Added '+inp.files.length+' document(s) for '+D('d_cl'),inp.files.length],n=>n>0]].forEach(h=>hook(...h));
-const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clView(),master:()=>masterView(),upload:()=>uploadView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
+const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clView(),master:()=>wt.live?mcLive():masterView(),upload:()=>calView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
 function render(){let h;try{h=(V[cur]||(()=>stub(cur)))()}catch(e){console.error(e);h=`<h1>${esc(String(cur))}</h1><div class="card"><b>This page could not be displayed</b><div class="sub" style="margin:8px 0">${esc(e&&e.message||String(e))}</div><button class="btn" onclick="render()">Try again</button></div>`}view.innerHTML=h;nav()}
 /* ===== WorkTrack: sign-in, firm registration, hierarchy, settings, Drive ===== */
 const SB_URL="https://ozbfdawgrfdlnrvdneoi.supabase.co";
@@ -355,7 +360,7 @@ const pwBox=(inp)=>`<span class="pwrap">${inp}<button type="button" class="pwt" 
 const $id=i=>document.getElementById(i);
 const ok_email=e=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
 function applyAccent(k){if(!ACC[k])k="blue-green";ACCENT=k;document.documentElement.style.setProperty("--gold",ACC[k][1]);let l=document.querySelector("link[rel=icon]");if(!l){l=document.createElement("link");l.rel="icon";document.head.appendChild(l)}l.href=LG(1);refreshBrand()}
-function refreshBrand(){if(!(wt.live&&wt.firm))return;const b=$id("brand");if(b)b.innerHTML=`<img src="${LG(1)}" alt="" style="height:30px;vertical-align:middle;margin-right:8px">${esc(wt.firm.name)}<small>WorkTrack · FY 2026-27</small>`}
+function refreshBrand(){if(!(wt.live&&wt.firm))return;const b=$id("brand");if(b)b.innerHTML=`<img src="${LG(1)}" alt="" style="height:30px;vertical-align:middle;margin-right:8px">${esc(wt.firm.name)}<small>WorkTrack · ${fyLabel()}</small>`}
 function toast(t,bad){let e=$id("wt-toast");if(!e){e=document.createElement("div");e.id="wt-toast";document.body.appendChild(e)}e.className=bad?"bad":"";e.textContent=t;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",bad?8000:3500)}
 async function fn(name,body){const {data,error}=await SB.functions.invoke(name,{body});if(error){let m="Request failed. Please try again.";try{const j=await error.context.json();m=j.error||m}catch(_){}return {error:m}}if(data&&data.error)return {error:data.error};return {data}}
 const rpcErr=e=>String(e.message||e).replace(/^.*?exception:\s*/i,"")||"Could not save";
@@ -414,7 +419,7 @@ function wipeSample(){
 }
 function goLive(){
  const f=wt.firm;applyAccent(f.accent);
- refreshBrand();
+ refreshBrand();calLoad();
  $id("topname").textContent=f.name;$id("prevLbl").style.display="none";
  viewAs={managing_partner:"Partner",partner:"Partner",manager:"Manager",staff:"Staff"}[wt.profile.app_role];
  $id("demoNote").textContent="Signed in as "+wt.profile.full_name+". Sign-in, firm settings, hierarchy, Drive, employee logins and My Day are live. Task, timesheet, invoice and other work pages still show sample data until the firm database is connected.";
@@ -581,6 +586,7 @@ const bizName=id=>{const x=msItem(MS.biz,id);return x?x.item.name:String(id)};
 function clNorm(c){c.name=String(c.name||"");["gstRows","tanRows","tdsRows","tcsRows","incharge","cmp"].forEach(k=>{if(!Array.isArray(c[k]))c[k]=[]});
  [["gmulti","gstRows"],["tmulti","tanRows"],["dmulti","tdsRows"],["cmulti","tcsRows"]].forEach(([f,r])=>{if(c[f]&&!c[r].length)c[f]=0});
  c.gstRows.forEach(r=>{if(!Array.isArray(r.inc))r.inc=[];if(!Array.isArray(r.cmp))r.cmp=[]});
+ if(!Array.isArray(c.dirs))c.dirs=[];[...c.gstRows,...c.tdsRows,...c.tcsRows,...c.tanRows].forEach(r=>{if(!Array.isArray(r.dirs))r.dirs=[]});
  if(c.cmpV==2)return c;const m=a=>(a||[]).map(x=>CMP_N2I[x]||(msItem(MS.comp,x)?x:"legacy:"+x));c.cmp=m(c.cmp);(c.gstRows||[]).forEach(r=>r.cmp=m(r.cmp));c.cmpV=2;return c}
 function msLoad(m){if(!m)return;["biz","comp"].forEach(k=>{if(m[k]&&Array.isArray(m[k].cats)){MS[k]=m[k];if(k=="biz"&&!MS.biz.kyc)MS.biz.kyc=KYC_NOTE}})}
 /* ---- searchable, categorised multi-select (used for compliances and business descriptions) ---- */
@@ -605,7 +611,7 @@ function mpClear(k){mpSet(k,[])}
 function mpAll(k,cid,on){const m=MP[k],q=m.q.trim().toLowerCase(),c=m.master().cats.find(x=>x.id==cid),s=new Set(m.sel());
  c.items.filter(i=>i.active&&(!q||(i.name+" "+c.name).toLowerCase().includes(q))).forEach(i=>on?s.add(i.id):s.delete(i.id));mpSet(k,[...s])}
 /* compliances that apply: stores compliance IDs; nothing is ever selected automatically */
-const cmpCfg=p=>({master:()=>MS.comp,selAll:1,sel:()=>clGet(p)||[],set:v=>{clSet(p,v);clPanLbl()},summary:(k,s)=>mpChips(k,s,cmpName)});
+const cmpCfg=p=>({master:()=>MS.comp,selAll:1,sel:()=>clGet(p)||[],set:v=>{clSet(p,v);clPanLbl();if(p=="cmp")clRegs()},summary:(k,s)=>mpChips(k,s,cmpName)});
 /* ---- business sector & description (common to the whole client, never per GSTIN/TAN) ---- */
 const bizEnsure=b=>{if(b.items.length&&!b.items.some(x=>x.p))b.items[0].p=1;if(b.items.filter(x=>x.p).length>1){let f=0;b.items.forEach(x=>{if(x.p&&f++)delete x.p})}};
 const bizCfg=()=>({master:()=>MS.biz,selAll:0,sel:()=>CL.d.biz.items.filter(x=>x.id).map(x=>x.id),
@@ -650,8 +656,8 @@ const PHR={IN:[/^[6-9]\d{9}$/,"10 digits, starting with 6, 7, 8 or 9"],US:[NANP,
 function phCheck(iso,raw){const d=String(raw||"").replace(/\D/g,"");let n=d.replace(/^0+/,"");const r=PHR[iso]||[/^\d{6,14}$/,"6 to 14 digits"],dial=(CTM[iso]||CTM.IN)[2];
  if(!r[0].test(n)&&n.startsWith(dial)&&r[0].test(n.slice(dial.length)))n=n.slice(dial.length);
  return r[0].test(n)?{ok:1,num:n}:{ok:0,num:n,msg:`The WhatsApp number for ${(CTM[iso]||CTM.IN)[1]} must be ${r[1]}.`}}
-const CL_TYPES=["Individual","Sole proprietor","Hindu Undivided Family (HUF)","Partnership firm","LLP","Private Co.","Unlisted Public Co.","Listed Public Co.","Startup","NBFC","Scheduled Bank","Private Bank","Offshore Banking Unit (OBU)","PSUs","Foreign Co.","Real Estate Investment Trust (REIT)","Infrastructure Investment Trust (InvIT)","Securitisation Trust","Alternative Investment Fund (AIF)","Trust (Private / Charitable)","Co-operative Society","Co-operative Bank","Association of Persons (AOP)","Body of Individuals (BOI)","Local Authority","Artificial Juridical Person (AJP)","Govt. Body / Agency","Embassy / Consulate / High Commission","UN Bodies / International Agencies"];
-const T4={"Individual":"P","Sole proprietor":"P","Hindu Undivided Family (HUF)":"H","Partnership firm":"F","LLP":"F","Private Co.":"C","Unlisted Public Co.":"C","Listed Public Co.":"C","Startup":"CF","NBFC":"C","Scheduled Bank":"CJ","Private Bank":"CJ","Offshore Banking Unit (OBU)":"CJ","PSUs":"CG","Foreign Co.":"C","Real Estate Investment Trust (REIT)":"T","Infrastructure Investment Trust (InvIT)":"T","Securitisation Trust":"T","Alternative Investment Fund (AIF)":"TFCJ","Trust (Private / Charitable)":"T","Co-operative Society":"AB","Co-operative Bank":"AB","Association of Persons (AOP)":"A","Body of Individuals (BOI)":"B","Local Authority":"L","Artificial Juridical Person (AJP)":"J","Govt. Body / Agency":"G","Embassy / Consulate / High Commission":"GJ","UN Bodies / International Agencies":"GJ"};
+const CL_TYPES=["Individual","Sole proprietor","Hindu Undivided Family (HUF)","Partnership firm","LLP","Private Co.","Unlisted Public Co.","Listed Public Co.","Startup (LLP)","Startup (Pvt. Ltd. Company)","NBFC","Scheduled Bank","Private Bank","Offshore Banking Unit (OBU)","PSUs","Foreign Co.","Real Estate Investment Trust (REIT)","Infrastructure Investment Trust (InvIT)","Securitisation Trust","Alternative Investment Fund (AIF)","Trust (Private / Charitable)","Co-operative Society","Co-operative Bank","Association of Persons (AOP)","Body of Individuals (BOI)","Local Authority","Artificial Juridical Person (AJP)","Govt. Body / Agency","Embassy / Consulate / High Commission","UN Bodies / International Agencies"];
+const T4={"Individual":"P","Sole proprietor":"P","Hindu Undivided Family (HUF)":"H","Partnership firm":"F","LLP":"F","Private Co.":"C","Unlisted Public Co.":"C","Listed Public Co.":"C","Startup (LLP)":"F","Startup (Pvt. Ltd. Company)":"C","Startup":"CF","NBFC":"C","Scheduled Bank":"CJ","Private Bank":"CJ","Offshore Banking Unit (OBU)":"CJ","PSUs":"CG","Foreign Co.":"C","Real Estate Investment Trust (REIT)":"T","Infrastructure Investment Trust (InvIT)":"T","Securitisation Trust":"T","Alternative Investment Fund (AIF)":"TFCJ","Trust (Private / Charitable)":"T","Co-operative Society":"AB","Co-operative Bank":"AB","Association of Persons (AOP)":"A","Body of Individuals (BOI)":"B","Local Authority":"L","Artificial Juridical Person (AJP)":"J","Govt. Body / Agency":"G","Embassy / Consulate / High Commission":"GJ","UN Bodies / International Agencies":"GJ"};
 const ANYWORD=["Individual","Sole proprietor","Hindu Undivided Family (HUF)"];
 const CL_CMP=["GST - Monthly Return","GST - Quarterly Return","GSTR 9/9C","GST - OIDAR","GST - CTP/NRTP","GST - TDS/TCS","GST - Notice","Income Tax - Return","Income Tax - Notice","Income Tax - TDS/TCS","Income Tax - Form 128 (earlier Form 13)","Monthly Accounting","Compilation Report","ESG Report","Review","Statutory Audit","Income Tax - Tax Audit","Monthly Payroll","Payroll Audit","Stock Audit","Forensic Audit","MIS Implementation","Transition from AS to IND AS","International Taxation - DTAA","Transfer Pricing","GST - Registration","PAN Registration","GST - Refund","GST - LUT","Company Incorporation","ROC/MCA Filing","Company Restructuring/Winding up","MIS Reporting","Share Valuation","Due Diligence","FEMA & RBI Compliance (FDI/ODI/FC-GPR/FLA)","Certifications","Black Money Act","Others"];
 const CL_DES=["Accounts Manager","Accounting Staff","Authorised Signatory","Director","Karta","Managing Director","Partner","Proprietor","Individual","Trustee","Other"];
@@ -667,37 +673,42 @@ function regCheck(num,pan,mid,label){num=String(num||"").toUpperCase();
 const nameInit=n=>String(n||"").toUpperCase().replace(/^(THE|M\/S\.?|MESSRS)\s+/,"").replace(/[^A-Z ]/g," ").trim().split(/\s+/).filter(Boolean).map(w=>w[0]);
 function panCheck(d){const p=d.pan;if(!p)return {};
  if(!/^[A-Z]{5}\d{4}[A-Z]$/.test(p))return {err:"PAN should look like ABCDE1234F (5 letters, 4 digits, 1 letter)."};
- const t4=T4[d.type]||"";if(!t4.includes(p[3]))return {err:`PAN’s 4th letter is “${p[3]}”, but for ${d.type} it should be ${t4.split("").join(" or ")}.`};
+ const t4=T4[d.type]||"";if(t4&&!t4.includes(p[3]))return {err:`PAN’s 4th letter is “${p[3]}”, but for ${d.type} it should be ${t4.split("").join(" or ")}.`};
  const ini=nameInit(d.name);if(ini.length){const ok=ANYWORD.includes(d.type)?ini.includes(p[4]):ini[0]==p[4];
   if(!ok)return d.type=="Sole proprietor"?{warn:`PAN’s 5th letter “${p[4]}” does not match any word of the name. For a proprietorship the PAN is the proprietor’s, so this can be right if the firm name is a trade name.`}:{err:`PAN’s 5th letter is “${p[4]}”, which should be the ${ANYWORD.includes(d.type)?"first letter of the name or surname":"first letter of the client’s name"}.`}}
  return {}}
 const clAllCmp=d=>d.gmulti?[...new Set(d.grows.flatMap(r=>r.cmp))]:d.cmp;
 function panReq(d){if(d.country!="IN")return false;const c=clAllCmp(d),sole=d.type=="Individual"||d.type=="Sole proprietor";
  if(c.includes(CID.pan))return false;if(!sole&&c.includes(CID.inc))return false;return true}
-const clBlankRow=()=>({sc:"",l3:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[]});
-const clBlankReg=()=>({no:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:""});
-const clNew=()=>({name:"",type:"Private Co.",pan:"",tan:"",tmulti:0,trows:[],gst:"",gmulti:0,grows:[],tds:"",dmulti:0,drows:[],tcs:"",cmulti:0,crows:[],contact:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[],biz:{na:0,items:[]}});
+const clBlankRow=()=>({sc:"",l3:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[],rid:"",rk:"CIN",dirs:[]});
+const clBlankReg=()=>({no:"",contact:"",desig:"",cc:"IN",ph:"",inc:[],addr:"",rid:"",rk:"CIN",dirs:[]});
+const clNew=()=>({name:"",type:"Private Co.",pan:"",tan:"",tmulti:0,trows:[],gst:"",gmulti:0,grows:[],tds:"",dmulti:0,drows:[],tcs:"",cmulti:0,crows:[],contact:"",cc:"IN",ph:"",inc:[],addr:"",country:"IN",cmp:[],biz:{na:0,items:[]},rid:"",rk:"CIN",uin:"",dirs:[]});
 const CL={err:"",editId:null,list:[],loaded:0,busy:0,q:"",show:0,d:clNew(),msg:"",warnOk:0,drive:true,reason:""};
 const clPeople=()=>wt.live?wt.hier.map(h=>({id:h.id,name:h.name,sub:h.designation})):staff.map(s=>({id:s[0],name:s[0],sub:""}));
 const clPath=(p)=>p.split(":");
-function clGet(p){const a=clPath(p);return a.length==1?CL.d[a[0]]:CL.d[a[0]][+a[1]][a[2]]}
-function clSet(p,v){const a=clPath(p);if(a.length==1)CL.d[a[0]]=v;else CL.d[a[0]][+a[1]][a[2]]=v}
+const clKey=k=>/^\d+$/.test(k)?+k:k;
+function clGet(p){let o=CL.d;for(const k of clPath(p)){if(o==null)return undefined;o=o[clKey(k)]}return o}
+function clSet(p,v){const a=clPath(p);let o=CL.d;for(let i=0;i<a.length-1;i++)o=o[clKey(a[i])];o[clKey(a[a.length-1])]=v}
 /* ---- loading ---- */
 function clSeed(){if(CL.seeded||wt.live)return;CL.seeded=1;const tm={"Company":"Private Co.","Proprietor":"Sole proprietor","Trust":"Trust (Private / Charitable)"};CL.list=cdata.map(c=>clNorm({id:c[0],name:c[0],type:tm[c[1]]||c[1],pan:c[2],gst:c[3],gmulti:0,gstRows:[],contact:c[4],cc:CTN[(clients[c[0]]||[])[0]]||"IN",ph:(clients[c[0]]||[])[1]||"",incharge:[{id:c[6],name:c[6]}],cmp:c[5],country:"IN",addr:""}))}
 async function clLoad(){CL.busy=1;const r=await fn("clients",{action:"list"});CL.busy=0;CL.loaded=1;
  if(r.error){CL.err=r.error}else{CL.err="";CL.drive=r.data.drive!==false;CL.reason=r.data.reason||"";msLoad(r.data.masters);CL.list=(r.data.clients||[]).map(clNorm);clBridge()}
- if(cur=="clients")render()}
+ if(cur=="clients"||cur=="master")render()}
 /* other pages still read the older cdata / clients lookups */
 function clBridge(){cdata.length=0;Object.keys(clients).forEach(k=>delete clients[k]);
  CL.list.forEach(c=>{try{const g1=c.gmulti?(c.gstRows[0]||{}):c,ph=c.gmulti?(c.gstRows[0]||{}):c;
   cdata.push([c.name,c.type,c.pan||"",(c.gmulti?(c.gstRows[0]||{}).gstin:c.gst)||"",(g1.contact||""),(c.gmulti?clAllCmpOf(c):c.cmp).map(cmpName),(c.gmulti?c.gstRows.flatMap(r=>r.inc):c.incharge).map(x=>x.name).join(", ")]);
   clients[c.name]=[(CTM[ph.cc||"IN"]||CTM.IN)[1],ph.ph||""]}catch(e){console.error(e)}})}
-const clShowTds=d=>d.type=="PSUs"||d.type=="Govt. Body / Agency",clShowTcs=d=>/^[A-Z]{5}\d{4}[A-Z]$/.test(d.pan)&&!"LGJHB".includes(d.pan[3]);
+const clShowTds=d=>d.type=="PSUs"||d.type=="Govt. Body / Agency",clShowTcs=d=>!UIN_T.includes(d.type)&&/^[A-Z]{5}\d{4}[A-Z]$/.test(d.pan)&&!"LGJHB".includes(d.pan[3]);
 const clAllCmpOf=c=>[...new Set((c.gstRows||[]).flatMap(r=>r.cmp))];
 /* ---- inputs ---- */
 const clI=(p,ph,extra="")=>`<input data-p="${p}" value="${esc(clGet(p)||"")}" placeholder="${ph||""}" onchange="clCh('${p}',this.value)" ${extra}>`;
-function clCh(p,v){const k=clPath(p).pop();if(k=="pan"||k=="tan"||k=="tds"||k=="tcs"||k=="gst"||k=="no"||k=="l3")v=v.toUpperCase().replace(/\s/g,"");clSet(p,v.trim?v.trim():v);
- if(p=="pan"||p=="type")setTimeout(()=>{clRegs();clPanLbl()},0);
+function clCh(p,v){const k=clPath(p).pop();
+ if(["pan","tan","tds","tcs","gst","no","l3","rid","uin","bcid"].includes(k))v=String(v).toUpperCase().replace(k=="rid"?/[ ]+/g:/\s/g,"");
+ if(k=="id"||k=="nid")v=String(v).replace(/\D/g,"");
+ clSet(p,typeof v=="string"?v.trim():v);
+ if(p=="type")clFix(CL.d);
+ if(p=="pan"||p=="type"||/:des$/.test(p))setTimeout(()=>{clRegs();clPanLbl();if(p=="type")clRest()},0);
  if(/^grows:\d+:(sc|l3)$/.test(p)){const i=+p.split(":")[1],r=CL.d.grows[i],e=$id("clg"+i);if(e)e.textContent=clGstin(r)}
 }
 const addrReq=cm=>!cm.includes(CID.gst);
@@ -731,35 +742,119 @@ function clAddRow(k){CL.d[k].push(k=="grows"?clBlankRow():clBlankReg());clRegs()
 function clDelRow(k,i){CL.d[k].splice(i,1);
  if(!CL.d[k].length){const f={trows:"tmulti",grows:"gmulti",drows:"dmulti",crows:"cmulti"}[k];CL.d[f]=0;toast("No rows left, so “Having multiple…?” was switched back to No.")}
  clRegs();clRest()}
-function clRegTable(rk,label,hint){const rows=CL.d[rk];
- return `<div class="tbl cltbl"><table><tr><th>#</th><th>${label} *</th><th>Contact person</th><th>Designation</th><th>WhatsApp country</th><th>WhatsApp number</th><th>In-charge</th><th>Address *</th><th></th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${clI(rk+":"+i+":no",hint,'maxlength="15" style="min-width:150px;text-transform:uppercase"')}</td><td>${clI(rk+":"+i+":contact","")}</td><td>${desSel(rk+":"+i+":desig")}</td><td>${clCombo(rk+":"+i+":cc","dial")}</td><td>${clI(rk+":"+i+":ph","","type=tel inputmode=tel")}</td><td>${clSel(rk+":"+i+":inc","inc")}</td><td>${clI(rk+":"+i+":addr","")}</td><td><button class="btn ghost sm" onclick="clDelRow('${rk}',${i})" title="Remove">✕</button></td></tr>`).join("")}</table></div><div style="margin-top:8px"><button class="btn ghost sm" onclick="clAddRow('${rk}')">＋ Add another</button></div>`}
+/* ---- registration IDs (CIN / LLPIN / FCRN / UIN) and directors / partners ---- */
+const COMPANY_T=["Private Co.","Unlisted Public Co.","Listed Public Co.","NBFC","Scheduled Bank","Private Bank","PSUs","Foreign Co.","Startup (Pvt. Ltd. Company)"];
+const LLP_T=["LLP","Startup (LLP)"];
+const UIN_T=["Embassy / Consulate / High Commission","UN Bodies / International Agencies"];
+const CIN_REQ=["Private Co.","Unlisted Public Co.","Listed Public Co.","NBFC","Private Bank","Startup (Pvt. Ltd. Company)"];
+const CIN_OPT=["Scheduled Bank","PSUs","Offshore Banking Unit (OBU)"];
+const DIR_DES=["Managing Director","Whole-time Director","Director (Executive)","Director (Non-Executive)","Independent Director","Additional Director","Alternate Director","Nominee Director"];
+const LLP_DES=["Designated Partner","Partner (Individual)","Partner (Body Corporate)"];
+const RE={cin:/^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/,llpin:/^[A-Z]{3}-?[0-9]{4}$/,fcrn:/^F[0-9]{5}$/,din:/^[0-9]{8}$/,pan:/^[A-Z]{5}[0-9]{4}[A-Z]$/,tan:/^[A-Z]{4}[0-9]{5}[A-Z]$/,
+ tds:/^[0-9]{2}([A-Z]{4}[0-9]{5}[A-Z]|[A-Z]{5}[0-9]{4}[A-Z])[1-9A-Z]D[0-9A-Z]$/,tcs:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}C[0-9A-Z]$/,uin:/^[0-9]{2}[A-Z0-9]{5}[A-Z0-9]{5}[A-Z0-9]{2}[A-Z0-9]$/};
+const RIDL={CIN:"CIN",LLPIN:"LLPIN",FCRN:"FCRN",CSRN:"Co-operative Society Registration No."},RIDP={CIN:"U12345KL2020PTC123456",LLPIN:"AAB1234",FCRN:"F12345",CSRN:"e.g. 123/2015"},RIDM={CIN:21,LLPIN:8,FCRN:6,CSRN:30};
+const ridInfo=t=>(t=="Co-operative Society"||t=="Co-operative Bank")?{k:"CSRN"}:CIN_REQ.includes(t)?{k:"CIN",req:1}:CIN_OPT.includes(t)?{k:"CIN"}:t=="Startup"?{k:"CIN",tog:1}:LLP_T.includes(t)?{k:"LLPIN"}:t=="Foreign Co."?{k:"FCRN"}:null;
+const clShowGst=d=>!UIN_T.includes(d.type);
+const clPeopleKind=d=>COMPANY_T.includes(d.type)?"dir":LLP_T.includes(d.type)?"llp":"";
+function clFix(d){if(!clShowGst(d)){d.gmulti=0;d.dmulti=0;d.cmulti=0}}
+function clMulti(d){const m={t:!!d.tmulti,g:clShowGst(d)&&!!d.gmulti,d:clShowGst(d)&&clShowTds(d)&&!!d.dmulti,c:clShowTcs(d)&&!!d.cmulti};m.common=!(m.t||m.g||m.d||m.c);m.ppl=!(m.g||m.d||m.c);return m}
+const ridReq=d=>{const i=ridInfo(d.type);return !!(i&&i.req)&&!d.legacyNoRid&&!clAllCmp(d).includes(CID.inc)};
+const ridKind=(d,o)=>{const i=ridInfo(d.type);return !i?"":i.tog?((o&&o.rk)||"CIN"):i.k};
+const ridNorm=(v,k)=>{v=String(v||"").toUpperCase().replace(k=="CSRN"?/[ ]{2,}/g:/\s/g,k=="CSRN"?" ":"");return k=="LLPIN"?v.replace("-",""):v};
+function ridErr(kind,v,type,req,lb){v=ridNorm(v,kind);if(!v)return req?`${lb}: enter the ${kind}.`:"";
+ if(kind=="CIN"){if(!RE.cin.test(v))return `${lb}: the CIN should be 21 characters, like U12345KL2020PTC123456.`;
+  if(type=="Listed Public Co."&&v[0]!="L")return `${lb}: a listed company’s CIN starts with L.`;
+  if((type=="Private Co."||type=="Unlisted Public Co.")&&v[0]!="U")return `${lb}: an unlisted company’s CIN starts with U.`}
+ if(kind=="LLPIN"&&!RE.llpin.test(v))return `${lb}: the LLPIN should be 7 characters, 3 letters and 4 digits, like AAB1234.`;
+ if(kind=="FCRN"&&!RE.fcrn.test(v))return `${lb}: the FCRN should be 6 characters, F and 5 digits, like F12345.`;
+ if(kind=="CSRN"&&!/^[A-Z0-9][A-Z0-9\/\-. ]{2,29}$/.test(v))return `${lb}: enter the registration number as issued by the Registrar of Co-operative Societies (letters, digits, / - . only).`;
+ return ""}
+function tdsErr(num,d,lb){num=String(num||"").toUpperCase();
+ if(!RE.tds.test(num))return `${lb}: should be 15 characters: state code, the 10-character TAN or PAN, entity code, the letter D and a check character (like 27AAPFU0939F1DX).`;
+ if(!GSTST.some(x=>x[0]==num.slice(0,2)))return `${lb}: ${num.slice(0,2)} is not a valid state code.`;
+ if(gchk(num.slice(0,14))!=num[14])return `${lb}: the last character is wrong. For these first 14 characters it should be ${gchk(num.slice(0,14))}.`;
+ const core=num.slice(2,12);if(RE.pan.test(core)){if(d.pan&&core!=d.pan)return `${lb}: the PAN inside it must be the client’s PAN (${d.pan}).`}
+ else{const t=[d.tan,...d.trows.map(r=>r.no)].filter(Boolean);if(t.length&&!t.includes(core))return `${lb}: the TAN inside it must be one of the client’s TANs.`}return ""}
+function tcsErr(num,d,lb){num=String(num||"").toUpperCase();
+ if(!RE.tcs.test(num))return `${lb}: should be 15 characters: state code, the 10-character PAN, entity code, the letter C and a check character (like 27AAPFU0939F1CX).`;
+ if(!GSTST.some(x=>x[0]==num.slice(0,2)))return `${lb}: ${num.slice(0,2)} is not a valid state code.`;
+ if(gchk(num.slice(0,14))!=num[14])return `${lb}: the last character is wrong. For these first 14 characters it should be ${gchk(num.slice(0,14))}.`;
+ if(d.pan&&num.slice(2,12)!=d.pan)return `${lb}: the PAN inside it must be the client’s PAN (${d.pan}).`;return ""}
+const personBlank=()=>({nm:"",id:"",des:"",addr:"",res:0,wom:0,pan:"",pct:"",cap:"",bcid:"",nnm:"",nid:""});
+function cleanPerson(p,kind){const q={...personBlank(),...p},ind=kind=="llp"&&q.des=="Partner (Individual)",bc=kind=="llp"&&q.des=="Partner (Body Corporate)",dp=kind=="llp"&&q.des=="Designated Partner";
+ return {nm:q.nm.trim(),des:q.des,addr:q.addr.trim(),id:(ind||bc)?"":q.id,res:(kind=="dir"||dp)?(q.res?1:0):0,wom:kind=="dir"?(q.wom?1:0):0,pan:(ind||bc)?q.pan:"",pct:ind?String(q.pct).trim():"",cap:ind?String(q.cap).trim():"",bcid:bc?ridNorm(q.bcid,"LLPIN"):"",nnm:bc?q.nnm.trim():"",nid:bc?q.nid:""}}
+function clPeopleErr(list,kind,lb,type){const er=[],W=kind=="llp"?"Partner":"Director",I=kind=="llp"?"DPIN":"DIN",seen=new Set();let tot=0;
+ list.forEach((p,i)=>{const n=`${lb}${W} ${i+1}: `,ind=kind=="llp"&&p.des=="Partner (Individual)",bc=kind=="llp"&&p.des=="Partner (Body Corporate)";
+  if(!String(p.nm).trim())er.push(n+(bc?"enter the company / LLP name.":"enter the name."));
+  if(!p.des)er.push(n+"select the designation.");
+  if(!ind&&!bc&&(kind=="dir"||p.des=="Designated Partner")){const id=String(p.id||"");
+   if(id){if(!RE.din.test(id))er.push(n+`${I} must be 8 digits.`);else if(seen.has(id))er.push(n+`${I} ${id} is entered twice.`);seen.add(id)}
+   else if(!(kind=="dir"&&type=="Foreign Co."))er.push(n+`enter the ${I} (8 digits).`)}
+  if(!String(p.addr).trim())er.push(n+"enter the address.");
+  if(ind){const pn=String(p.pan||"");if(!RE.pan.test(pn)||pn[3]!="P")er.push(n+"enter a valid PAN of the individual (4th letter P).");
+   const x=parseFloat(p.pct);if(String(p.pct).trim()===""||!isFinite(x))er.push(n+"enter the profit share %.");else if(x<0||x>100)er.push(n+"profit share cannot be more than 100%.");else tot+=x;
+   if(String(p.cap).trim()!==""&&!(parseFloat(p.cap)>=0))er.push(n+"capital contribution must be a number.")}
+  if(bc){const v=ridNorm(p.bcid,"LLPIN");if(!(RE.cin.test(v)||RE.llpin.test(v)))er.push(n+"enter the CIN (21 characters) or LLPIN (7 characters) of the body corporate.");
+   const pn=String(p.pan||"");if(!RE.pan.test(pn)||!"CF".includes(pn[3]))er.push(n+"enter a valid PAN of the body corporate (4th letter C or F).");
+   if(!String(p.nnm).trim())er.push(n+"enter the authorised nominee’s name.");if(!RE.din.test(String(p.nid||"")))er.push(n+"enter the nominee’s 8-digit DIN / DPIN.")}});
+ if(tot>100.0001)er.push(`${lb}the partners’ profit shares add up to ${+tot.toFixed(2)}%, which is more than 100%.`);return er}
+function ridField(p,kp,o){const i=ridInfo(CL.d.type),k=ridKind(CL.d,o),req=ridReq(CL.d),ph=RIDP[k],len=RIDM[k];
+ return `<label>${i.tog?`<select data-p="${kp}" onchange="clCh('${kp}',this.value);clRegs()"><option>CIN</option><option ${k=="LLPIN"?"selected":""}>LLPIN</option></select>`:(k=="FCRN"?"FCRN (Foreign Company Registration Number)":RIDL[k])}${req?" *":" (optional)"}${clI(p,ph,`maxlength="${len}" style="text-transform:uppercase;min-width:150px"`)}</label>`}
+function clPerson(b,kind){const g=k=>clGet(b+":"+k),llp=kind=="llp",des=g("des"),ind=llp&&des=="Partner (Individual)",bc=llp&&des=="Partner (Body Corporate)",dp=llp&&des=="Designated Partner";
+ const chk=(k,l)=>`<label class="chk" style="font-size:12px"><input type="checkbox" data-p="${b}:${k}" ${g(k)?"checked":""} onchange="clCh('${b}:${k}',this.checked?1:0)"> ${l}</label>`;
+ const sel=`<select data-p="${b}:des" onchange="clCh('${b}:des',this.value)"><option value="">Select…</option>${(llp?LLP_DES:DIR_DES).map(x=>`<option ${des==x?"selected":""}>${x}</option>`).join("")}</select>`;
+ const sm='style="min-width:110px"';
+ return {nm:clI(b+":nm",bc?"Company / LLP name":"Full name",'style="min-width:150px"'),
+  id:(ind||bc)?`<input disabled placeholder="Not applicable" style="min-width:100px">`:clI(b+":id",llp?"8-digit DPIN":"8-digit DIN",'inputmode="numeric" maxlength="8" style="min-width:100px"'),
+  des:sel+(llp?"":chk("res","Resident director")+chk("wom","Woman director")),
+  addr:clI(b+":addr","Address",'style="min-width:170px"'),
+  det:dp?chk("res","Resident in India"):ind?`${clI(b+":pan","PAN",'maxlength="10" '+sm)}${clI(b+":pct","Profit share %",'inputmode="decimal" '+sm)}${clI(b+":cap","Capital contribution (₹)",'inputmode="decimal" '+sm)}`:bc?`${clI(b+":bcid","CIN / LLPIN",'maxlength="21" '+sm)}${clI(b+":pan","PAN",'maxlength="10" '+sm)}${clI(b+":nnm","Authorised nominee’s name",sm)}${clI(b+":nid","Nominee’s DIN / DPIN",'inputmode="numeric" maxlength="8" '+sm)}`:`<span class="note">Select a designation</span>`}}
+function clAddPerson(lp){clGet(lp).push(personBlank());clRegs()}
+function clDelPerson(lp,i){clGet(lp).splice(i,1);clRegs()}
+function clPeopleBlock(){const d=CL.d,kind=clPeopleKind(d),llp=kind=="llp",W=llp?"Partner":"Director",I=llp?"DPIN":"DIN";
+ return `<div class="clblk"><div class="lbl">${W}s of the ${llp?"LLP":"company"}</div><div class="note">Add as many ${W.toLowerCase()}s as there are, there is no limit.</div>${d.dirs.length?`<div class="tbl cltbl"><table><tr><th>#</th><th>Name of ${W} *</th><th>${I}</th><th>Designation *</th><th>Address *</th>${llp?"<th>Details</th>":""}<th></th></tr>${d.dirs.map((p,i)=>{const c=clPerson("dirs:"+i,kind);return `<tr><td>${i+1}</td><td>${c.nm}</td><td>${c.id}</td><td>${c.des}</td><td>${c.addr}</td>${llp?`<td>${c.det}</td>`:""}<td><button class="btn ghost sm" title="Remove" onclick="clDelPerson('dirs',${i})">✕</button></td></tr>`}).join("")}</table></div>`:""}<div style="margin-top:8px"><button class="btn ghost sm" onclick="clAddPerson('dirs')">＋ Add ${W.toLowerCase()}</button></div></div>`}
+/* directors / partners shown to the right of each row of the GSTIN, TDS deductor and TCS collector tables */
+function clPplHead(rows,kind){const n=Math.max(0,...rows.map(r=>(r.dirs||[]).length)),W=kind=="llp"?"Partner":"Director",I=kind=="llp"?"DPIN":"DIN";let h="";
+ for(let i=1;i<=n;i++)h+=`<th>Name of ${W} ${i} *</th><th>${I} of ${W} ${i}</th><th>Designation of ${W} ${i} *</th><th>Address of ${W} ${i} *</th>${kind=="llp"?`<th>Details of ${W} ${i}</th>`:""}`;
+ return {n,h:h+`<th>${W}s</th>`}}
+function clPplCells(rk,i,r,n,kind){const W=kind=="llp"?"Partner":"Director",cols=kind=="llp"?5:4;let h="";
+ for(let j=0;j<n;j++){const p=(r.dirs||[])[j];if(!p){h+=`<td colspan="${cols}"><span class="note">–</span></td>`;continue}
+  const c=clPerson(`${rk}:${i}:dirs:${j}`,kind);h+=`<td>${c.nm}<button class="btn ghost sm" title="Remove this ${W.toLowerCase()}" onclick="clDelPerson('${rk}:${i}:dirs',${j})">✕</button></td><td>${c.id}</td><td>${c.des}</td><td>${c.addr}</td>${kind=="llp"?`<td>${c.det}</td>`:""}`}
+ return h+`<td><button class="btn ghost sm" onclick="clAddPerson('${rk}:${i}:dirs')">＋ ${W}</button></td>`}
+function clRegTable(rk,label,hint,ppl){const d=CL.d,rows=d[rk],info=ridInfo(d.type),kind=ppl?clPeopleKind(d):"",ph=kind?clPplHead(rows,kind):{n:0,h:""};
+ return `<div class="tbl cltbl"><table><tr><th>#</th><th>${label} *</th><th>Contact person</th><th>Designation</th><th>WhatsApp country</th><th>WhatsApp number</th><th>In-charge</th><th>Address *</th>${info?`<th>${info.tog?"CIN / LLPIN":RIDL[ridKind(d)]}${ridReq(d)?" *":""}</th>`:""}${ph.h}<th></th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${clI(rk+":"+i+":no",hint,'maxlength="15" style="min-width:150px;text-transform:uppercase"')}</td><td>${clI(rk+":"+i+":contact","")}</td><td>${desSel(rk+":"+i+":desig")}</td><td>${clCombo(rk+":"+i+":cc","dial")}</td><td>${clI(rk+":"+i+":ph","","type=tel inputmode=tel")}</td><td>${clSel(rk+":"+i+":inc","inc")}</td><td>${clI(rk+":"+i+":addr","")}</td>${info?`<td>${ridCell(rk,i,r,info)}</td>`:""}${kind?clPplCells(rk,i,r,ph.n,kind):""}<td><button class="btn ghost sm" onclick="clDelRow('${rk}',${i})" title="Remove">✕</button></td></tr>`).join("")}</table></div><div style="margin-top:8px"><button class="btn ghost sm" onclick="clAddRow('${rk}')">＋ Add another</button></div>`}
+function ridCell(rk,i,r,info){const k=ridKind(CL.d,r),p=`${rk}:${i}:rid`,kp=`${rk}:${i}:rk`;
+ return `${info.tog?`<select data-p="${kp}" onchange="clCh('${kp}',this.value);clRegs()"><option>CIN</option><option ${k=="LLPIN"?"selected":""}>LLPIN</option></select>`:""}${clI(p,RIDP[k],`maxlength="${RIDM[k]}" style="min-width:150px;text-transform:uppercase"`)}`}
+
 function clKeep(e,fn){const a=document.activeElement,k=a&&a.dataset&&a.dataset.p&&e.contains(a)?a.dataset.p:null;fn();if(k){const n=e.querySelector(`[data-p="${k}"]`);if(n)n.focus()}}
 function clRegs(){const e=$id("clregs");if(!e)return;clKeep(e,()=>clRegs0(e))}
-function clRegs0(e){const d=CL.d,p4=d.pan.length>=4?d.pan[3]:"",hasPan=/^[A-Z]{5}\d{4}[A-Z]$/.test(d.pan);
- let h="";
- h+=`<div class="clblk"><div class="grid"><label>TAN (Income Tax, optional)${d.tmulti?"":clI("tan","ABCD12345E",'maxlength="10"')}</label></div>${yn("tmulti",d.tmulti,"Having multiple TAN?")}${d.tmulti?clRegTable("trows","TAN","ABCD12345E"):""}</div>`;
- h+=`<div class="clblk"><div class="grid"><label>GSTIN (if registered)${d.gmulti?"":clI("gst","27AAPFU0939F1ZV",`maxlength="15" ${hasPan?"":"disabled"}`)}</label></div>${hasPan?"":`<div class="note">Enter the PAN first. A client without a PAN cannot have a GSTIN.</div>`}${yn("gmulti",d.gmulti,"Having multiple GSTIN?",!hasPan)}${d.gmulti?clGstTable():""}</div>`;
- if(d.type=="PSUs"||d.type=="Govt. Body / Agency")h+=`<div class="clblk"><div class="grid"><label>GST TDS deductor number (optional)${d.dmulti?"":clI("tds","27AAPFU0939F1DX",'maxlength="15"')}</label></div>${yn("dmulti",d.dmulti,"Having multiple TDS deductor numbers?")}${d.dmulti?clRegTable("drows","TDS deductor number","27AAPFU0939F1DX"):""}</div>`;
- if(hasPan&&!"LGJHB".includes(p4))h+=`<div class="clblk"><div class="grid"><label>GST TCS collector number (optional)${d.cmulti?"":clI("tcs","27AAPFU0939F1CX",'maxlength="15"')}</label></div>${yn("cmulti",d.cmulti,"Having multiple TCS collector numbers?")}${d.cmulti?clRegTable("crows","TCS collector number","27AAPFU0939F1CX"):""}</div>`;
+function clRegs0(e){const d=CL.d;clFix(d);const hasPan=RE.pan.test(d.pan),m=clMulti(d),info=ridInfo(d.type),kind=clPeopleKind(d);let h="";
+ if(info&&m.common)h+=`<div class="clblk"><div class="grid">${ridField("rid","rk",d)}</div></div>`;
+ h+=`<div class="clblk"><div class="grid"><label>TAN (Income Tax, optional)${d.tmulti?"":clI("tan","ABCD12345E",'maxlength="10"')}</label></div>${yn("tmulti",d.tmulti,"Having multiple TAN?")}${d.tmulti?clRegTable("trows","TAN","ABCD12345E",0):""}</div>`;
+ if(clShowGst(d))h+=`<div class="clblk"><div class="grid"><label>GSTIN (if registered)${d.gmulti?"":clI("gst","27AAPFU0939F1ZV",`maxlength="15" ${hasPan?"":"disabled"}`)}</label></div>${hasPan?"":`<div class="note">Enter the PAN first. A client without a PAN cannot have a GSTIN.</div>`}${yn("gmulti",d.gmulti,"Having multiple GSTIN?",!hasPan)}${d.gmulti?clGstTable():""}</div>`;
+ else h+=`<div class="clblk"><div class="grid"><label>UIN (GST Unique Identification Number, optional)${clI("uin","15 characters",'maxlength="15" style="text-transform:uppercase"')}</label></div><div class="note">GSTIN, GST TDS deductor number and GST TCS collector number do not apply to this type of client.</div></div>`;
+ if(clShowTds(d)&&clShowGst(d))h+=`<div class="clblk"><div class="grid"><label>GST TDS deductor number (optional)${d.dmulti?"":clI("tds","27AAPFU0939F1DX",'maxlength="15"')}</label></div>${yn("dmulti",d.dmulti,"Having multiple TDS deductor numbers?")}${d.dmulti?clRegTable("drows","TDS deductor number","27AAPFU0939F1DX",1):""}</div>`;
+ if(clShowTcs(d))h+=`<div class="clblk"><div class="grid"><label>GST TCS collector number (optional)${d.cmulti?"":clI("tcs","27AAPFU0939F1CX",'maxlength="15"')}</label></div>${yn("cmulti",d.cmulti,"Having multiple TCS collector numbers?")}${d.cmulti?clRegTable("crows","TCS collector number","27AAPFU0939F1CX",1):""}</div>`;
+ if(kind&&m.ppl)h+=clPeopleBlock();
  e.innerHTML=h;clPanLbl()}
-function clGstTable(){const rows=CL.d.grows;
- return `<div class="tbl cltbl"><table><tr><th>#</th><th>State code *</th><th>PAN</th><th>Last 3 digits *</th><th>GSTIN</th><th>Contact person *</th><th>Designation *</th><th>WhatsApp country *</th><th>WhatsApp number *</th><th>In-charge *</th><th>Address *</th><th>Country *</th><th>Compliances *</th><th></th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><select onchange="clCh('grows:${i}:sc',this.value)"><option value="">Select…</option>${GSTST.map(x=>`<option value="${x[0]}" ${r.sc==x[0]?"selected":""}>${x[0]} – ${x[1]}</option>`).join("")}</select></td><td><input value="${esc(CL.d.pan)}" disabled style="width:110px"></td><td><input value="${esc(r.l3)}" maxlength="3" placeholder="1Z5" style="width:70px;text-transform:uppercase" onchange="clCh('grows:${i}:l3',this.value)"><div class="note" style="margin:2px 0 0">middle is always Z</div></td><td id="clg${i}" style="font-family:monospace;white-space:nowrap">${esc(clGstin(r))}</td><td>${clI("grows:"+i+":contact","")}</td><td>${desSel("grows:"+i+":desig")}</td><td>${clCombo("grows:"+i+":cc","dial")}</td><td>${clI("grows:"+i+":ph","","type=tel inputmode=tel")}</td><td>${clSel("grows:"+i+":inc","inc")}</td><td>${clI("grows:"+i+":addr","")}</td><td>${clCombo("grows:"+i+":country","country")}</td><td>${clSel("grows:"+i+":cmp","cmp")}</td><td><button class="btn ghost sm" onclick="clDelRow('grows',${i})" title="Remove">✕</button></td></tr>`).join("")}</table></div><div style="margin-top:8px"><button class="btn ghost sm" onclick="clAddRow('grows')">＋ Add another GSTIN</button></div><div class="note">All fields in this table are mandatory. State code and the last 3 digits are combined with the PAN above to form the GSTIN.</div>`}
+function clGstTable(){const d=CL.d,rows=d.grows,info=ridInfo(d.type),kind=clPeopleKind(d),ph=kind?clPplHead(rows,kind):{n:0,h:""};
+ return `<div class="tbl cltbl"><table><tr><th>#</th><th>State code *</th><th>PAN</th><th>Last 3 digits *</th><th>GSTIN</th><th>Contact person *</th><th>Designation *</th><th>WhatsApp country *</th><th>WhatsApp number *</th><th>In-charge *</th><th>Address *</th><th>Country *</th><th>Compliances *</th>${info?`<th>${info.tog?"CIN / LLPIN":RIDL[ridKind(d)]}${ridReq(d)?" *":""}</th>`:""}${ph.h}<th></th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><select onchange="clCh('grows:${i}:sc',this.value)"><option value="">Select…</option>${GSTST.map(x=>`<option value="${x[0]}" ${r.sc==x[0]?"selected":""}>${x[0]} – ${x[1]}</option>`).join("")}</select></td><td><input value="${esc(CL.d.pan)}" disabled style="width:110px"></td><td><input value="${esc(r.l3)}" maxlength="3" placeholder="1Z5" style="width:70px;text-transform:uppercase" onchange="clCh('grows:${i}:l3',this.value)"><div class="note" style="margin:2px 0 0">middle is always Z</div></td><td id="clg${i}" style="font-family:monospace;white-space:nowrap">${esc(clGstin(r))}</td><td>${clI("grows:"+i+":contact","")}</td><td>${desSel("grows:"+i+":desig")}</td><td>${clCombo("grows:"+i+":cc","dial")}</td><td>${clI("grows:"+i+":ph","","type=tel inputmode=tel")}</td><td>${clSel("grows:"+i+":inc","inc")}</td><td>${clI("grows:"+i+":addr","")}</td><td>${clCombo("grows:"+i+":country","country")}</td><td>${clSel("grows:"+i+":cmp","cmp")}</td>${info?`<td>${ridCell("grows",i,r,info)}</td>`:""}${kind?clPplCells("grows",i,r,ph.n,kind):""}<td><button class="btn ghost sm" onclick="clDelRow('grows',${i})" title="Remove">✕</button></td></tr>`).join("")}</table></div><div style="margin-top:8px"><button class="btn ghost sm" onclick="clAddRow('grows')">＋ Add another GSTIN</button></div><div class="note">All fields in this table are mandatory. State code and the last 3 digits are combined with the PAN above to form the GSTIN.</div>`}
 function clRest(){const e=$id("clrest");if(!e)return;const d=CL.d;mpReg("cmp_main",cmpCfg("cmp"));clKeep(e,()=>{
  e.innerHTML=d.gmulti?`<div class="note">Contact, WhatsApp, in-charge, address, country and compliances are entered for each GSTIN in the table above.</div>`:`<div class="grid"><label>Contact person${clI("contact","")}</label><label>WhatsApp country<br>${clCombo("cc","dial")}</label><label>WhatsApp number *${clI("ph","","type=tel inputmode=tel")}</label></div>
  <div class="lbl" style="margin-top:12px">In-charge * <span class="note">(select one or more employees)</span></div>${clCloud("inc","inc")}
  <div class="grid" style="margin-top:12px"><label><span id="cladl">Address *</span>${clI("addr","Street, city, PIN")}</label><label>Country *<br>${clCombo("country","country")}</label></div>
  <div class="lbl" style="margin-top:12px">Compliances that apply</div>${mpHtml("cmp_main","Search compliances across all categories…")}`;if(!d.gmulti)mpRender("cmp_main")})}
 /* ---- validation and save ---- */
-function clValidate(){const d=CL.d,er=[];let warn="";
+function clValidate(){const d=CL.d,er=[];let warn="";clFix(d);
  if(!d.name.trim())er.push("Enter the client name.");
- [["gmulti","grows","GSTIN",1],["tmulti","trows","TAN",1],["dmulti","drows","GST TDS deductor number",clShowTds(d)],["cmulti","crows","GST TCS collector number",clShowTcs(d)]].forEach(([f,r,l,on])=>{if(on&&d[f]&&!d[r].length)er.push(`Add at least one ${l} row, or set “Having multiple…?” to No.`)});
- if(!/^[A-Z]{5}\d{4}[A-Z]$/.test(d.pan)&&((d.gst&&!d.gmulti)||(d.gmulti&&d.grows.length)))er.push("A GSTIN needs the client’s PAN. Enter a valid PAN, or clear the GSTIN.");
+ [["gmulti","grows","GSTIN",clShowGst(d)],["tmulti","trows","TAN",1],["dmulti","drows","GST TDS deductor number",clShowTds(d)],["cmulti","crows","GST TCS collector number",clShowTcs(d)]].forEach(([f,r,l,on])=>{if(on&&d[f]&&!d[r].length)er.push(`Add at least one ${l} row, or set “Having multiple…?” to No.`)});
+ if(clShowGst(d)&&!/^[A-Z]{5}\d{4}[A-Z]$/.test(d.pan)&&((d.gst&&!d.gmulti)||(d.gmulti&&d.grows.length)))er.push("A GSTIN needs the client’s PAN. Enter a valid PAN, or clear the GSTIN.");
  const pc=panCheck(d);
  if(!d.pan&&panReq(d))er.push("PAN is mandatory for a client in India, unless the only work is PAN registration"+(d.type=="Individual"||d.type=="Sole proprietor"?"":" or company incorporation")+".");
  if(pc.err)er.push(pc.err);if(pc.warn)warn=pc.warn;
  if(d.tan&&!d.tmulti&&!/^[A-Z]{4}\d{5}[A-Z]$/.test(d.tan))er.push("TAN should look like ABCD12345E (4 letters, 5 digits, 1 letter).");
  d.trows.forEach((r,i)=>{if(d.tmulti){if(!/^[A-Z]{4}\d{5}[A-Z]$/.test(r.no))er.push(`TAN row ${i+1}: should look like ABCD12345E.`);if(!r.addr.trim())er.push(`TAN row ${i+1}: enter the address.`);const p=r.ph?phCheck(r.cc,r.ph):{ok:1};if(!p.ok)er.push(`TAN row ${i+1}: ${p.msg}`)}});
- if(d.gst&&!d.gmulti){const m=regCheck(d.gst,d.pan,"Z","GSTIN");if(m)er.push(m)}
+ if(clShowGst(d)&&d.gst&&!d.gmulti){const m=regCheck(d.gst,d.pan,"Z","GSTIN");if(m)er.push(m)}
  if(d.gmulti){d.grows.forEach((r,i)=>{const n=`GSTIN row ${i+1}: `;
    if(!r.sc)er.push(n+"select the state code.");
    if(!/^[1-9A-Z]Z[0-9A-Z]$/.test(r.l3))er.push(n+"the last 3 digits are entity number, Z, and check character (like 1Z5).");
@@ -767,16 +862,25 @@ function clValidate(){const d=CL.d,er=[];let warn="";
    if(!r.contact.trim())er.push(n+"enter the contact person.");if(!r.desig)er.push(n+"select the designation.");
    const p=phCheck(r.cc,r.ph);if(!r.ph||!p.ok)er.push(n+(r.ph?p.msg:"enter the WhatsApp number."));
    if(!r.inc.length)er.push(n+"select at least one in-charge.");if(!r.addr.trim()&&addrReq(r.cmp))er.push(n+"enter the address.");if(!r.cmp.length)er.push(n+"select the compliances.")})}
- [["tds","dmulti","drows","D","GST TDS deductor number"],["tcs","cmulti","crows","C","GST TCS collector number"]].forEach(([k,mk,rk,mid,lb])=>{if(!(k=="tds"?clShowTds(d):clShowTcs(d)))return;
-  if(d[k]&&!d[mk]){const m=regCheck(d[k],d.pan,mid,lb);if(m)er.push(m)}
-  if(d[mk])d[rk].forEach((r,i)=>{const m=regCheck(r.no,d.pan,mid,`${lb} row ${i+1}`);if(m)er.push(m);if(!r.addr.trim())er.push(`${lb} row ${i+1}: enter the address.`);const p=r.ph?phCheck(r.cc,r.ph):{ok:1};if(!p.ok)er.push(`${lb} row ${i+1}: ${p.msg}`)})});
+ [["tds","dmulti","drows","GST TDS deductor number",tdsErr,clShowTds(d)&&clShowGst(d)],["tcs","cmulti","crows","GST TCS collector number",tcsErr,clShowTcs(d)]].forEach(([k,mk,rk,lb,f2,on])=>{if(!on)return;
+  if(d[k]&&!d[mk]){const m=f2(d[k],d,lb);if(m)er.push(m)}
+  if(d[mk])d[rk].forEach((r,i)=>{const m=f2(r.no,d,`${lb} row ${i+1}`);if(m)er.push(m);if(!r.addr.trim())er.push(`${lb} row ${i+1}: enter the address.`);const p=r.ph?phCheck(r.cc,r.ph):{ok:1};if(!p.ok)er.push(`${lb} row ${i+1}: ${p.msg}`)})});
+ {const m=clMulti(d),info=ridInfo(d.type),kind=clPeopleKind(d),rq=ridReq(d);
+  if(info){const kk=o=>ridKind(d,o);
+   if(m.common){const x=ridErr(kk(d),d.rid,d.type,rq,RIDL[kk(d)]);if(x)er.push(x)}
+   [["t","trows","TAN"],["g","grows","GSTIN"],["d","drows","GST TDS deductor number"],["c","crows","GST TCS collector number"]].forEach(([f,rk,l])=>{if(m[f])d[rk].forEach((r,i)=>{const x=ridErr(kk(r),r.rid,d.type,rq,`${l} row ${i+1}: ${RIDL[kk(r)]}`);if(x)er.push(x)})})}
+  if(kind){if(m.ppl)er.push(...clPeopleErr(d.dirs,kind,"",d.type));
+   [["g","grows","GSTIN"],["d","drows","GST TDS deductor number"],["c","crows","GST TCS collector number"]].forEach(([f,rk,l])=>{if(m[f])d[rk].forEach((r,i)=>er.push(...clPeopleErr(r.dirs||[],kind,`${l} row ${i+1}: `,d.type)))})}
+  if(UIN_T.includes(d.type)&&d.uin&&!RE.uin.test(d.uin))er.push("UIN should be 15 characters: 2-digit state code, then letters and digits (like 0717ABC00001UNA).")}
  {const bz=d.biz;if(!bz.na&&!bz.items.length&&!d.legacyNoBiz)er.push("Select the business description (or tick “Not applicable” if there is no business activity).");if(bz.items.length&&!bz.items.some(x=>x.p))er.push("Mark one business activity as Primary (★).")}
  if(!d.gmulti){if(!d.addr.trim()&&addrReq(d.cmp))er.push("Enter the client’s address (it is optional only when the compliance is GST registration).");const p=phCheck(d.cc,d.ph);if(!d.ph)er.push("Enter the client’s WhatsApp number.");else if(!p.ok)er.push(p.msg);if(!d.inc.length)er.push("Select at least one in-charge.");if(!d.country)er.push("Select the country.")}
  return {er,warn}}
-function clRecord(){const d=CL.d,fix=r=>({...r,ph:r.ph?phCheck(r.cc,r.ph).num:""});bizEnsure(d.biz);const tdsOn=clShowTds(d),tcsOn=clShowTcs(d);
- const rec={name:d.name.trim(),type:d.type,pan:d.pan,tan:d.tmulti?"":d.tan,tmulti:d.tmulti,tanRows:d.tmulti?d.trows.map(fix):[],gst:d.gmulti?"":d.gst,gmulti:d.gmulti,
-  gstRows:d.gmulti?d.grows.map(r=>({...fix(r),gstin:r.sc+d.pan+r.l3})):[],tds:tdsOn&&!d.dmulti?d.tds:"",dmulti:tdsOn?d.dmulti:0,tdsRows:tdsOn&&d.dmulti?d.drows.map(fix):[],tcs:tcsOn&&!d.cmulti?d.tcs:"",cmulti:tcsOn?d.cmulti:0,tcsRows:tcsOn&&d.cmulti?d.crows.map(fix):[],
-  contact:d.gmulti?"":d.contact,cc:d.cc,ph:d.gmulti?"":phCheck(d.cc,d.ph).num,incharge:d.gmulti?[]:d.inc,addr:d.gmulti?"":d.addr,country:d.gmulti?((d.grows[0]||{}).country||"IN"):d.country,cmp:d.gmulti?[]:d.cmp,cmpV:2,biz:d.biz.na?{na:1,items:[]}:{na:0,items:d.biz.items}};
+function clRecord(){const d=CL.d;clFix(d);bizEnsure(d.biz);const m=clMulti(d),info=ridInfo(d.type),kind=clPeopleKind(d),gOn=clShowGst(d),tdsOn=clShowTds(d)&&gOn,tcsOn=clShowTcs(d),gm=gOn&&d.gmulti?1:0,dm=tdsOn&&d.dmulti?1:0,cm=tcsOn&&d.cmulti?1:0;
+ const fix=(r,pp)=>({...r,ph:r.ph?phCheck(r.cc,r.ph).num:"",rk:info?ridKind(d,r):"",rid:info?ridNorm(r.rid,ridKind(d,r)):"",dirs:pp&&kind?(r.dirs||[]).map(x=>cleanPerson(x,kind)):[]});
+ const rec={name:d.name.trim(),type:d.type,pan:d.pan,tan:d.tmulti?"":d.tan,tmulti:d.tmulti,tanRows:d.tmulti?d.trows.map(r=>fix(r,0)):[],
+  gst:gOn&&!gm?d.gst:"",gmulti:gm,gstRows:gm?d.grows.map(r=>({...fix(r,1),gstin:r.sc+d.pan+r.l3})):[],tds:tdsOn&&!dm?d.tds:"",dmulti:dm,tdsRows:dm?d.drows.map(r=>fix(r,1)):[],tcs:tcsOn&&!cm?d.tcs:"",cmulti:cm,tcsRows:cm?d.crows.map(r=>fix(r,1)):[],
+  uin:UIN_T.includes(d.type)?d.uin:"",rk:info&&m.common?ridKind(d,d):"",rid:info&&m.common?ridNorm(d.rid,ridKind(d,d)):"",dirs:kind&&m.ppl?d.dirs.map(x=>cleanPerson(x,kind)):[],
+  contact:gm?"":d.contact,cc:d.cc,ph:gm?"":phCheck(d.cc,d.ph).num,incharge:gm?[]:d.inc,addr:gm?"":d.addr,country:gm?((d.grows[0]||{}).country||"IN"):d.country,cmp:gm?[]:d.cmp,cmpV:2,biz:d.biz.na?{na:1,items:[]}:{na:0,items:d.biz.items}};
  if(!d.pan)rec.pan="";return rec}
 async function clSave(){if(CL.busy)return;const {er,warn}=clValidate();CL.msg=er[0]||"";const box=$id("clmsg");
  if(er.length){box.innerHTML=er.slice(0,6).map(x=>"• "+esc(x)).join("<br>")+(er.length>6?`<br>…and ${er.length-6} more`:"");box.scrollIntoView({block:"center"});return}
@@ -796,9 +900,9 @@ async function clSave(){if(CL.busy)return;const {er,warn}=clValidate();CL.msg=er
  try{clNorm(saved);if(eid){const i=CL.list.findIndex(x=>x.id==eid);if(i>=0)CL.list[i]=saved;else CL.list.push(saved)}else CL.list.push(saved);clBridge()}catch(e){console.error(e)}
  CL.busy=0;CL.show=0;CL.editId=null;CL.d=clNew();CL.msg="";toast((eid?"Client updated":"Client added")+(wt.live?" and saved to Drive":""));render()}
 function clOpen(){CL.msg="";CL.editId=null;CL.d=clNew();CL.show=!CL.show;render()}
-function clFromRec(c){const R=(a,b)=>(a||[]).map(r=>({...b(),...r}));
- return {...clNew(),name:c.name,type:c.type,pan:c.pan||"",tan:c.tan||"",tmulti:c.tmulti?1:0,trows:R(c.tanRows,clBlankReg),gst:c.gst||"",gmulti:c.gmulti?1:0,grows:R(c.gstRows,clBlankRow),tds:c.tds||"",dmulti:c.dmulti?1:0,drows:R(c.tdsRows,clBlankReg),tcs:c.tcs||"",cmulti:c.cmulti?1:0,crows:R(c.tcsRows,clBlankReg),contact:c.contact||"",cc:c.cc||"IN",ph:c.ph||"",inc:c.incharge||[],addr:c.addr||"",country:c.country||"IN",cmp:[...(c.cmp||[])],biz:c.biz?JSON.parse(JSON.stringify(c.biz)):{na:0,items:[]},legacyNoBiz:!c.biz}}
-function clEdit(id){const c=CL.list.find(x=>x.id==id);if(!c)return;CL.d=clFromRec(c);CL.editId=id;CL.msg="";CL.show=1;render();setTimeout(()=>{const f=$id("clform");if(f)f.scrollIntoView({block:"start"})},50)}
+function clFromRec(c){const P1=x=>({...personBlank(),...x}),R=(a,b)=>(a||[]).map(r=>{const o={...b(),...r};o.dirs=(o.dirs||[]).map(P1);return o});
+ return {...clNew(),name:c.name,type:c.type,pan:c.pan||"",tan:c.tan||"",tmulti:c.tmulti?1:0,trows:R(c.tanRows,clBlankReg),gst:c.gst||"",gmulti:c.gmulti?1:0,grows:R(c.gstRows,clBlankRow),tds:c.tds||"",dmulti:c.dmulti?1:0,drows:R(c.tdsRows,clBlankReg),tcs:c.tcs||"",cmulti:c.cmulti?1:0,crows:R(c.tcsRows,clBlankReg),contact:c.contact||"",cc:c.cc||"IN",ph:c.ph||"",inc:c.incharge||[],addr:c.addr||"",country:c.country||"IN",cmp:[...(c.cmp||[])],biz:c.biz?JSON.parse(JSON.stringify(c.biz)):{na:0,items:[]},legacyNoBiz:!c.biz,legacyNoRid:!("rk" in c),rid:c.rid||"",rk:c.rk||"CIN",uin:c.uin||"",dirs:(c.dirs||[]).map(P1)}}
+function clEdit(id){const c=CL.list.find(x=>x.id==id);if(!c)return;CL.d=clFromRec(c);clFix(CL.d);CL.editId=id;CL.msg="";CL.show=1;render();setTimeout(()=>{const f=$id("clform");if(f)f.scrollIntoView({block:"start"})},50)}
 async function clDel(id){const c=CL.list.find(x=>x.id==id);if(!c||!confirm(`Delete ${c.name}?\n\nIt is removed from the client list. In Google Drive a copy is kept inside the clients file, so it can be recovered.`))return;
  if(wt.live){const r=await fn("clients",{action:"delete",id});if(r.error)return toast(r.error,1)}
  CL.list=CL.list.filter(x=>x.id!=id);if(CL.editId==id){CL.editId=null;CL.show=0;CL.d=clNew()}clBridge();toast("Client deleted");render()}
@@ -812,9 +916,9 @@ function clView(){
  const q=CL.q.toLowerCase(),sub="color:var(--mut);font-size:12px",canAdd=!wt.live||["managing_partner","partner","manager"].includes(wt.profile.app_role),canAdm=!wt.live||["managing_partner","partner"].includes(wt.profile.app_role);
  const all=c=>c.gmulti?c.gstRows.map(r=>r.gstin):[c.gst].filter(Boolean);
  const rows=CL.list.filter(c=>!q||(c.name+" "+(c.pan||"")+" "+all(c).join(" ")).toLowerCase().includes(q)).map(rowSafe(c=>{const g=all(c),r0=c.gmulti?c.gstRows[0]:c,pp=(CTM[r0.cc]||CTM.IN)[2],cm=(c.gmulti?clAllCmpOf(c):c.cmp).map(cmpName),bz=c.biz?(c.biz.na?"Business: not applicable":(()=>{const it=c.biz.items||[],pr=it.find(x=>x.p)||it[0];return pr?"Business: "+(pr.id?bizName(pr.id):pr.other)+(it.length>1?" (+"+(it.length-1)+" more)":""):""})()):"",inc=(c.gmulti?c.gstRows.flatMap(r=>r.inc):c.incharge).filter((x,i,a)=>a.findIndex(y=>y.id==x.id)==i);
-  return `<tr><td class="cl"><b>${esc(c.name)}</b><br><span style="${sub}">${esc(c.type)}</span>${bz?`<br><span style="${sub}">${esc(bz)}</span>`:""}</td><td>${esc(c.pan)||"–"}<br><span style="${sub}">${g.length>1?g.length+" GSTINs":g[0]||"No GSTIN"}</span></td><td>${esc(r0.contact)||"–"}${c.gmulti&&c.gstRows.length>1?` <span style="${sub}">(+${c.gstRows.length-1} more)</span>`:""}<br><span style="${sub}">+${pp} ${esc(r0.ph)}</span></td><td>${cm.map(x=>`<span class="pill" style="margin:0 4px 4px 0">${esc(x)}</span>`).join("")||"–"}</td><td>${esc(inc.map(x=>x.name).join(", "))||"–"}</td>${canAdd?`<td style="white-space:nowrap"><button class="btn ghost sm" onclick="clEdit('${c.id}')">Edit</button> <button class="btn ghost sm" onclick="clDel('${c.id}')">Delete</button></td>`:""}</tr>`})).join("")||`<tr><td colspan="6">${CL.list.length?"No clients match your search.":"No clients yet. Use “Onboard a client” to add the first one."}</td></tr>`;
+  return `<tr><td class="cl"><b>${esc(c.name)}</b><br><span style="${sub}">${esc(c.type)}</span>${bz?`<br><span style="${sub}">${esc(bz)}</span>`:""}</td><td>${esc(c.pan)||"–"}<br><span style="${sub}">${g.length>1?g.length+" GSTINs":g[0]||"No GSTIN"}</span>${c.rid?`<br><span style="${sub}">${RIDL[c.rk||"CIN"]||"ID"}: ${esc(c.rid)}</span>`:""}${c.uin?`<br><span style="${sub}">UIN: ${esc(c.uin)}</span>`:""}</td><td>${esc(r0.contact)||"–"}${c.gmulti&&c.gstRows.length>1?` <span style="${sub}">(+${c.gstRows.length-1} more)</span>`:""}<br><span style="${sub}">+${pp} ${esc(r0.ph)}</span></td><td>${cm.map(x=>`<span class="pill" style="margin:0 4px 4px 0">${esc(x)}</span>`).join("")||"–"}</td><td>${esc(inc.map(x=>x.name).join(", "))||"–"}</td>${canAdd?`<td style="white-space:nowrap"><button class="btn ghost sm" onclick="clEdit('${c.id}')">Edit</button> <button class="btn ghost sm" onclick="clDel('${c.id}')">Delete</button></td>`:""}</tr>`})).join("")||`<tr><td colspan="6">${CL.list.length?"No clients match your search.":"No clients yet. Use “Onboard a client” to add the first one."}</td></tr>`;
  const d=CL.d,form=CL.show?`<div class="card" id="clform"><b>${CL.editId?"Edit client":"Onboard a client"}</b>
-  <div class="grid" style="margin-top:10px"><label>Client name *<input data-p="name" value="${esc(d.name)}" onchange="clCh('name',this.value)"></label><label>Type<select onchange="clCh('type',this.value)">${CL_TYPES.map(t=>`<option ${t==d.type?"selected":""}>${t}</option>`).join("")}</select></label><label><span id="clpanl">PAN${panReq(d)?" *":" (optional)"}</span><input data-p="pan" value="${esc(d.pan)}" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase" onchange="clCh('pan',this.value)"><span id="clpanh" class="note">${d.country=="IN"?"":"PAN is mandatory only when the client’s country is India."}</span></label></div>
+  <div class="grid" style="margin-top:10px"><label>Client name *<input data-p="name" value="${esc(d.name)}" onchange="clCh('name',this.value)"></label><label>Type<select onchange="clCh('type',this.value)">${(CL_TYPES.includes(d.type)?CL_TYPES:[d.type,...CL_TYPES]).map(t=>`<option ${t==d.type?"selected":""}>${esc(t)}</option>`).join("")}</select></label><label><span id="clpanl">PAN${panReq(d)?" *":" (optional)"}</span><input data-p="pan" value="${esc(d.pan)}" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase" onchange="clCh('pan',this.value)"><span id="clpanh" class="note">${d.country=="IN"?"":"PAN is mandatory only when the client’s country is India."}</span></label></div>
   <div id="clregs" style="margin-top:10px"></div><div id="clbiz"></div><div id="clrest" style="margin-top:6px"></div>
   <div id="clmsg" class="err" style="margin-top:10px">${esc(CL.msg)}</div><div style="margin-top:12px"><button class="btn" id="clsave" onclick="clSave()">${CL.editId?"Save changes":"Add client"}</button> <button class="btn ghost" onclick="clOpen()">Close form</button></div></div>`:"";
  if(CL.show)setTimeout(()=>{clRegs();clBiz();clRest();clPanLbl()},0);
@@ -910,6 +1014,140 @@ async function mdTeamRefresh(){
  MD.tbusy=1;const r=await fn("workday",{action:"team",day:lDay()});MD.tbusy=0;
  if(r.data&&r.data.team&&r.data.team.lead){MD.s.team=r.data.team;const el=$id("mdteam");if(el)el.innerHTML=mdTeamHtml()}}
 
+/* ---------- Master Calendar: "Compliance deadlines" master + monthly / weekly calendar (2026 to 2100) ---------- */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"],MON3=MONTHS.map(x=>x.slice(0,3)),DOWS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const CALM={cfg:{fyStart:4,rows:[]},loaded:0,busy:0,err:"",view:"month",y:0,m:0,ws:null,edit:null,lbl:"",drive:true,reason:""};
+const calCreator=()=>wt.live?!!(wt.profile&&wt.profile.app_role=="managing_partner"):viewAs=="Partner";
+const calToday=()=>{const d=wt.live?new Date():new Date(TODAY);return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+const lastDay=(y,m)=>new Date(y,m,0).getDate();
+const ord=n=>{const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])};
+const fyStartYear=(d,s)=>d.getMonth()+1>=s?d.getFullYear():d.getFullYear()-1;
+const fyLabel=(d=new Date(),s=CALM.cfg.fyStart)=>{const y=fyStartYear(d,s);return s==1?"FY "+y:"FY "+y+"-"+String((y+1)%100).padStart(2,"0")};
+const calName=r=>r.label||cmpName(r.comp)||"Deadline";
+/* the day of the month on which row r falls in calendar month Y-M (0 when it does not) */
+function calDay(r,Y,M){const fyS=CALM.cfg.fyStart,dd=(y,m)=>r.last?lastDay(y,m):Math.min(+r.day||1,lastDay(y,m));
+ if(r.freq=="month")return(r.all!==false||(r.months||[]).includes(M))?dd(Y,M):0;
+ if(r.freq=="year")return M==+r.mon?dd(Y,M):0;
+ if(r.freq=="quarter"||r.freq=="half"){const A=Y*12+M-1,per=r.freq=="quarter"?3:6,n=r.freq=="quarter"?4:2,sel=r.freq=="quarter"?r.qs:r.hs;
+  for(let y0=Y-2;y0<=Y+1;y0++)for(let k=1;k<=n;k++){if(r.all===false&&!(sel||[]).includes(k))continue;if(y0*12+fyS-1+per*k-1+(+r.off||1)==A)return dd(Y,M)}}
+ return 0}
+function calGen(rows,from,to){const out=[];
+ rows.forEach(r=>{if(r.freq=="week")for(let d=new Date(from);d<=to;d.setDate(d.getDate()+1))if(d.getDay()==+r.wd)out.push({d:new Date(d),r})});
+ let y=from.getFullYear(),m=from.getMonth()+1;const ey=to.getFullYear(),em=to.getMonth()+1;
+ while(y<ey||(y==ey&&m<=em)){rows.forEach(r=>{if(r.freq=="week")return;const dd=calDay(r,y,m);if(dd){const d=new Date(y,m-1,dd);if(d>=from&&d<=to)out.push({d,r})}});m++;if(m>12){m=1;y++}}
+ return out.sort((a,b)=>a.d-b.d||calName(a.r).localeCompare(calName(b.r)))}
+function calText(r){const s=CALM.cfg.fyStart,day=()=>r.last?"the last day":"the "+ord(+r.day||1),dueM=(per,k)=>MON3[(s-1+per*k-1+(+r.off||1))%12];
+ if(r.freq=="week")return "Every "+DOWS[+r.wd||0];
+ if(r.freq=="month")return day()+" of "+(r.all!==false?"every month":(r.months||[]).map(x=>MON3[x-1]).join(", "));
+ if(r.freq=="year")return (r.last?"Last day of "+MONTHS[(+r.mon||1)-1]:ord(+r.day||1)+" "+MONTHS[(+r.mon||1)-1])+" every year";
+ const q=r.freq=="quarter",per=q?3:6,n=q?4:2,sel=q?r.qs:r.hs,ks=[...Array(n).keys()].map(i=>i+1).filter(k=>r.all!==false||(sel||[]).includes(k));
+ return `${day()} of the ${ord(+r.off||1)} month after the ${q?"quarter":"half-year"} ends (${ks.map(k=>dueM(per,k)).join(", ")||"none selected"})`}
+/* ---- loading / saving (the calendar lives in the firm's Drive; only the Managing Partner can change it) ---- */
+async function calLoad(){CALM.busy=1;const r=await fn("clients",{action:"cal_get"});CALM.busy=0;CALM.loaded=1;
+ if(r.error)CALM.err=r.error;else{CALM.err="";CALM.drive=r.data.drive!==false;CALM.reason=r.data.reason||"";if(r.data.calendar&&Array.isArray(r.data.calendar.rows))CALM.cfg={fyStart:r.data.calendar.fyStart||4,rows:r.data.calendar.rows}}
+ calBrand();if(cur=="upload"||cur=="master")render()}
+function calBrand(){const l=fyLabel();if(l!==CALM.lbl){CALM.lbl=l;if(typeof refreshBrand=="function")refreshBrand()}}
+setInterval(()=>{if(wt.live)calBrand()},60000);
+async function calPersist(cfg){if(wt.live){const r=await fn("clients",{action:"cal_set",calendar:cfg});if(r.error){toast(r.error,1);return false}}CALM.cfg=cfg;calBrand();return true}
+/* ---- calendar view ---- */
+function calInit(){const t=calToday();CALM.y=Math.min(2100,Math.max(2026,t.getFullYear()));CALM.m=t.getFullYear()<2026?1:t.getMonth()+1;CALM.ws=new Date(t.getFullYear(),t.getMonth(),t.getDate()-t.getDay());CALM.init=1}
+function calNav(d){if(CALM.view=="month"){let y=CALM.y,m=CALM.m+d;if(m<1){m=12;y--}if(m>12){m=1;y++}if(y<2026||y>2100)return;CALM.y=y;CALM.m=m}
+ else{const w=new Date(CALM.ws);w.setDate(w.getDate()+7*d);if(w<new Date(2025,11,26)||w>new Date(2100,11,31))return;CALM.ws=w}render()}
+function calJump(y,m){CALM.y=y;CALM.m=m;const f=new Date(y,m-1,1);CALM.ws=new Date(y,m-1,1-f.getDay());render()}
+function calToTodayBtn(){calInit();render()}
+function calView(){
+ if(wt.live&&!CALM.loaded){if(!CALM.busy)calLoad();return `<h1>Master Calendar</h1><div class="sub">Loading from Google Drive…</div>`}
+ if(wt.live&&CALM.err)return `<h1>Master Calendar</h1><div class="card"><b>The calendar could not be loaded</b><div class="sub" style="margin:8px 0">${esc(CALM.err)}</div><button class="btn" onclick="CALM.loaded=0;CALM.err='';render()">Try again</button></div>`;
+ if(wt.live&&!CALM.drive)return `<h1>Master Calendar</h1><div class="card"><b>Google Drive must be connected first</b><div class="sub" style="margin:8px 0">The compliance deadlines are kept in the firm’s Google Drive.${CALM.reason?"<br>"+esc(CALM.reason):""}</div></div>`;
+ if(!CALM.init)calInit();
+ const t=calToday(),rows=CALM.cfg.rows,mo=CALM.view=="month";let body="",title="";
+ if(mo){const Y=CALM.y,M=CALM.m,first=new Date(Y,M-1,1),n=lastDay(Y,M),items=calGen(rows,first,new Date(Y,M-1,n)),by={};items.forEach(i=>(by[i.d.getDate()]=by[i.d.getDate()]||[]).push(i));
+  title=`${MONTHS[M-1]} ${Y}`;let cells=DOWS.map(d=>`<div class="cdh">${d.slice(0,3)}</div>`).join("");
+  for(let i=0;i<first.getDay();i++)cells+=`<div class="cd off"></div>`;
+  for(let d=1;d<=n;d++){const l=by[d]||[],isT=t.getFullYear()==Y&&t.getMonth()+1==M&&t.getDate()==d;
+   cells+=`<div class="cd ${isT?"td":""}"><b>${d}</b>${l.slice(0,3).map(i=>calPill(i)).join("")}${l.length>3?`<span class="cmore" title="${esc(l.slice(3).map(i=>calName(i.r)).join(", "))}">+${l.length-3} more</span>`:""}</div>`}
+  body=`<div class="calg">${cells}</div>`}
+ else{const s=new Date(CALM.ws),e=new Date(s);e.setDate(e.getDate()+6);title=`${s.getDate()} ${MON3[s.getMonth()]} ${s.getFullYear()} – ${e.getDate()} ${MON3[e.getMonth()]} ${e.getFullYear()}`;
+  const items=calGen(rows,s,e);let cells="";
+  for(let i=0;i<7;i++){const d=new Date(s);d.setDate(s.getDate()+i);const l=items.filter(x=>+x.d==+d),isT=+d==+t;
+   cells+=`<div class="cd wk ${isT?"td":""}"><b>${DOWS[i].slice(0,3)} ${d.getDate()} ${MON3[d.getMonth()]}</b>${l.map(x=>calPill(x)).join("")||`<span class="note">–</span>`}</div>`}
+  body=`<div class="calw">${cells}</div>`}
+ const yrs=[];for(let y=2026;y<=2100;y++)yrs.push(y);
+ const curM=mo?CALM.m:(new Date(CALM.ws.getFullYear(),CALM.ws.getMonth(),CALM.ws.getDate()+3)).getMonth()+1,curY=mo?CALM.y:(new Date(CALM.ws.getFullYear(),CALM.ws.getMonth(),CALM.ws.getDate()+3)).getFullYear();
+ return `<h1>Master Calendar</h1><div class="sub">The firm’s compliance due dates. ${calCreator()?"Use “Compliance deadlines” to add or change them.":"Everyone can view the full calendar."}</div>
+ <div class="card row" style="gap:8px;flex-wrap:wrap"><div class="seg"><button class="btn ${mo?"":"ghost"} sm" onclick="CALM.view='month';render()">Monthly</button><button class="btn ${mo?"ghost":""} sm" onclick="CALM.view='week';render()">Weekly</button></div>
+  <button class="btn ghost sm" onclick="calNav(-1)" aria-label="Previous">◀</button><b style="min-width:150px;text-align:center">${title}</b><button class="btn ghost sm" onclick="calNav(1)" aria-label="Next">▶</button>
+  <select onchange="calJump(${curY},+this.value)">${MONTHS.map((x,i)=>`<option value="${i+1}" ${i+1==curM?"selected":""}>${x}</option>`).join("")}</select><select onchange="calJump(+this.value,${curM})">${yrs.map(y=>`<option ${y==curY?"selected":""}>${y}</option>`).join("")}</select>
+  <button class="btn ghost sm" onclick="calToTodayBtn()">Today</button>${calCreator()?`<button class="btn sm" onclick="calOpenMaster()" style="margin-left:auto">Compliance deadlines</button>`:""}</div>
+ <div class="card">${rows.length?"":`<div class="note" style="margin-bottom:8px">No deadlines have been set up yet.${calCreator()?" Use “Compliance deadlines” to add them.":""}</div>`}${body}</div>`}
+const calPill=i=>`<span class="cpl" title="${esc(calName(i.r)+" · "+(cmpName(i.r.comp)||"")+" · "+calText(i.r))}">${esc(calName(i.r))}</span>`;
+/* ---- "Compliance deadlines" master configuration (Managing Partner only) ---- */
+const CALNOTE="Due dates for Every quarter and Every 6 months are counted from the end of that period: with an April–March year, “1st month after the quarter ends” for the April–June quarter is July. Not applicable for Every week, Every month and Every year, where you pick the actual day or month. If a date does not exist in a month (for example the 31st in April) the last day of that month is used. Due dates never move for Sundays or holidays.";
+const calBlank=()=>({id:"d"+Math.random().toString(36).slice(2,9),comp:"",label:"",freq:"month",wd:1,day:15,last:0,all:true,months:[],qs:[],hs:[],off:1,mon:1});
+function calOpenMaster(){CALM.edit=null;let m=$id("calmodal");if(m)m.remove();m=document.createElement("div");m.className="mdl";m.id="calmodal";m.innerHTML=`<div class="mdc wide"><div class="row" style="justify-content:space-between"><b>Compliance deadlines</b><button class="btn ghost sm" onclick="$id('calmodal').remove();render()">Close</button></div><div id="calbody"></div></div>`;document.body.appendChild(m);calMr()}
+function calMr(){const e=$id("calbody");if(!e)return;const st=e.scrollTop,cfg=CALM.cfg,ed=CALM.edit,fy=cfg.fyStart;
+ const rows=cfg.rows.map((r,i)=>`<tr><td><b>${esc(calName(r))}</b>${r.label?`<br><small style="color:var(--mut)">${esc(cmpName(r.comp))}</small>`:""}</td><td>${{week:"Every week",month:"Every month",quarter:"Every quarter",half:"Every 6 months",year:"Every year"}[r.freq]}</td><td>${esc(calText(r))}</td><td style="white-space:nowrap"><button class="btn ghost sm" onclick="calEdit(${i})">Edit</button> <button class="btn ghost sm" onclick="calDel(${i})">Delete</button></td></tr>`).join("");
+ e.innerHTML=`<div class="note" style="margin:8px 0">${CALNOTE}</div>
+ <label style="max-width:360px">Financial year starts in<select onchange="calFy(+this.value)">${MONTHS.map((x,i)=>`<option value="${i+1}" ${i+1==fy?"selected":""}>${x}</option>`).join("")}</select></label><div class="note">The financial year runs ${MON3[fy-1]}–${MON3[(fy+10)%12]}, currently ${fyLabel()}. It changes automatically on the first day of the next financial year.</div>
+ <div class="tbl cltbl" style="margin-top:10px"><table><tr><th>Compliance</th><th>Frequency</th><th>Due date is</th><th>Save / Edit / Delete</th></tr>${rows||`<tr><td colspan="4"><span class="note">No deadlines yet.</span></td></tr>`}</table></div>
+ ${ed?calForm():`<div style="margin-top:10px"><button class="btn" onclick="CALM.edit=calBlank();CALM.idx=-1;calMr()">＋ Add deadline</button></div>`}`;e.scrollTop=st}
+async function calFy(v){const ok=await calPersist({...CALM.cfg,fyStart:v});if(ok){toast("Financial year updated");calMr()}else calMr()}
+function calEdit(i){CALM.edit=JSON.parse(JSON.stringify(CALM.cfg.rows[i]));CALM.idx=i;calMr()}
+async function calDel(i){if(!confirm("Delete this deadline?"))return;const rows=CALM.cfg.rows.filter((_,j)=>j!=i);if(await calPersist({...CALM.cfg,rows})){CALM.edit=null;calMr()}}
+function calE(k,v){CALM.edit[k]=v;calMr()}
+function calArr(k,n,on){const a=new Set(CALM.edit[k]);on?a.add(n):a.delete(n);CALM.edit[k]=[...a].sort((x,y)=>x-y);calMr()}
+function calForm(){const E=CALM.edit,s=CALM.cfg.fyStart,days=[...Array(31).keys()].map(i=>i+1),
+ dayCtl=(extra="")=>`<label>Date<select ${E.last?"disabled":""} onchange="calE('day',+this.value)">${days.map(d=>`<option ${d==E.day?"selected":""}>${d}</option>`).join("")}</select></label><label class="chk" style="align-self:end"><input type="checkbox" ${E.last?"checked":""} onchange="calE('last',this.checked?1:0)"> Last day${extra}</label>`,
+ qLbl=k=>`Q${k} (${MON3[(s-1+3*(k-1))%12]}–${MON3[(s-1+3*k-1)%12]})`,hLbl=k=>`H${k} (${MON3[(s-1+6*(k-1))%12]}–${MON3[(s-1+6*k-1)%12]})`,
+ chk=(k,n,l)=>`<label class="chk"><input type="checkbox" ${(E[k]||[]).includes(n)?"checked":""} onchange="calArr('${k}',${n},this.checked)"> ${l}</label>`;
+ let opt="";
+ if(E.freq=="week")opt=`<label>Day of the week<select onchange="calE('wd',+this.value)">${DOWS.map((d,i)=>`<option value="${i}" ${i==E.wd?"selected":""}>${d}</option>`).join("")}</select></label>`;
+ else if(E.freq=="month")opt=`<label class="chk"><input type="checkbox" ${E.all?"checked":""} onchange="calE('all',this.checked)"> Applies to every month</label>${E.all?"":`<div class="chips">${MONTHS.map((x,i)=>chk("months",i+1,x)).join("")}</div>`}<div class="grid">${dayCtl(" of the month")}</div>`;
+ else if(E.freq=="quarter"||E.freq=="half"){const q=E.freq=="quarter",n=q?4:2,per=q?"quarter":"half-year";
+  opt=`<label class="chk"><input type="checkbox" ${E.all?"checked":""} onchange="calE('all',this.checked)"> Applies to ${q?"every quarter":"both halves"}</label>${E.all?"":`<div class="chips">${[...Array(n).keys()].map(i=>chk(q?"qs":"hs",i+1,q?qLbl(i+1):hLbl(i+1))).join("")}</div>`}
+  <div class="grid"><label>Due in the<select onchange="calE('off',+this.value)">${[...Array(q?3:6).keys()].map(i=>`<option value="${i+1}" ${i+1==E.off?"selected":""}>${["first","second","third","fourth","fifth","sixth"][i]} month after the ${per} ends</option>`).join("")}</select></label>${dayCtl(" of that month")}</div>`}
+ else opt=`<div class="grid"><label>Month<select onchange="calE('mon',+this.value)">${MONTHS.map((x,i)=>`<option value="${i+1}" ${i+1==E.mon?"selected":""}>${x}</option>`).join("")}</select></label>${dayCtl(" of "+MONTHS[E.mon-1])}</div>`;
+ const groups=MS.comp.cats.map(c=>{const it=c.items.filter(i=>i.active||i.id==E.comp);return it.length?`<optgroup label="${esc(c.name)}">${it.map(i=>`<option value="${i.id}" ${i.id==E.comp?"selected":""}>${esc(i.name)}</option>`).join("")}</optgroup>`:""}).join("");
+ return `<div class="clblk"><b>${CALM.idx>=0?"Edit deadline":"New deadline"}</b>
+ <div class="grid"><label>Compliance *<select onchange="CALM.edit.comp=this.value;calMr()"><option value="">Select…</option>${groups}</select></label><label>Custom name (optional, shown in the calendar)<input value="${esc(E.label)}" maxlength="80" placeholder="e.g. GSTR-1" onchange="CALM.edit.label=this.value.trim();calMr()"></label>
+ <label>Frequency *<select onchange="calE('freq',this.value)">${[["week","Every week"],["month","Every month"],["quarter","Every quarter"],["half","Every 6 months"],["year","Every year"]].map(([v,l])=>`<option value="${v}" ${v==E.freq?"selected":""}>${l}</option>`).join("")}</select></label></div>
+ <div style="margin-top:8px">${opt}</div><div class="note" style="margin-top:8px"><b>Due date is:</b> ${esc(calText(E))}</div><div id="calerr" class="err"></div>
+ <div class="wrow" style="margin-top:8px"><button class="btn" id="calsave" onclick="calSaveRow()">Save</button><button class="btn ghost" onclick="CALM.edit=null;calMr()">Cancel</button></div></div>`}
+async function calSaveRow(){const E=CALM.edit,er=$id("calerr");
+ if(!E.comp)return er.textContent="Select the compliance.";
+ if(E.freq=="month"&&!E.all&&!E.months.length)return er.textContent="Select the applicable months.";
+ if(E.freq=="quarter"&&!E.all&&!E.qs.length)return er.textContent="Select the applicable quarters.";
+ if(E.freq=="half"&&!E.all&&!E.hs.length)return er.textContent="Select the applicable half.";
+ const rows=[...CALM.cfg.rows];if(CALM.idx>=0)rows[CALM.idx]=E;else rows.push(E);
+ const b=$id("calsave");b.disabled=true;b.textContent="Saving…";
+ if(await calPersist({...CALM.cfg,rows})){CALM.edit=null;toast("Deadline saved"+(wt.live?" to Drive":""))}
+ calMr()}
+/* ---- Master Compliance (live firm): upcoming due dates; employees see only the deadlines of their own clients ---- */
+const MC_RANGES=[["d5","Next 5 days"],["d10","Next 10 days"],["d15","Next 15 days"],["d30","Next 30 days"],["d60","Next 60 days"],["d90","Next 90 days"],["d180","Next 180 days"],["d365","Next 365 days"],["cm","Current month"],["cq","Current quarter"],["fy","Current financial year"]];
+const mcKey=()=>"wt_mc_"+((wt.profile&&wt.profile.user_id)||"u");
+const mcGet=()=>{try{return localStorage.getItem(mcKey())||"d30"}catch(_){return "d30"}};
+function mcSet(v){try{localStorage.setItem(mcKey(),v)}catch(_){}render()}
+function mcRange(v,t){const s=CALM.cfg.fyStart;
+ if(v[0]=="d"){const to=new Date(t);to.setDate(to.getDate()+ +v.slice(1));return [t,to]}
+ if(v=="cm")return [new Date(t.getFullYear(),t.getMonth(),1),new Date(t.getFullYear(),t.getMonth()+1,0)];
+ const y0=fyStartYear(t,s);if(v=="fy")return [new Date(y0,s-1,1),new Date(y0,s-1+12,0)];
+ const q=Math.floor((t.getFullYear()*12+t.getMonth()-(y0*12+s-1))/3);return [new Date(y0,s-1+3*q,1),new Date(y0,s-1+3*(q+1),0)]}
+/* the person themself plus everyone below them in the firm hierarchy */
+const mcTeamIds=()=>{const h=wt.hier||[],me=h.find(x=>x.user_id==(wt.profile||{}).user_id);if(!me)return [];const out=new Set([me.id]);let ch=true;while(ch){ch=false;h.forEach(x=>{if(x.parent_id&&out.has(x.parent_id)&&!out.has(x.id)){out.add(x.id);ch=true}})}return [...out]}
+const clIncAll=c=>[...(c.incharge||[]),...[c.gstRows,c.tanRows,c.tdsRows,c.tcsRows].flatMap(a=>(a||[]).flatMap(r=>r.inc||[]))].map(x=>x.id);
+const clCmpAll=c=>c.gmulti?[...new Set((c.gstRows||[]).flatMap(r=>r.cmp||[]))]:(c.cmp||[]);
+function mcLive(){
+ if(!CALM.loaded){if(!CALM.busy)calLoad();return `<h1>Master Compliance</h1><div class="sub">Loading from Google Drive…</div>`}
+ if(!CL.loaded){if(!CL.busy)clLoad();return `<h1>Master Compliance</h1><div class="sub">Loading from Google Drive…</div>`}
+ if(CALM.err||!CALM.drive)return `<h1>Master Compliance</h1><div class="card"><b>Master Compliance could not be loaded</b><div class="sub" style="margin:8px 0">${esc(CALM.err||CALM.reason||"Google Drive is not connected.")}</div><button class="btn" onclick="CALM.loaded=0;CALM.err='';render()">Try again</button></div>`;
+ const creator=calCreator(),t=calToday(),v=mcGet(),[from,to]=mcRange(v,t),team=mcTeamIds();
+ const mine=creator?CL.list:CL.list.filter(c=>clIncAll(c).some(i=>team.includes(i)));
+ const items=calGen(CALM.cfg.rows,from,to).map(i=>({...i,cl:mine.filter(c=>clCmpAll(c).includes(i.r.comp))})).filter(i=>creator||i.cl.length);
+ const rows=items.map(i=>{const n=Math.round((i.d-t)/864e5),nm=i.cl.map(c=>c.name);
+  return `<tr class="${n<0?"late":""}" style="${n<0?"opacity:.8":""}"><td>${fmt(i.d.getFullYear()+"-"+String(i.d.getMonth()+1).padStart(2,"0")+"-"+String(i.d.getDate()).padStart(2,"0"))}<br><small style="color:var(--mut)">${DOWS[i.d.getDay()]} · ${n<0?`<b style="color:var(--red,#b42318)">${-n} day${n==-1?"":"s"} ago (past due date)</b>`:n==0?"<b>today</b>":n==1?"tomorrow":"in "+n+" days"}</small></td><td><b>${esc(calName(i.r))}</b>${i.r.label?`<br><small style="color:var(--mut)">${esc(cmpName(i.r.comp))}</small>`:""}</td><td>${esc(calText(i.r))}</td><td>${nm.length?esc(nm.slice(0,creator?4:8).join(", "))+(nm.length>(creator?4:8)?` <small style="color:var(--mut)">+${nm.length-(creator?4:8)} more</small>`:""):`<span style="color:var(--mut)">No clients</span>`}${creator&&nm.length?`<br><small style="color:var(--mut)">${nm.length} client${nm.length>1?"s":""}</small>`:""}</td></tr>`}).join("")||`<tr><td colspan="4">No due dates in this period${creator?"":" for your clients"}.</td></tr>`;
+ return `<h1>Master Compliance</h1><div class="sub">${creator?"All deadlines in the master calendar, with the clients they apply to.":"Deadlines for the clients you and your team are in charge of."} A client is linked to a deadline through “Compliances that apply” on the client’s profile.</div>
+ <div class="card row"><label style="margin:0">Show<select onchange="mcSet(this.value)">${MC_RANGES.map(([k,l])=>`<option value="${k}" ${k==v?"selected":""}>${l}</option>`).join("")}</select></label><span class="note" style="margin:0">${fmt(from.getFullYear()+"-"+String(from.getMonth()+1).padStart(2,"0")+"-"+String(from.getDate()).padStart(2,"0"))} to ${fmt(to.getFullYear()+"-"+String(to.getMonth()+1).padStart(2,"0")+"-"+String(to.getDate()).padStart(2,"0"))} · this choice applies only to your own view${v[0]=="d"?"":" · earlier days of the period are shown as past due"}</span></div>
+ ${tbl(["Due","Deadline","Due date is","Clients"],rows)}`}
 async function boot(){
  applyAccent("blue-green");
  SB.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY"){RECOVERING=true;setTimeout(recoverUI,0)}});
