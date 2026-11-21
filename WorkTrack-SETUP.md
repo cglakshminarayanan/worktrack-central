@@ -116,3 +116,19 @@ After you save the new password, the app signs you out and signs you in again wi
 - Clients store IDs only (`bd…` for descriptions, e.g. `gst-monthly` for compliances), so renaming or moving an entry never changes a client.
   Entries can be deactivated but never removed; the server refuses a save that drops an existing entry.
 - Older client records that stored compliance names are converted to IDs when loaded, and saved in the new form the next time that client is edited.
+
+## My Tasks module (live)
+
+- New Edge Function `tasks` (deployed; nothing else was changed, no existing record touched). All task data lives in the Managing Partner's Drive, in `Employee Records / Work Records`:
+  - `wt-tasks-<FY start year>.json`: one file per financial year of creation (tasks, per-person progress, hours log, history).
+  - `wt-eod-<YYYY-MM>.json`: End-of-Day summaries, check-outs and early check-out authorisations for the whole firm, one file per month.
+  - `wt-taskcfg.json`: End-of-Day mandatory/optional, delegations, task permissions, firm holidays, approved leave.
+  - Every write is read back from Drive before it is reported as saved; writes are serialised with the same database lock the Clients function uses.
+- Nothing in Supabase changes. Task times use the firm clock (India time, Asia/Kolkata), which decides "today", the closing time and the check-out window.
+- Visibility: own tasks plus everyone below you in the hierarchy; the Managing Partner sees all. This includes people who have never logged in. Seeing is not changing: Task Settings (Managing Partner) grants, per person, assign / update team progress / edit-reassign-cancel / delete. People can always update their own tasks, and edit tasks they created themselves within their team.
+- Financial year: the title shows the current FY with a dropdown for earlier years. A task completed or cancelled in an earlier FY is locked. A task still open, or finished after the current FY began, stays editable from the current FY. Previous-year views are read-only.
+- My Day: task deadlines show as blue appointments (exact due time, otherwise the firm's start time). They are worked out from the task itself, so editing, moving, cancelling or deleting a task updates My Day automatically and duplicates cannot exist. Managers also see their team's (with names, can be switched off).
+- Attendance records are only read, never changed. After attendance is marked, the attendance card shows Check Out. It is unavailable before the closing time (or an authorised earlier time), and while a mandatory summary is pending, even after a refresh or sign-out. The server enforces this on every call. The Managing Partner is not held to the time or summary rule.
+- Workload: load = estimated remaining hours of open tasks due in the chosen period (plus overdue), capacity = firm hours on working days less holidays and approved leave. Overloaded above 100%, Moderate 60 to 100%, Available below 60%. Open tasks not updated for 3+ days (adjustable) show as "Not updated", never as available. Reallocation is suggestion-only.
+
+First real test (not possible from here, needs your Google Drive): sign in as Managing Partner, My Tasks, assign a task, update it, open My Day, then check that `wt-tasks-<year>.json` appears in Work Records.

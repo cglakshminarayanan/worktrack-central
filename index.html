@@ -87,6 +87,9 @@ tr.late{background:var(--badbg)}td.cl{color:var(--gold)}td.due.l{color:var(--bad
 #wt-toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1c1c1e;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:200;max-width:90vw;display:none}#wt-toast.bad{background:var(--bad)}
 .leaflet-container{font:inherit}
 .pwrap{display:flex;gap:6px;align-items:stretch;margin-top:4px}.pwrap input{flex:1;min-width:0;margin-top:0}.pwt{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:0 12px;font:inherit;font-size:13px;cursor:pointer}
+.wlb{height:14px;background:var(--bg);border:1px solid var(--line);border-radius:7px;position:relative;overflow:hidden;display:flex}.wlb i{display:block;height:100%}.wlb b{position:absolute;top:0;bottom:0;width:2px;background:var(--ink)}
+.mdappt.mdtask{background:var(--blue);color:var(--blueink);border:1px solid var(--blueink)}.mdappt.mdtask.done{opacity:.6;text-decoration:line-through}
+.fysel{font:inherit}
 </style>
 </head>
 <body>
@@ -339,7 +342,7 @@ function tsheetView(){const mgr=canSee('clients');
 function hook(n,pre,ok){const o=window[n];window[n]=function(...a){const s=pre(...a),r=o.apply(this,a);if(!ok||ok(s[1]))logAct(s[0]);return r}}
 const D=id=>{const e=document.getElementById(id);return e?e.value:''};
 [['send',(k,i)=>['Opened a WhatsApp reminder for '+(k=='inv'?invs:comp)[i][0],Object.keys(sent).length],n=>Object.keys(sent).length>n],['submitWk',()=>[tsStatus=='Draft'?'Submitted the timesheet for 02–08 Nov':'Withdrew the timesheet for 02–08 Nov']],['decide',(i,s)=>[s+' the timesheet of '+approvals[i][0]]],['decideLv',(i,s)=>[s+' leave for '+lv[i][0]]],['submitLeave',()=>['Requested '+D('l_type')+' leave from '+D('l_from')+' to '+D('l_to')],()=>lvMsg==''],['addClient',()=>['Onboarded client '+D('c_name')],()=>cmsg==''],['raiseInv',()=>['Raised an invoice for '+D('i_cl')],()=>invMsg==''],['recRcpt',()=>['Recorded a receipt on '+D('r_inv')],()=>invMsg==''],['invite',()=>['Invited '+D('u_email')+' as '+D('u_role')],()=>umsg==''],['setRole',(i,v)=>[users[i][0]+' is now '+v],()=>umsg==''],['toggleUser',i=>[(users[i][3]=='Disabled'?'Enabled':'Disabled')+' the account of '+users[i][0]],()=>umsg==''],['applyUp',r=>[(r?'Replaced':'Added to')+' the master compliance calendar',!!(upRes&&upRes.ok.length)],s=>s],['setTask',(i,k)=>['Moved “'+tasks[i][3]+'” to '+STAT[k]]],['assignTask',()=>['Assigned a task to '+D('t_who')],()=>tkMsg==''],['setRate',i=>['Changed the hourly rate of '+PEOPLE[i]],()=>rmsg==''],['addFee',()=>['Added the fee item '+D('f_n')],()=>rmsg==''],['upDocs',inp=>['Added '+inp.files.length+' document(s) for '+D('d_cl'),inp.files.length],n=>n>0]].forEach(h=>hook(...h));
-const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clView(),master:()=>wt.live?mcLive():masterView(),upload:()=>calView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
+const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clView(),master:()=>wt.live?mcLive():masterView(),upload:()=>calView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>wt.live?tkLive():tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
 function render(){let h;try{h=(V[cur]||(()=>stub(cur)))()}catch(e){console.error(e);h=`<h1>${esc(String(cur))}</h1><div class="card"><b>This page could not be displayed</b><div class="sub" style="margin:8px 0">${esc(e&&e.message||String(e))}</div><button class="btn" onclick="render()">Try again</button></div>`}view.innerHTML=h;nav()}
 /* ===== WorkTrack: sign-in, firm registration, hierarchy, settings, Drive ===== */
 const SB_URL="https://ozbfdawgrfdlnrvdneoi.supabase.co";
@@ -413,6 +416,7 @@ function wipeSample(){
  PEOPLE.length=0;PEOPLE.push(ME);rates[ME]=0;RATE=0;
  users.push([ME,wt.profile.email,wt.profile.app_role=="staff"?"Staff":wt.profile.app_role=="manager"?"Manager":"Partner","Active"]);
  tkD.who=ME;tkD.cl="";dwD=TOD;
+ TK.loaded=0;TK.d=null;TK.sel=null;TK.eod=null;TK.show=0;TK.fv=null;TK.sc=null;TK.wl=null;TK.co=null;TK.det=null;TK.err="";MD.tk=null;
  {const mo=new Date(TODAY);mo.setDate(mo.getDate()-((mo.getDay()+6)%7));const nm=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   for(let i=0;i<7;i++){const d=new Date(mo);d.setDate(mo.getDate()+i);WEEK[i]=nm[i]+" "+z2(d.getDate())}
   const e=new Date(mo);e.setDate(mo.getDate()+6);WKLBL=z2(mo.getDate())+(mo.getMonth()==e.getMonth()?"":" "+M[mo.getMonth()])+"–"+z2(e.getDate())+" "+M[e.getMonth()]+" "+e.getFullYear()}
@@ -422,10 +426,10 @@ function goLive(){
  refreshBrand();calLoad();
  $id("topname").textContent=f.name;$id("prevLbl").style.display="none";
  viewAs={managing_partner:"Partner",partner:"Partner",manager:"Manager",staff:"Staff"}[wt.profile.app_role];
- $id("demoNote").textContent="Signed in as "+wt.profile.full_name+". Sign-in, firm settings, hierarchy, Drive, employee logins and My Day are live. Task, timesheet, invoice and other work pages still show sample data until the firm database is connected.";
+ $id("demoNote").textContent="Signed in as "+wt.profile.full_name+". Sign-in, firm settings, hierarchy, Drive, employee logins and My Day are live. Clients, Master Compliance and My Tasks (with My Day appointments, work summaries and check-out) are live and saved in the firm\u2019s Google Drive. Timesheet, invoice and other work pages still show sample data until they are connected.";
  const h=location.hash.match(/drive=(\w+)(?:&reason=(\w+))?/);let note=null;
  if(h){note=h[1]=="connected"?["Google Drive connected and verified.",0]:["Drive was not connected: "+(DRV_ERR[h[2]]||"unknown error")+".",1];history.replaceState(null,"",location.pathname+location.search)}
- cur=(h&&canSee("settings"))?"settings":"myday";ovHide();nav();render();if(note)toast(note[0],note[1])}
+ cur=(h&&canSee("settings"))?"settings":"myday";ovHide();nav();render();if(note)toast(note[0],note[1]);setTimeout(()=>{if(!TK.loaded&&!TK.busy)tkLoad()},0)}
 
 /* ---------- registration wizard ---------- */
 const W={step:0,signed:false,accent:"blue-green",f:{name:"",address:"",pname:"",phone:"",desig:"Managing Partner",email:"",pw:"",open:"09:30",close:"18:00",days:[1,2,3,4,5,6]},loc:{lat:null,lng:null,r:150},nodes:[],hadDraft:false};
@@ -693,7 +697,7 @@ function clSet(p,v){const a=clPath(p);let o=CL.d;for(let i=0;i<a.length-1;i++)o=
 function clSeed(){if(CL.seeded||wt.live)return;CL.seeded=1;const tm={"Company":"Private Co.","Proprietor":"Sole proprietor","Trust":"Trust (Private / Charitable)"};CL.list=cdata.map(c=>clNorm({id:c[0],name:c[0],type:tm[c[1]]||c[1],pan:c[2],gst:c[3],gmulti:0,gstRows:[],contact:c[4],cc:CTN[(clients[c[0]]||[])[0]]||"IN",ph:(clients[c[0]]||[])[1]||"",incharge:[{id:c[6],name:c[6]}],cmp:c[5],country:"IN",addr:""}))}
 async function clLoad(){CL.busy=1;const r=await fn("clients",{action:"list"});CL.busy=0;CL.loaded=1;
  if(r.error){CL.err=r.error}else{CL.err="";CL.drive=r.data.drive!==false;CL.reason=r.data.reason||"";msLoad(r.data.masters);CL.list=(r.data.clients||[]).map(clNorm);clBridge()}
- if(cur=="clients"||cur=="master")render()}
+ if(cur=="clients"||cur=="master"||(cur=="tasks"&&wt.live))render()}
 /* other pages still read the older cdata / clients lookups */
 function clBridge(){cdata.length=0;Object.keys(clients).forEach(k=>delete clients[k]);
  CL.list.forEach(c=>{try{const g1=c.gmulti?(c.gstRows[0]||{}):c,ph=c.gmulti?(c.gstRows[0]||{}):c;
@@ -935,7 +939,7 @@ async function mdLoad(){
  MD.busy=1;MD.day=lDay();
  const r=await fn("workday",{action:"state",day:MD.day});
  MD.busy=0;MD.loaded=1;
- if(r.error){MD.err=r.error}else{MD.err="";MD.s=r.data;mdSub()}
+ if(r.error){MD.err=r.error}else{MD.err="";MD.s=r.data;mdSub();if(r.data.drive){mdTkDay();tkEodLoad();if(!TK.loaded&&!TK.busy)tkLoad()}}
  if(cur=="myday")render()}
 function mdLive(){
  const p=wt.profile,mp=p.app_role=="managing_partner";
@@ -947,19 +951,25 @@ function mdLive(){
  const att=s.me.att,rule=mp?"As Managing Partner you can mark attendance from any place. Your current location is recorded.":(s.firm.hasOffice?`You must be within ${s.firm.r} m of the office. Your location is checked when you mark attendance.`:"The Managing Partner has not pinned the office location yet, so attendance cannot be verified.");
  const top=att?"":`<div class="card row"><div><div class="lbl">Attendance</div><div class="big">Not marked yet</div><div class="sub" style="margin:4px 0 0">${rule}</div></div><button class="btn" id="attbtn" onclick="mdAtt()">Mark attendance</button></div>`;
  const tm=s.team&&s.team.lead?`<div id="mdteam">${mdTeamHtml()}</div>`:"";
- const bottom=att?`<div class="card"><b>✔ Attendance marked at ${esc(att.hm)}</b>${att.dist!=null?`<div class="sub" style="margin:4px 0 0">${att.dist} m from the office${att.inside?"":" (outside the geofence)"}</div>`:""}</div>`:"";
+ const bottom=att?`<div class="card"><b>✔ Attendance marked at ${esc(att.hm)}</b>${att.dist!=null?`<div class="sub" style="margin:4px 0 0">${att.dist} m from the office${att.inside?"":" (outside the geofence)"}</div>`:""}<div id="mdco">${mdCoHtml()}</div></div>`:"";
  setTimeout(()=>{const e=$id("mdscroll");if(e){e.scrollLeft=MD.sl!=null?MD.sl:Math.max(0,(hmMin(lHM())/30)*MDW-140);e.onscroll=()=>{MD.sl=e.scrollLeft}}},0);
- return head+top+mdTimeline()+mdTimer(att)+tm+bottom}
+ return head+`<div id="mdbn">${mdBanner()}</div>`+top+`<div id="mdtlwrap">${mdTimeline()}</div>`+mdTimer(att)+tm+bottom}
 function mdTimeline(){
- const tl=[...MD.s.me.tl].sort((a,b)=>hmMin(a.s)-hmMin(b.s)),lanes=[];
- const blocks=tl.map(x=>{let l=0;while(lanes[l]!==undefined&&lanes[l]>hmMin(x.s))l++;lanes[l]=hmMin(x.e);return {x,l}});
+ const own=MD.s.me.tl.map(x=>({x,k:"a"})),showT=MD.tkTeam!==0,all=MD.tk||[];
+ const tkI=all.filter(i=>i.self||showT).map(i=>{const m=Math.min(hmMin(i.t)+30,23*60+59);return {x:{id:i.id+"|"+i.mid,s:i.t,e:mdp(Math.floor(m/60))+":"+mdp(m%60),t:i.title},k:"t",i}});
+ const tl=[...own,...tkI].sort((a,b)=>hmMin(a.x.s)-hmMin(b.x.s)),lanes=[];
+ const blocks=tl.map(o=>{let l=0;while(lanes[l]!==undefined&&lanes[l]>hmMin(o.x.s))l++;lanes[l]=hmMin(o.x.e);return {...o,l}});
  const H=30+Math.max(1,lanes.length)*40+8;
  let slots="";for(let i=0;i<48;i++){const m=i%2?"30":"00";slots+=`<div class="mdslot${m=="00"?" h":""}" style="left:${i*MDW}px;width:${MDW}px;height:${H}px" onclick="mdSlot(${i*30})"><span>${m=="00"?mdp(i/2)+":00":m}</span></div>`}
- const bl=blocks.map(({x,l})=>`<div class="mdappt" style="left:${hmMin(x.s)/30*MDW+2}px;width:${Math.max(30,(hmMin(x.e)-hmMin(x.s))/30*MDW-4)}px;top:${30+l*40}px" title="${esc(x.t)} · ${x.s}–${x.e}" onclick="mdEdit('${x.id}')"><b>${esc(x.t)}</b><small>${x.s}–${x.e}</small></div>`).join("");
+ const bl=blocks.map(o=>{const x=o.x,pos=`left:${hmMin(x.s)/30*MDW+2}px;width:${Math.max(30,(hmMin(x.e)-hmMin(x.s))/30*MDW-4)}px;top:${30+o.l*40}px`;
+  if(o.k=="a")return `<div class="mdappt" style="${pos}" title="${esc(x.t)} \u00B7 ${x.s}\u2013${x.e}" onclick="mdEdit('${x.id}')"><b>${esc(x.t)}</b><small>${x.s}\u2013${x.e}</small></div>`;
+  const i=o.i;return `<div class="mdappt mdtask${i.done?" done":""}" style="${pos}" title="Task due ${i.t}: ${esc(i.title)}${i.self?"":" \u00B7 "+esc(i.name)}" onclick="tkOpenFromDay('${i.id}')"><b>${i.done?"\u2713 ":"\u23F0 "}${esc(i.title)}</b><small>${esc(i.cl||"Internal")}${i.self?"":" \u00B7 "+esc(i.name)}</small></div>`}).join("");
  const now=`<div class="mdnow" style="left:${hmMin(lHM())/30*MDW}px;height:${H}px"></div>`;
- const f=MD.form,list=tl.map(x=>`<tr><td>${x.s}–${x.e}</td><td>${esc(x.t)}</td><td style="text-align:right"><button class="btn ghost sm" onclick="mdEdit('${x.id}')">Edit</button> <button class="btn ghost sm" onclick="mdDel('${x.id}')">Remove</button></td></tr>`).join("");
- const form=MD.showForm?`<div class="grid" style="margin-top:10px"><label>Appointment / meeting<input id="mdt" maxlength="120" value="${esc(f.t)}" placeholder="e.g. Audit meeting with client"></label><label>From<input id="mds" type="time" value="${f.s}"></label><label>To<input id="mde" type="time" value="${f.e}"></label></div><div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdTlSave()">${f.id?"Save changes":"Add to timeline"}</button><button class="btn ghost sm" onclick="MD.showForm=0;render()">Cancel</button></div><div id="mderr" class="err"></div>`:`<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdSlot(Math.ceil(hmMin(lHM())/30)*30)">＋ Add appointment</button></div>`;
- return `<div class="card"><b>Today’s appointments</b><div class="sub" style="margin:4px 0 8px">Each box is 30 minutes. Tap a time to add a meeting there, or tap an appointment to change it.</div><div class="mdscroll" id="mdscroll"><div class="mdtl" style="width:${48*MDW}px;height:${H}px">${slots}${bl}${now}</div></div>${list?`<div class="tbl" style="margin-top:10px"><table>${list}</table></div>`:`<div class="note" style="margin-top:8px">No appointments scheduled today.</div>`}${form}</div>`}
+ const f=MD.form,list=tl.map(o=>{const x=o.x;if(o.k=="a")return `<tr><td>${x.s}\u2013${x.e}</td><td>${esc(x.t)}</td><td style="text-align:right"><button class="btn ghost sm" onclick="mdEdit('${x.id}')">Edit</button> <button class="btn ghost sm" onclick="mdDel('${x.id}')">Remove</button></td></tr>`;
+  const i=o.i;return `<tr><td>${i.t}</td><td>${i.done?"\u2713 ":""}<b>${esc(i.title)}</b> <span class="pill ${i.done?"g":"a"}">Task ${i.done?"completed":"due"}</span><br><small style="color:var(--mut)">${esc(i.cl||"Internal")}${i.asg?" \u00B7 "+esc(i.asg):""}${i.self?"":" \u00B7 "+esc(i.name)}${i.tm?"":" \u00B7 shown at the firm\u2019s start time"}</small></td><td style="text-align:right"><button class="btn ghost sm" onclick="tkOpenFromDay('${i.id}')">Open</button></td></tr>`}).join("");
+ const hasTeam=all.some(i=>!i.self),tog=hasTeam?`<label class="chk" style="margin:6px 0"><input type="checkbox" ${showT?"checked":""} onchange="MD.tkTeam=this.checked?1:0;mdTlRefresh()"> Show my team\u2019s task deadlines</label>`:"";
+ const form=MD.showForm?`<div class="grid" style="margin-top:10px"><label>Appointment / meeting<input id="mdt" maxlength="120" value="${esc(f.t)}" placeholder="e.g. Audit meeting with client"></label><label>From<input id="mds" type="time" value="${f.s}"></label><label>To<input id="mde" type="time" value="${f.e}"></label></div><div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdTlSave()">${f.id?"Save changes":"Add to timeline"}</button><button class="btn ghost sm" onclick="MD.showForm=0;render()">Cancel</button></div><div id="mderr" class="err"></div>`:`<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="mdSlot(Math.ceil(hmMin(lHM())/30)*30)">+ Add appointment</button></div>`;
+ return `<div class="card"><b>Today\u2019s appointments</b><div class="sub" style="margin:4px 0 8px">Each box is 30 minutes. Tap a time to add a meeting there, or tap an appointment to change it. Task deadlines (blue) appear automatically at their due time, or at the firm\u2019s start time when none is set.</div>${tog}<div class="mdscroll" id="mdscroll"><div class="mdtl" style="width:${48*MDW}px;height:${H}px">${slots}${bl}${now}</div></div>${list?`<div class="tbl" style="margin-top:10px"><table>${list}</table></div>`:`<div class="note" style="margin-top:8px">No appointments scheduled today.</div>`}${form}</div>`}
 function mdTimer(att){
  const run=MD.s.me.run,locked=!att;
  const cur=run?`<div class="note" style="margin:10px 0;background:var(--blue)"><b>Working on:</b> ${esc(run.t)}${run.c?" · "+esc(run.c):""}${run.k?" · "+esc(run.k):""}<br>Started ${new Date(run.s).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}${run.day!=MD.day?" (yesterday)":""} · <b id="runel">00:00:00</b> <button class="btn ghost sm" onclick="mdStop()">Stop</button></div>`:"";
@@ -988,7 +998,7 @@ async function mdAtt(){
  catch(e){back();return toast("Your location is needed to mark attendance. Allow location access for this site in the browser and try again.",1)}
  if(b)b.textContent="Saving to Drive…";MD.busy=0;
  const d=await mdCall({action:"attendance",hm:lHM(),at:new Date().toISOString(),lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy});
- if(!d){back();return}toast("Attendance marked at "+MD.s.me.att.hm);render()}
+ if(!d){back();return}toast("Attendance marked at "+MD.s.me.att.hm);tkEodLoad();render()}
 function mdSlot(min){const a=Math.min(min,23*60+30),e=Math.min(a+30,23*60+59),f=m=>mdp(Math.floor(m/60))+":"+mdp(m%60);MD.form={id:"",t:"",s:f(a),e:f(e)};MD.showForm=1;render();const i=$id("mdt");if(i)i.focus()}
 function mdEdit(id){const x=MD.s.me.tl.find(y=>y.id==id);if(!x)return;MD.form={id:x.id,t:x.t,s:x.s,e:x.e};MD.showForm=1;render();const i=$id("mdt");if(i)i.focus()}
 async function mdTlSave(){
@@ -1148,6 +1158,459 @@ function mcLive(){
  return `<h1>Master Compliance</h1><div class="sub">${creator?"All deadlines in the master calendar, with the clients they apply to.":"Deadlines for the clients you and your team are in charge of."} A client is linked to a deadline through “Compliances that apply” on the client’s profile.</div>
  <div class="card row"><label style="margin:0">Show<select onchange="mcSet(this.value)">${MC_RANGES.map(([k,l])=>`<option value="${k}" ${k==v?"selected":""}>${l}</option>`).join("")}</select></label><span class="note" style="margin:0">${fmt(from.getFullYear()+"-"+String(from.getMonth()+1).padStart(2,"0")+"-"+String(from.getDate()).padStart(2,"0"))} to ${fmt(to.getFullYear()+"-"+String(to.getMonth()+1).padStart(2,"0")+"-"+String(to.getDate()).padStart(2,"0"))} · this choice applies only to your own view${v[0]=="d"?"":" · earlier days of the period are shown as past due"}</span></div>
  ${tbl(["Due","Deadline","Due date is","Clients"],rows)}`}
+
+/* ---------- My Tasks (live firm): tasks, workload, work summaries, reports ----------
+   Tasks live in the firm's Google Drive (function "tasks"). Visibility, permissions, the FY lock and the check-out rules are
+   enforced by the server; the page only shows what the server returns and never decides access by itself. */
+const TK={loaded:0,busy:0,err:"",d:null,tab:"list",sel:null,f:{view:"all",q:"",emp:"",cl:"",asg:"",st:"",due:"",df:"",dt:""},sort:{k:"due",d:1},show:0,msg:"",det:null,eod:null,wl:null,rep:{k:"emp",month:"",data:null,busy:0,err:""},sum:{from:"",to:"",mid:"",rows:null,busy:0,msg:""},cfgBusy:0,co:null,nf:0,tm:null};
+const TKST={ns:"Not Started",ip:"In Progress",pc:"Pending \u2013 Client",pi:"Pending \u2013 Internal",ok:"Completed",oh:"On Hold"},TKSC={ns:"",ip:"",pc:"a",pi:"a",ok:"g",oh:"a"},TKPR={normal:"Normal",high:"High",urgent:"Urgent"};
+const tkToday=()=>(TK.d&&TK.d.today)||lDay();
+const tkDt=d=>d?d.slice(8,10)+"/"+d.slice(5,7)+"/"+d.slice(2,4):"";
+const tkAdd=(d,n)=>{const x=new Date(d+"T12:00:00Z");x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)};
+const tkDiff=(a,b)=>Math.round((Date.parse(a+"T12:00:00Z")-Date.parse(b+"T12:00:00Z"))/864e5);
+const tkH=n=>String(Math.round(n*100)/100);
+const tkFyLbl=y=>{const s=TK.d?TK.d.fy.s:4;return s==1?"FY "+y:"FY "+y+"-"+String((y+1)%100).padStart(2,"0")};
+const tkNm=m=>{const h=(wt.hier||[]).find(x=>x.id==m);return h?h.name:"Former employee"};
+const tkMe=()=>TK.d.me.mid;
+const tkMP=()=>!!(TK.d&&TK.d.me.mp);
+const tkTeam=()=>new Set(mcTeamIds().filter(x=>x!=tkMe()));
+const tkLead=()=>tkMP()||tkTeam().size>0;
+const tkRo=()=>!!(TK.d&&TK.d.fy.sel<TK.d.fy.cur);
+const tkRows=()=>{const o=[];if(TK.d)for(const t of TK.d.tasks)for(const a of t.as)o.push({t,a});return o};
+const tkOpenR=r=>!r.t.can&&r.a.st!="ok";
+const tkLate=r=>tkOpenR(r)&&r.t.due<tkToday();
+const tkSoon=r=>tkOpenR(r)&&!tkLate(r)&&r.t.due<=tkAdd(tkToday(),2);
+const tkRemain=(t,a)=>a.st=="ok"?0:a.remain!=null?a.remain:Math.max(0,t.est-a.spent);
+/* ---- loading ---- */
+async function tkLoad(fy){
+ TK.busy=1;const r=await fn("tasks",{action:"list",fy:fy!=null?fy:(TK.sel!=null?TK.sel:undefined)});TK.busy=0;TK.loaded=1;
+ if(r.error){TK.err=r.error}else if(r.data.drive===false){TK.err=r.data.reason||"Google Drive is not connected. Tasks are saved in the firm's Google Drive, so the Managing Partner must connect it first (Settings)."}
+ else{TK.err="";TK.d=r.data;TK.sel=r.data.fy.sel;if(r.data.fy.sel==r.data.fy.cur)tkBridge();if(MD&&MD.s)mdTkDay();if(TK.tab=="sum"&&!TK.eod&&!TK.sum.busy)tkSumInit();if(TK.tab=="set")tkCoLoad()}
+ if(!CL.loaded&&!CL.busy&&wt.live)clLoad();
+ if(cur=="tasks"||cur=="home"||cur=="ts"||cur=="mon"||cur=="dws")render();else if(cur=="myday")mdPatch();else nav()}
+/* the older Home / Work Monitor / Task Sheet pages read a simple list: keep it in step with the real tasks of the current FY */
+function tkBridge(){tasks.length=0;if(!TK.d)return;const me=tkMe();
+ for(const t of TK.d.tasks){if(t.can)continue;for(const a of t.as)tasks.push([a.mid==me?ME:a.name,t.cl?t.cl.name:"",t.asg||(t.cat?t.cat.name:"")||"Internal",t.title,t.due,a.st=="ok"?"Completed":TKST[a.st],tkH(a.spent)+" / "+tkH(t.est)])}}
+function tkFy(v){TK.sel=+v;TK.det=null;TK.loaded=0;render()}
+/* ---- searchable dropdown (single or multi) ---- */
+const SS={};
+function ss(id,o){SS[id]=o;return `<button type="button" class="cbb" id="ss_${id}" onclick="ssOpen('${id}',this)" style="width:100%;justify-content:space-between;margin-top:4px;text-align:left"><span class="ssl" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(ssLbl(id))}</span><span> \u25BE</span></button>`}
+function ssLbl(id){const o=SS[id],v=o.val;if(o.multi){const n=(v||[]).map(x=>(o.opts.find(y=>y.v==x)||{}).l).filter(Boolean);return n.length?n.join(", "):o.ph}const x=o.opts.find(y=>y.v==v&&!y.g);return x&&v!==""?x.l:o.ph}
+function ssOpen(id,btn){cbClose();const o=SS[id],r=btn.getBoundingClientRect(),el=document.createElement("div");el.className="cbp";el.id="cbpanel";el._btn=btn;el.dataset.ss=id;
+ const w=Math.max(280,Math.min(r.width,420)),left=Math.max(8,Math.min(r.left,innerWidth-w-8));el.style.width=w+"px";el.style.left=left+"px";
+ const down=innerHeight-r.bottom>300||r.top<300;if(down)el.style.top=(r.bottom+4)+"px";else el.style.bottom=(innerHeight-r.top+4)+"px";
+ el.innerHTML=`<input id="cbq" placeholder="Search\u2026" autocomplete="off" oninput="ssFilter(this.value)"><div class="cbl" id="cbl"></div>`;document.body.appendChild(el);ssList(id);$id("cbq").focus()}
+function ssList(id){const o=SS[id];let g="",h="";o.opts.forEach((x,i)=>{
+  if(x.g){h+=`<div class="note" data-g="1" style="margin:6px 4px 2px;font-weight:600">${esc(x.l)}</div>`;return}
+  const on=o.multi?(o.val||[]).includes(x.v):o.val===x.v;
+  h+=`<div class="cbi" data-s="${esc((x.l+" "+(x.sub||"")+" "+(x.grp||"")).toLowerCase())}" onclick="ssPick('${id}',${i})"><span>${o.multi?(on?"\u2611 ":"\u2610 "):(on?"\u2713 ":"")}${esc(x.l)}${x.sub?` <small>${esc(x.sub)}</small>`:""}</span></div>`});
+ $id("cbl").innerHTML=h||`<div class="note">Nothing to choose.</div>`}
+function ssFilter(v){v=v.toLowerCase();document.querySelectorAll("#cbl .cbi").forEach(e=>e.style.display=e.dataset.s.includes(v)?"":"none");document.querySelectorAll("#cbl [data-g]").forEach(e=>e.style.display=v?"none":"")}
+function ssPick(id,i){const o=SS[id],x=o.opts[i];if(!x||x.g)return;
+ if(o.multi){const a=o.val||(o.val=[]),k=a.indexOf(x.v);if(k<0)a.push(x.v);else a.splice(k,1);const q=$id("cbq").value;ssList(id);ssFilter(q)}
+ else{o.val=x.v;cbClose()}
+ const b=$id("ss_"+id);if(b)b.querySelector(".ssl").textContent=ssLbl(id);if(o.onch)o.onch(o.val)}
+/* ---- list ---- */
+const TKV=[["all","All tasks I can see"],["my","My tasks"],["team","Subordinates\u2019 tasks"],["byme","Assigned by me"],["self","Self-created"],["pend","Pending"],["late","Overdue"],["done","Completed"],["cancel","Cancelled"]];
+function tkViewOk(r,v){const me=tkMe(),t=r.t,a=r.a;
+ if(v=="cancel")return !!t.can;if(v!="all"&&t.can)return false;
+ switch(v){case"my":return a.mid==me;case"team":return tkTeam().has(a.mid);case"byme":return t.by.mid==me&&a.mid!=me;case"self":return t.by.mid==me&&t.as.every(x=>x.mid==me);case"pend":return a.st!="ok";case"late":return tkLate(r);case"done":return a.st=="ok";default:return true}}
+function tkFiltered(){const f=TK.f,q=f.q.trim().toLowerCase(),td=tkToday();
+ return tkRows().filter(r=>{const t=r.t,a=r.a;
+  if(!tkViewOk(r,f.view))return false;
+  if(f.emp&&a.mid!=f.emp)return false;
+  if(f.cl&&(f.cl=="__none"?t.cl:(!t.cl||t.cl.id!=f.cl)))return false;
+  if(f.asg&&(t.asg||"")!=f.asg)return false;
+  if(f.st&&(f.st=="x"?!t.can:(t.can||a.st!=f.st)))return false;
+  if(f.due=="late"&&!tkLate(r))return false;if(f.due=="today"&&t.due!=td)return false;if(f.due=="w"&&!(t.due>=td&&t.due<=tkAdd(td,7)))return false;if(f.due=="m"&&!(t.due>=td&&t.due<=tkAdd(td,30)))return false;
+  if(f.df&&t.due<f.df)return false;if(f.dt&&t.due>f.dt)return false;
+  if(q&&!(t.title+" "+(t.cl?t.cl.name:"")+" "+(t.asg||"")+" "+a.name+" "+(t.cat?t.cat.name:"")+" "+t.desc).toLowerCase().includes(q))return false;
+  return true})}
+function tkSorted(rows){const k=TK.sort.k,d=TK.sort.d,pr={urgent:0,high:1,normal:2};
+ const key=r=>k=="client"?(r.t.cl?r.t.cl.name:"~").toLowerCase():k=="asg"?(r.t.asg||"~").toLowerCase():k=="status"?(r.t.can?"z":r.a.st):k=="emp"?r.a.name.toLowerCase():r.t.due+(r.t.dueTime||"00:00");
+ return rows.slice().sort((x,y)=>{const a=key(x),b=key(y);return (a<b?-1:a>b?1:(pr[x.t.prio]-pr[y.t.prio]))*d})}
+function tkSort(k){TK.sort=TK.sort.k==k?{k,d:-TK.sort.d}:{k,d:1};tkList()}
+const tkTh=(k,l)=>`<span style="cursor:pointer;white-space:nowrap" onclick="tkSort('${k}')">${l}${TK.sort.k==k?(TK.sort.d>0?" \u25B2":" \u25BC"):""}</span>`;
+function tkDueNote(r){const t=r.t,td=tkToday();if(!tkOpenR(r))return "";const n=tkDiff(t.due,td);return n<0?`<b style="color:var(--bad)">${-n} day${n==-1?"":"s"} overdue</b>`:n==0?"<b>due today</b>":n<=2?`<b style="color:var(--amberink)">due in ${n} day${n>1?"s":""}</b>`:""}
+function tkRowHtml(r,emp){const t=r.t,a=r.a,late=tkLate(r),mine=a.mid==tkMe();
+ const st=t.can?`<span class="pill r">Cancelled</span>`:`<span class="pill ${TKSC[a.st]}">${TKST[a.st]}</span>${a.st!="ok"&&a.pct?` <small>${a.pct}%</small>`:""}`;
+ const pr=t.prio!="normal"?` <span class="pill ${t.prio=="urgent"?"r":"a"}">${TKPR[t.prio]}</span>`:"";
+ return `<tr class="${late?"late":""}" style="cursor:pointer;${t.can?"opacity:.6":""}" onclick="tkOpen('${t.id}')"><td class="cl">${esc(t.cl?t.cl.name:"Internal")}</td><td>${esc(t.asg||(t.cat?t.cat.name:"")||"\u2014")}</td><td><b>${esc(t.title)}</b>${pr}${t.as.length>1?` <small style="color:var(--mut)">(${t.as.length} people)</small>`:""}${t.lk?` <small title="Completed in an earlier financial year">\uD83D\uDD12</small>`:""}</td><td class="due ${late?"l":""}">${tkDt(t.due)}${t.dueTime?" "+t.dueTime:""}<br><small>${tkDueNote(r)}</small></td><td>${st}</td><td>${tkH(a.spent)} / ${tkH(t.est)}</td>${emp?`<td>${esc(mine?"Me":a.name)}</td>`:""}</tr>`}
+function tkListHtml(){const rows=tkSorted(tkFiltered()),emp=tkLead()||tkRows().some(r=>r.a.mid!=tkMe());
+ const h=[tkTh("client","Client"),tkTh("asg","Assignment"),"Task",tkTh("due","Due"),tkTh("status","Status"),"Hrs (spent / est.)"].concat(emp?[tkTh("emp","Employee")]:[]);
+ return `<div class="note" style="margin:0 0 6px">${rows.length} row${rows.length==1?"":"s"}${rows.length!=tkRows().length?" (filtered)":""}. Click a row to open it, update progress or see its history.</div>`+tbl(h,rows.map(r=>tkRowHtml(r,emp)).join("")||`<tr><td colspan="${h.length}">No tasks match.</td></tr>`)}
+function tkList(){const e=$id("tklist");if(e)e.innerHTML=tkListHtml()}
+function tkF(k,v){TK.f[k]=v;tkList()}
+function tkSearch(v){TK.f.q=v;clearTimeout(TK.tm);TK.tm=setTimeout(tkList,150)}
+function tkOptList(ids,sel,all){return `<option value="">${all}</option>`+ids.map(([v,l])=>`<option value="${esc(v)}" ${v==sel?"selected":""}>${esc(l)}</option>`).join("")}
+function tkNeed(){const rows=tkRows(),late=rows.filter(tkLate),soon=rows.filter(tkSoon);return {late,soon}}
+function tkAlertHtml(){const {late,soon}=tkNeed();if(!late.length&&!soon.length)return "";
+ const li=(r,c)=>`<div class="mpi" style="cursor:pointer;display:block" onclick="tkOpen('${r.t.id}')"><b style="color:${c}">${tkDt(r.t.due)}</b> ${esc(r.t.title)} <small style="color:var(--mut)">${esc(r.t.cl?r.t.cl.name:"Internal")} \u00B7 ${esc(r.a.mid==tkMe()?"Me":r.a.name)}</small></div>`;
+ return `<div class="card" style="border-color:${late.length?"var(--bad)":"var(--gold)"}"><b>Needs attention</b> <small style="color:var(--mut)">Overdue and approaching tasks stay visible here whether or not the employee has logged in or updated them.</small>
+ ${late.length?`<div class="row" style="margin-top:8px"><b style="color:var(--bad)">${late.length} overdue</b><button class="btn ghost sm" onclick="TK.f.view='late';render()">Show only overdue</button></div>${late.slice(0,5).map(r=>li(r,"var(--bad)")).join("")}${late.length>5?`<div class="note">+${late.length-5} more</div>`:""}`:""}
+ ${soon.length?`<div class="row" style="margin-top:8px"><b style="color:var(--amberink)">${soon.length} due within 2 days</b></div>${soon.slice(0,5).map(r=>li(r,"var(--amberink)")).join("")}${soon.length>5?`<div class="note">+${soon.length-5} more</div>`:""}`:""}</div>`}
+function tkListTab(){const d=TK.d,rows=tkRows(),open=rows.filter(tkOpenR).length,done=rows.filter(r=>!r.t.can&&r.a.st=="ok").length,late=rows.filter(tkLate).length;
+ const people=[...new Map(rows.map(r=>[r.a.mid,r.a.name])).entries()].sort((a,b)=>a[1]<b[1]?-1:1);
+ const cls=[...new Map(rows.filter(r=>r.t.cl).map(r=>[r.t.cl.id,r.t.cl.name])).entries()].sort((a,b)=>a[1]<b[1]?-1:1);
+ const asg=[...new Set(rows.map(r=>r.t.asg).filter(Boolean))].sort().map(x=>[x,x]);
+ const f=TK.f,card=(l,n,c)=>`<div class="card" style="margin:0"><div class="lbl">${l}</div><div class="big" ${c?`style="color:${c}"`:""}>${n}</div></div>`;
+ const canAssign=!tkRo()&&d.assignable.length>0;
+ return `${tkAlertHtml()}<div class="grid" style="margin-bottom:16px">${card("Open",open)}${card("Completed",done,"var(--ok)")}${card("Overdue",late,late?"var(--bad)":"")}${card("Cancelled",rows.filter(r=>r.t.can).length)}</div>
+ ${canAssign?`<div class="card row"><div><b>${TK.show?"Assign a task":"Add a task"}</b><div class="sub" style="margin:2px 0 0">${d.assignable.length>1?"Assign work to your team or record work you are doing yourself.":"Record work you are doing yourself."}</div></div><button class="btn" onclick="tkToggleForm()">${TK.show?"Close form":"Assign a task"}</button></div>${TK.show?tkFormHtml():""}`:""}
+ <div class="card filters" style="align-items:flex-end">
+ <label style="font-size:12px;color:var(--mut)">View<br><select onchange="tkF('view',this.value)">${TKV.filter(x=>tkLead()||!["team"].includes(x[0])).map(x=>`<option value="${x[0]}" ${x[0]==f.view?"selected":""}>${x[1]}</option>`).join("")}</select></label>
+ <label style="font-size:12px;color:var(--mut)">Search<br><input type="search" placeholder="Task, client, person\u2026" value="${esc(f.q)}" oninput="tkSearch(this.value)"></label>
+ ${people.length>1?`<label style="font-size:12px;color:var(--mut)">Employee<br><select onchange="tkF('emp',this.value)">${tkOptList(people,f.emp,"All")}</select></label>`:""}
+ <label style="font-size:12px;color:var(--mut)">Client<br><select onchange="tkF('cl',this.value)">${tkOptList([["__none","Internal (no client)"]].concat(cls),f.cl,"All")}</select></label>
+ <label style="font-size:12px;color:var(--mut)">Assignment<br><select onchange="tkF('asg',this.value)">${tkOptList(asg,f.asg,"All")}</select></label>
+ <label style="font-size:12px;color:var(--mut)">Status<br><select onchange="tkF('st',this.value)">${tkOptList(Object.entries(TKST).concat([["x","Cancelled"]]),f.st,"All")}</select></label>
+ <label style="font-size:12px;color:var(--mut)">Due<br><select onchange="tkF('due',this.value)">${tkOptList([["late","Overdue"],["today","Today"],["w","Next 7 days"],["m","Next 30 days"]],f.due,"Any time")}</select></label>
+ <label style="font-size:12px;color:var(--mut)">Due from<br><input type="date" value="${f.df}" onchange="tkF('df',this.value)"></label><label style="font-size:12px;color:var(--mut)">to<br><input type="date" value="${f.dt}" onchange="tkF('dt',this.value)"></label>
+ <button class="btn ghost sm" onclick="TK.f={view:'all',q:'',emp:'',cl:'',asg:'',st:'',due:'',df:'',dt:''};render()">Clear</button></div>
+ <div id="tklist">${tkListHtml()}</div>`}
+/* ---- assign a task ---- */
+function tkToggleForm(){TK.show=TK.show?0:1;TK.msg="";render()}
+const tkCats=()=>{const o=[{v:"",l:"None (internal / administrative)"}];for(const c of MS.comp.cats){if(!c.active)continue;const it=c.items.filter(x=>x.active);if(!it.length)continue;o.push({g:1,l:c.name});for(const x of it)o.push({v:x.id,l:x.name,grp:c.name})}return o};
+function tkAsgOpts(clId){const set=new Set();
+ if(clId){const c=CL.list.find(x=>x.id==clId);if(c)clCmpAll(c).forEach(i=>set.add(cmpName(i)))}
+ else["Internal","Administration","Office work","Training"].forEach(x=>set.add(x));
+ tkRows().filter(r=>(r.t.cl?r.t.cl.id:"")==(clId||"")&&r.t.asg).forEach(r=>set.add(r.t.asg));
+ const e=$id("tf_asgl");if(e)e.innerHTML=[...set].map(x=>`<option value="${esc(x)}">`).join("");return set}
+function tkFormHtml(){const d=TK.d,me=tkMe();
+ const ppl=d.assignable.map(m=>{const h=wt.hier.find(x=>x.id==m);return h?{v:m,l:(m==me?"Myself \u2013 ":"")+h.name,sub:h.designation}:null}).filter(Boolean);
+ const cl=[{v:"",l:"None (internal / administrative)"}].concat(CL.list.slice().sort((a,b)=>a.name<b.name?-1:1).map(c=>({v:c.id,l:c.name,sub:c.pan||""})));
+ const pre=TK.fv||(TK.fv={to:ppl.length==1?[ppl[0].v]:(ppl.some(x=>x.v==me)?[me]:[]),cl:"",cat:""});
+ setTimeout(()=>tkAsgOpts(pre.cl),0);
+ return `<div class="card" id="tkform"><div class="grid">
+ <label>Assign to *${ss("f_to",{opts:ppl,multi:1,val:pre.to,ph:"Choose one or more people",onch:v=>pre.to=v})}</label>
+ <label>Client (optional)${CL.loaded?ss("f_cl",{opts:cl,val:pre.cl,ph:"None (internal / administrative)",onch:v=>{pre.cl=v;tkAsgOpts(v)}}):`<div class="note">Loading clients\u2026</div>`}</label>
+ <label>Assignment<input id="tf_asg" list="tf_asgl" maxlength="200" placeholder="Pick one or type your own"><datalist id="tf_asgl"></datalist></label>
+ <label>Task *<input id="tf_title" maxlength="200" placeholder="What has to be done"></label>
+ <label>Category / compliance (optional)${ss("f_cat",{opts:tkCats(),val:pre.cat,ph:"None (internal / administrative)",onch:v=>pre.cat=v})}</label>
+ <label>Due date *<input id="tf_due" type="date" min="${tkToday()}"></label>
+ <label>Due time (optional)<input id="tf_time" type="time"></label>
+ <label>Estimated hours *<input id="tf_est" type="number" min="0.5" step="0.5" placeholder="per person"></label>
+ <label>Priority<select id="tf_prio"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label></div>
+ <label style="display:block;margin-top:10px;font-size:12px;color:var(--mut)">Task description (optional)<textarea id="tf_desc" rows="2" maxlength="2000" style="width:100%;margin-top:4px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px"></textarea></label>
+ <div class="note">Without a due time the task appears in My Day at the firm\u2019s starting time (${esc(d.firm.open)}). When several people are chosen each keeps their own progress, hours and completion.</div>
+ <div id="tkmsg" class="err" style="margin-top:10px">${esc(TK.msg)}</div><div style="margin-top:6px"><button class="btn" id="tkgo" onclick="tkCreate()">Assign task</button></div></div>`}
+async function tkCreate(){const v=i=>($id(i)||{}).value||"",d=TK.d,me=tkMe(),pre=TK.fv,er=m=>{TK.msg=m;$id("tkmsg").textContent=m};
+ const title=v("tf_title").trim(),due=v("tf_due"),est=parseFloat(v("tf_est")),to=pre.to;
+ if(!to.length)return er("Choose whom to assign the task to.");if(!title)return er("Enter the task.");if(!due)return er("Choose a due date.");if(due<tkToday())return er("The due date can\u2019t be in the past.");if(!(est>0))return er("Enter the estimated hours.");
+ const others=to.filter(x=>x!=me);
+ if(others.length&&!confirm(`Assign \u201C${title}\u201D to ${others.map(tkNm).join(", ")}${to.includes(me)?" and yourself":""}?\n\nDue ${tkDt(due)}${v("tf_time")?" at "+v("tf_time"):""}, ${tkH(est)} h estimated${to.length>1?" for each person":""}. They will be notified.`))return;
+ const cat=pre.cat?{id:pre.cat,name:cmpName(pre.cat)}:null,b=$id("tkgo");b.disabled=true;b.textContent="Saving to Drive\u2026";
+ const r=await fn("tasks",{action:"create",task:{title,desc:v("tf_desc"),cl:pre.cl||null,asg:v("tf_asg"),cat,due,dueTime:v("tf_time"),est,prio:v("tf_prio"),to}});
+ if(r.error){b.disabled=false;b.textContent="Assign task";return er(r.error)}
+ TK.fv=null;TK.show=0;TK.msg="";toast(others.length?"Task assigned":"Task added");await tkLoad()}
+/* ---- task detail: progress, hours, comments, edit, reassign, cancel, delete, history ---- */
+const tkTime=iso=>new Date(iso).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+async function tkOpen(id){
+ if(!TK.d){await tkLoad();if(!TK.d)return}
+ TK.det={id,task:null,hist:[],former:[],edit:0,err:"",ro:cur=="tasks"&&tkRo()};
+ let m=$id("tkmodal");if(m)m.remove();m=document.createElement("div");m.className="mdl";m.id="tkmodal";m.onclick=e=>{if(e.target==m)tkClose()};document.body.appendChild(m);
+ m.innerHTML=`<div class="mdc wide"><div class="note">Loading\u2026</div></div>`;
+ const r=await fn("tasks",{action:"get",id});
+ if(r.error){m.innerHTML=`<div class="mdc wide"><b>This task could not be opened</b><div class="sub" style="margin:8px 0">${esc(r.error)}</div><button class="btn" onclick="tkClose()">Close</button></div>`;return}
+ TK.det.task=r.data.task;TK.det.hist=r.data.hist;TK.det.former=r.data.former;tkModal()}
+function tkClose(){const m=$id("tkmodal");if(m)m.remove();cbClose();TK.det=null}
+async function tkAfter(msg){if(msg)toast(msg);const id=TK.det&&TK.det.id;await tkLoad();if(typeof MD!="undefined"&&MD.s)mdTkDay();if(id&&TK.det&&$id("tkmodal")){const r=await fn("tasks",{action:"get",id});if(r.data){TK.det.task=r.data.task;TK.det.hist=r.data.hist;TK.det.former=r.data.former;tkModal()}}}
+function tkModal(){const m=$id("tkmodal");if(!m||!TK.det||!TK.det.task)return;const D=TK.det,t=D.task,ro=D.ro,d=TK.d;
+ const open=!t.can,td=tkToday();
+ const banner=t.lk?`<div class="note" style="background:var(--amber);padding:8px 10px;border-radius:8px">\uD83D\uDD12 This task was completed on ${tkDt(t.cd)}, in an earlier financial year, so it can be viewed but not changed.</div>`:t.can?`<div class="note" style="background:var(--badbg);padding:8px 10px;border-radius:8px">This task was cancelled on ${tkDt(t.can.at.slice(0,10))}${t.can.why?": "+esc(t.can.why):""}.</div>`:ro?`<div class="note" style="background:var(--blue);padding:8px 10px;border-radius:8px">You are looking at a previous financial year. ${t.fy<d.fy.cur||t.cd==null||t.cd>=d.fy.curFrom?"Switch to the current financial year to make changes.":""}</div>`:"";
+ const as=t.as.map(a=>{const mine=a.mid==tkMe(),can=!ro&&t.up.includes(a.mid),late=open&&a.st!="ok"&&t.due<td,rem=tkRemain(t,a);
+  const logs=(a.log||[]).slice(-12).map(l=>`<span class="ps" style="cursor:${can?"pointer":"default"}" ${can?`onclick="tkLogPick('${a.mid}','${l.d}',${l.h})"`:""}>${tkDt(l.d)} \u00B7 ${tkH(l.h)} h</span>`).join(" ");
+  const stale=open&&a.st!="ok"&&a.st!="oh"?tkStale(t,a):0;
+  return `<div class="clblk"><div class="row"><div><b>${esc(mine?a.name+" (me)":a.name)}</b> <span class="pill ${TKSC[a.st]}">${TKST[a.st]}</span>${a.st!="ok"&&a.pct?` <small>${a.pct}% done</small>`:""}${late?` <span class="pill r">Overdue</span>`:""}${stale?` <span class="pill a" title="No update for ${stale} days">Not updated (${stale} d)</span>`:""}</div><div class="note" style="margin:0">Spent ${tkH(a.spent)} h of ${tkH(t.est)} h \u00B7 about ${tkH(rem)} h left${a.upd?" \u00B7 last update "+tkTime(a.upd):""}</div></div>
+  ${logs?`<div class="cloud" style="margin-top:6px;max-height:none">${logs}</div>`:""}
+  ${can?`<div class="grid" style="margin-top:8px"><label>Status<select id="pg_st_${a.mid}">${Object.entries(TKST).map(([k,l])=>`<option value="${k}" ${k==a.st?"selected":""}>${l}</option>`).join("")}</select></label>
+  <label>Work completed (%)<input id="pg_pc_${a.mid}" type="number" min="0" max="100" value="${a.pct}"></label>
+  <label>Estimated remaining hours<input id="pg_rm_${a.mid}" type="number" min="0" step="0.5" value="${a.remain!=null?a.remain:""}" placeholder="${tkH(Math.max(0,t.est-a.spent))} (estimate \u2212 spent)"></label>
+  <label>Hours worked on<input id="pg_ld_${a.mid}" type="date" max="${td}" value="${td}"></label><label>Hours (that day)<input id="pg_lh_${a.mid}" type="number" min="0" max="24" step="0.25" placeholder="e.g. 2.5"></label></div>
+  <textarea id="pg_nt_${a.mid}" rows="2" maxlength="1000" placeholder="Remarks: delays, dependencies or difficulties (optional)" style="width:100%;margin-top:8px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px"></textarea>
+  <div class="wrow" style="margin-top:8px"><button class="btn sm" onclick="tkProgress('${a.mid}')">Save update</button>${a.st!="ok"?`<button class="btn ghost sm" onclick="tkProgress('${a.mid}',1)">Mark completed</button>`:""}</div>`
+  :`<div class="note">${open&&!ro?"You can view this person\u2019s progress but you do not have permission to change it.":""}</div>`}</div>`}).join("");
+ const cm=t.cm&&!ro?`<div class="clblk"><b>Add a comment</b><div class="add" style="margin-top:6px"><input id="tkcm" maxlength="1000" placeholder="Comment for everyone on this task" style="flex:1 1 260px"><button class="btn sm" onclick="tkComment()">Post</button></div></div>`:"";
+ const ed=t.ed&&!ro?tkEditHtml(t):"";
+ const hist=D.hist.map(h=>`<tr><td style="white-space:nowrap">${tkTime(h.at)}</td><td>${esc(h.by)}</td><td>${esc(h.t)}</td></tr>`).join("");
+ const fm=D.former.length?`<div class="note">Earlier assignees: ${D.former.map(x=>esc(x.name)+" ("+tkH(x.spent)+" h)").join(", ")}</div>`:"";
+ m.innerHTML=`<div class="mdc wide"><div class="row"><div><b style="font-size:17px">${esc(t.title)}</b> ${t.prio!="normal"?`<span class="pill ${t.prio=="urgent"?"r":"a"}">${TKPR[t.prio]}</span>`:""}</div><button class="btn ghost sm" onclick="tkClose()">Close</button></div>
+ <div class="sub" style="margin:4px 0 10px">${esc(t.cl?t.cl.name:"Internal")}${t.asg?" \u00B7 "+esc(t.asg):""}${t.cat?" \u00B7 "+esc(t.cat.name):""}</div>${banner}
+ <div class="grid" style="margin:10px 0"><div><div class="lbl">Due</div><b>${tkDt(t.due)}${t.dueTime?" at "+t.dueTime:" (shows in My Day at "+esc(d.firm.open)+")"}</b></div><div><div class="lbl">Estimate</div><b>${tkH(t.est)} h${t.as.length>1?" each":""}</b></div><div><div class="lbl">Created by</div><b>${esc(t.by.name)}</b> <small>${tkTime(t.at)}</small></div></div>
+ ${t.desc?`<div class="note" style="color:var(--ink);white-space:pre-wrap">${esc(t.desc)}</div>`:""}${fm}${as}${cm}${ed}
+ <h2 style="margin-top:14px">History <small>${D.hist.length}</small></h2><div class="tbl" style="max-height:220px;overflow:auto"><table>${hist||`<tr><td>No history yet.</td></tr>`}</table></div></div>`}
+function tkStale(t,a){const last=(a.upd||t.at).slice(0,10),n=tkDiff(tkToday(),last);return n>(TK.d.cfg.staleDays||3)?n:0}
+function tkLogPick(mid,d,h){const a=$id("pg_ld_"+mid),b=$id("pg_lh_"+mid);if(a&&b){a.value=d;b.value=h}}
+async function tkProgress(mid,done){const D=TK.det,t=D.task,a=t.as.find(x=>x.mid==mid),v=i=>$id(i+mid).value,body={action:"progress",id:t.id,mid};
+ const st=done?"ok":v("pg_st_");if(st!=a.st)body.st=st;
+ const pc=v("pg_pc_");if(pc!==""&&+pc!=a.pct&&st!="ok")body.pct=+pc;
+ const rm=v("pg_rm_");if(rm!==""){if(+rm!==a.remain)body.remain=+rm}else if(a.remain!=null)body.remain=null;
+ const lh=v("pg_lh_");if(lh!==""){const ld=v("pg_ld_");if(!ld)return toast("Choose the date for the hours.",1);body.log={d:ld,h:+lh}}
+ const nt=v("pg_nt_").trim();if(nt)body.note=nt;
+ if(Object.keys(body).length==3)return toast("Nothing has changed.");
+ const r=await fn("tasks",body);if(r.error)return toast(r.error,1);await tkAfter("Update saved")}
+async function tkComment(){const e=$id("tkcm"),s=e.value.trim();if(!s)return;const r=await fn("tasks",{action:"comment",id:TK.det.id,text:s});if(r.error)return toast(r.error,1);await tkAfter("Comment added")}
+function tkEditHtml(t){const d=TK.d,cl=[{v:"",l:"None (internal / administrative)"}].concat(CL.list.slice().sort((a,b)=>a.name<b.name?-1:1).map(c=>({v:c.id,l:c.name,sub:c.pan||""})));
+ const cur=t.as.map(a=>a.mid),all=[...new Set([...d.assignable,...cur])].map(m=>{const h=wt.hier.find(x=>x.id==m);return {v:m,l:h?h.name:"Former employee",sub:h?h.designation:""}});
+ if(!TK.det.edit)return `<div class="wrow"><button class="btn ghost sm" onclick="TK.det.edit=1;tkModal()">Edit details or reassign</button>${t.dl?`<button class="btn ghost sm" style="color:var(--bad)" onclick="tkDelete()">Delete</button>`:""}<button class="btn ghost sm" style="color:var(--bad)" onclick="tkCancel()">Cancel task</button></div>`;
+ setTimeout(()=>tkAsgOpts(t.cl?t.cl.id:""),0);
+ return `<div class="clblk"><b>Edit task</b><div class="grid" style="margin-top:8px">
+ <label>Task<input id="ed_title" maxlength="200" value="${esc(t.title)}"></label>
+ <label>Client${CL.loaded?ss("e_cl",{opts:cl,val:t.cl?t.cl.id:"",ph:"None",onch:v=>tkAsgOpts(v)}):`<div class="note">Loading\u2026</div>`}</label>
+ <label>Assignment<input id="tf_asg" list="tf_asgl" maxlength="200" value="${esc(t.asg)}"><datalist id="tf_asgl"></datalist></label>
+ <label>Category / compliance${ss("e_cat",{opts:tkCats(),val:t.cat?t.cat.id:"",ph:"None"})}</label>
+ <label>Due date<input id="ed_due" type="date" min="${tkToday()}" value="${t.due}"></label><label>Due time<input id="ed_time" type="time" value="${t.dueTime}"></label>
+ <label>Estimated hours<input id="ed_est" type="number" min="0.5" step="0.5" value="${t.est}"></label>
+ <label>Priority<select id="ed_prio">${Object.entries(TKPR).map(([k,l])=>`<option value="${k}" ${k==t.prio?"selected":""}>${l}</option>`).join("")}</select></label></div>
+ <label style="display:block;margin-top:8px;font-size:12px;color:var(--mut)">Description<textarea id="ed_desc" rows="2" maxlength="2000" style="width:100%;margin-top:4px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px">${esc(t.desc)}</textarea></label>
+ <div class="note">Changing the due date or time moves this task\u2019s appointment in My Day automatically.</div>
+ <div class="wrow"><button class="btn sm" onclick="tkSaveEdit()">Save changes</button><button class="btn ghost sm" onclick="TK.det.edit=0;tkModal()">Cancel</button></div>
+ <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:10px"><b>Reassign</b><label style="display:block;font-size:12px;color:var(--mut);margin-top:6px">Assigned to${ss("e_to",{opts:all,multi:1,val:cur.slice(),ph:"Choose people"})}</label>
+ <div class="note">Anyone you remove keeps their hours on record. A reassigned person starts with no progress.</div><div class="wrow"><button class="btn sm" onclick="tkReassign()">Reassign</button>${t.dl?`<button class="btn ghost sm" style="color:var(--bad)" onclick="tkDelete()">Delete task</button>`:""}<button class="btn ghost sm" style="color:var(--bad)" onclick="tkCancel()">Cancel task</button></div></div></div>`}
+async function tkSaveEdit(){const t=TK.det.task,v=i=>$id(i).value,p={};
+ const title=v("ed_title").trim();if(!title)return toast("The task cannot be blank.",1);if(title!=t.title)p.title=title;
+ if(v("ed_desc").trim()!=t.desc)p.desc=v("ed_desc").trim();if(v("tf_asg").trim()!=t.asg)p.asg=v("tf_asg").trim();
+ const est=parseFloat(v("ed_est"));if(!(est>0))return toast("Enter the estimated hours.",1);if(est!=t.est)p.est=est;
+ if(v("ed_prio")!=t.prio)p.prio=v("ed_prio");
+ if(!v("ed_due"))return toast("Choose a due date.",1);if(v("ed_due")!=t.due)p.due=v("ed_due");if(v("ed_time")!=t.dueTime)p.dueTime=v("ed_time");
+ const cl=SS.e_cl?SS.e_cl.val:(t.cl?t.cl.id:"");if((cl||"")!=(t.cl?t.cl.id:""))p.cl=cl||null;
+ const ct=SS.e_cat.val;if((ct||"")!=(t.cat?t.cat.id:""))p.cat=ct?{id:ct,name:cmpName(ct)}:null;
+ if(!Object.keys(p).length)return toast("Nothing has changed.");
+ const r=await fn("tasks",{action:"update",id:t.id,patch:p});if(r.error)return toast(r.error,1);TK.det.edit=0;await tkAfter("Task updated")}
+async function tkReassign(){const t=TK.det.task,to=SS.e_to.val.slice();if(!to.length)return toast("Choose at least one person.",1);
+ if(to.slice().sort().join()==t.as.map(a=>a.mid).sort().join())return toast("The assignment has not changed.");
+ if(!confirm(`Reassign \u201C${t.title}\u201D to ${to.map(tkNm).join(", ")}?\n\nEveryone affected will be notified.`))return;
+ const r=await fn("tasks",{action:"reassign",id:t.id,to});if(r.error)return toast(r.error,1);TK.det.edit=0;await tkAfter("Task reassigned")}
+async function tkCancel(){const t=TK.det.task;const why=prompt(`Cancel \u201C${t.title}\u201D?\nHours already recorded are kept. Reason (optional):`);if(why===null)return;
+ const r=await fn("tasks",{action:"cancel",id:t.id,why});if(r.error)return toast(r.error,1);await tkAfter("Task cancelled")}
+async function tkDelete(){const t=TK.det.task;if(!confirm(`Delete \u201C${t.title}\u201D?\n\nIt will disappear from every list and from My Day. The record is kept in the firm\u2019s Drive history.`))return;
+ const r=await fn("tasks",{action:"delete",id:t.id});if(r.error)return toast(r.error,1);tkClose();await tkLoad();toast("Task deleted")}
+/* ---- notifications ---- */
+const TKEV={created:"New task",reassigned:"Reassigned",due:"Deadline changed",comment:"Comment",completed:"Completed",progress:"Update",cancelled:"Cancelled",edited:"Changed"};
+function tkEodPending(){const e=TK.eod;if(!e||!e.mandatory||!e.att||e.sub||e.out)return "";return lHM()>=e.close?"Your End-of-Day Work Summary is pending. Submit it to check out.":""}
+async function tkSeen(){const r=await fn("tasks",{action:"seen"});if(r.error)return toast(r.error,1);TK.d.ev=[];render()}
+function tkNotifHtml(){const ev=TK.d.ev||[],{late,soon}=tkNeed(),ep=tkEodPending(),n=ev.length+(ep?1:0);
+ if(!n&&!late.length&&!soon.length)return "";
+ return `<div class="card"><div class="row"><b>\uD83D\uDD14 Notifications${n?` <span class="badge" style="display:inline-grid;margin-left:6px">${n}</span>`:""}</b><div>${ev.length?`<button class="btn ghost sm" onclick="tkSeen()">Mark updates as read</button> `:""}<button class="btn ghost sm" onclick="TK.nf=TK.nf?0:1;render()">${TK.nf?"Hide":"Show"}</button></div></div>
+ ${TK.nf?`<div style="margin-top:8px">${ep?`<div class="mpi" style="display:block;cursor:pointer" onclick="tkTab('sum')"><b>Pending:</b> ${ep}</div>`:""}${ev.slice(0,15).map(e=>`<div class="mpi" style="display:block;cursor:pointer" onclick="tkOpen('${e.id}')"><b>${TKEV[e.a]||"Update"}:</b> ${esc(e.title)} <small style="color:var(--mut)">${esc(e.t)} \u00B7 ${tkTime(e.at)}</small></div>`).join("")}${ev.length>15?`<div class="note">+${ev.length-15} older</div>`:""}${late.length||soon.length?`<div class="note">${late.length?late.length+" overdue":""}${late.length&&soon.length?" and ":""}${soon.length?soon.length+" due within 2 days":""} \u2013 listed under \u201CNeeds attention\u201D.</div>`:""}${!n?`<div class="note">No new updates.</div>`:""}</div>`:""}</div>`}
+/* ---- page frame ---- */
+function tkSumInit(){if(TK.tab=="sum"&&TK.d){tkEodLoad();if(tkLead()&&!TK.sum.rows&&!TK.sum.busy){const t=tkToday();TK.sum.to=t;TK.sum.from=tkAdd(t,-6);tkSumLoad()}}}
+function tkTab(k){TK.tab=k;if(!TK.d)return render();tkSumInit();if(k=="set")tkCoLoad();render()}
+const tkSetShow=()=>TK.d&&(tkMP()||TK.d.cfg.eodAdmin||TK.d.cfg.coAdmin);
+function tkLive(){
+ if(!TK.loaded){if(!TK.busy)tkLoad();return `<h1>My Tasks</h1><div class="sub">Loading from Google Drive\u2026</div>`}
+ if(TK.err)return `<h1>My Tasks</h1><div class="card"><b>My Tasks could not be loaded</b><div class="sub" style="margin:8px 0">${esc(TK.err)}</div><button class="btn" onclick="TK.loaded=0;TK.err='';render()">Try again</button></div>`;
+ const d=TK.d,fy=d.fy;
+ if(!CL.loaded&&!CL.busy)clLoad();
+ const tabs=[["list","My Tasks"]].concat(tkLead()?[["wl","Employee Workload"]]:[]).concat([["sum","Work Summaries"],["rep","Reports"]]).concat(tkSetShow()?[["set","Task Settings"]]:[]);
+ if(!tabs.some(x=>x[0]==TK.tab))TK.tab="list";
+ const body=TK.tab=="wl"?tkWlTab():TK.tab=="sum"?tkSumTab():TK.tab=="rep"?tkRepTab():TK.tab=="set"?tkSetTab():tkListTab();
+ return `<h1>My Tasks <select onchange="tkFy(this.value)" title="Financial year" style="font-size:15px;font-weight:700;margin-left:10px;vertical-align:middle;border-color:var(--gold)">${fy.years.map(y=>`<option value="${y}" ${y==fy.sel?"selected":""}>${tkFyLbl(y)}${y==fy.cur?" (current)":""}</option>`).join("")}</select></h1>
+ <div class="sub">${tkFyLbl(fy.sel)}: ${tkDt(fy.from)} to ${tkDt(fy.to)}${tkRo()?` \u00B7 <b>previous year, view only</b>. Tasks completed in an earlier year are locked; tasks still running into the current year can be changed from the current year.`:""}</div>
+ ${tkNotifHtml()}<div class="seg" style="margin-bottom:14px;flex-wrap:wrap">${tabs.map(([k,l])=>`<button class="btn ${TK.tab==k?"":"ghost"} sm" onclick="tkTab('${k}')">${l}</button>`).join("")}</div>${body}`}
+/* ---- Employee Workload ----
+   Load = estimated remaining hours of open tasks (on-hold tasks are listed but not counted) due in the chosen period, plus anything still overdue.
+   Capacity = the firm's working hours on working days in the period (from today onwards), less firm holidays and approved leave.
+   Overloaded: load above capacity. Moderate: 60% to 100%. Available: under 60% and every open task recently updated. */
+const TKW={mod:60};
+const tkPeople=()=>{const h=wt.hier||[];if(tkMP())return h;const ids=new Set(mcTeamIds());return h.filter(x=>ids.has(x.id))};
+function tkWlInit(){if(!TK.wl){const t=tkToday();TK.wl={from:t,to:tkAdd(t,13),cl:"",asg:"",cat:"",sel:[],emp:"",sort:"util"}}return TK.wl}
+function tkDayHrs(){const f=TK.d.firm,m=s=>{const [h,x]=String(s).split(":").map(Number);return h*60+x};return Math.max(0,(m(f.close)-m(f.open))/60)}
+function tkCap(mid,from,to){const hrs=tkDayHrs(),wd=TK.d.firm.days,hol=new Set(TK.d.cfg.holidays.map(h=>h.d)),lv=TK.d.cfg.leaves.filter(l=>l.mid==mid);let h=0,n=0;
+ for(let d=from;d<=to&&n<800;d=tkAdd(d,1),n++){const w=new Date(d+"T12:00:00Z").getUTCDay();if(!wd.includes(w)||hol.has(d))continue;let f=1;for(const l of lv)if(d>=l.from&&d<=l.to)f=Math.min(f,l.half?.5:0);h+=hrs*f}return h}
+function tkWlCalc(){const W=tkWlInit(),td=tkToday(),pr={urgent:0,high:1,normal:2},cf=W.from>td?W.from:td,past=W.to<td;
+ const inc=tkRows().filter(r=>{const t=r.t;if(t.can)return false;
+  if(W.cl&&(W.cl=="__none"?t.cl:(!t.cl||t.cl.id!=W.cl)))return false;if(W.asg&&(t.asg||"")!=W.asg)return false;if(W.cat&&(!t.cat||t.cat.id!=W.cat))return false;
+  const open=tkOpenR(r);return (t.due>=W.from&&t.due<=W.to)||(open&&t.due<W.from&&W.from<=td)});
+ const out=tkPeople().map(p=>{const its=inc.filter(r=>r.a.mid==p.id),o={mid:p.id,name:p.name,desig:p.designation,n:its.length,ns:0,ip:0,pend:0,done:0,oh:0,late:0,est:0,act:0,rem:0,stale:0,items:its,risk:[]};
+  for(const r of its){const a=r.a;o.est+=r.t.est;o.act+=a.spent;
+   if(a.st=="ns")o.ns++;else if(a.st=="ip")o.ip++;else if(a.st=="pc"||a.st=="pi")o.pend++;else if(a.st=="ok")o.done++;else o.oh++;
+   if(tkLate(r))o.late++;
+   if(tkOpenR(r)&&a.st!="oh"){o.rem+=tkRemain(r.t,a);if(tkStale(r.t,a))o.stale++}}
+  o.cap=past?0:tkCap(p.id,cf,W.to);o.util=past?null:o.cap>0?o.rem/o.cap*100:(o.rem>0?999:0);
+  o.cls=past?"past":o.util>100?"over":o.util>=TKW.mod?"mod":(o.stale>0?"nu":"avail");
+  let cum=0;const q=its.filter(r=>tkOpenR(r)&&r.a.st!="oh").sort((x,y)=>x.t.due<y.t.due?-1:x.t.due>y.t.due?1:pr[x.t.prio]-pr[y.t.prio]);
+  for(const r of q){const rem=tkRemain(r.t,r.a);cum+=rem;const du=r.t.due<td?td:r.t.due,cp=tkCap(p.id,td,du);
+   if(r.t.due<td)o.risk.push({r,why:"Overdue by "+tkDiff(td,r.t.due)+" day(s)",bad:1});else if(cum>cp+1e-9)o.risk.push({r,why:"At risk: about "+tkH(cum)+" h of work is due by this date but only "+tkH(cp)+" h of working time is available",bad:0})}
+  return o});
+ const s=W.sort;out.sort((a,b)=>s=="name"?(a.name<b.name?-1:1):s=="late"?(b.late-a.late||(a.name<b.name?-1:1)):((b.util==null?-1:b.util)-(a.util==null?-1:a.util)||(a.name<b.name?-1:1)));
+ return out}
+const TKCL={over:["Overloaded","r","var(--bad)"],mod:["Moderate","a","#d99a00"],avail:["Available","g","var(--ok)"],nu:["Not updated","","#8a8a92"],past:["Past period","","#8a8a92"]};
+const tkClPill=c=>`<span class="pill ${TKCL[c][1]}" ${TKCL[c][1]==""?`style="background:var(--bg);color:var(--mut)"`:""}>${TKCL[c][0]}</span>`;
+/* reallocation suggestions: only ever suggestions; nothing moves until the person with permission approves */
+function tkSuggest(rows){const sug=[],spare=new Map(rows.map(r=>[r.mid,r.cap-r.rem])),load=new Map(rows.map(r=>[r.mid,r.rem])),pr={normal:0,high:1,urgent:2},me=tkMe();
+ const targets=rows.filter(r=>r.cls=="avail");
+ for(const A of rows.filter(r=>r.cls=="over")){
+  const cand=A.items.filter(r=>tkOpenR(r)&&r.a.st=="ns"&&r.a.spent==0&&r.t.as.length==1).sort((x,y)=>pr[x.t.prio]-pr[y.t.prio]||(x.t.due<y.t.due?1:-1));
+  for(const r of cand){if(load.get(A.mid)<=A.cap)break;const rem=tkRemain(r.t,r.a);
+   const best=targets.filter(b=>b.mid!=A.mid&&spare.get(b.mid)>=rem&&(r.t.due>=tkToday()||true)).sort((x,y)=>spare.get(y.mid)-spare.get(x.mid))[0];
+   if(!best)continue;spare.set(best.mid,spare.get(best.mid)-rem);load.set(A.mid,load.get(A.mid)-rem);
+   sug.push({r,from:A,to:best,rem,can:r.t.ed&&!tkRo()&&TK.d.assignable.includes(best.mid)})}}
+ return sug}
+function tkWlSet(k,v){tkWlInit()[k]=v;if(k=="from"&&v>TK.wl.to)TK.wl.to=v;if(k=="to"&&v<TK.wl.from)TK.wl.from=v;render()}
+function tkWlPreset(n){const t=tkToday(),W=tkWlInit(),fy=TK.d.fy;if(n=="fy"){W.from=fy.curFrom;W.to=TK.d.fy.s==1?fy.curFrom.slice(0,4)+"-12-31":(+fy.curFrom.slice(0,4)+1)+"-"+String(fy.s-1).padStart(2,"0")+"-"+String(new Date(Date.UTC(+fy.curFrom.slice(0,4)+1,fy.s-1,0)).getUTCDate()).padStart(2,"0")}else{W.from=t;W.to=tkAdd(t,n)}render()}
+function tkWlSel(m){const W=tkWlInit(),i=W.sel.indexOf(m);if(i<0)W.sel.push(m);else W.sel.splice(i,1);render()}
+function tkWlEmp(m){tkWlInit().emp=m;render()}
+async function tkSugg(tid,fromM,toM){const t=TK.d.tasks.find(x=>x.id==tid);if(!t)return;
+ if(!confirm(`Move \u201C${t.title}\u201D from ${tkNm(fromM)} to ${tkNm(toM)}?\n\nThis is a suggestion from the workload view. Nothing changes until you approve it here. Both people will be notified.`))return;
+ const to=t.as.map(a=>a.mid==fromM?toM:a.mid),r=await fn("tasks",{action:"reassign",id:tid,to:[...new Set(to)]});if(r.error)return toast(r.error,1);toast("Task reassigned");await tkLoad()}
+function tkWlTab(){const W=tkWlInit(),rowsAll=tkWlCalc(),rows=W.sel.length?rowsAll.filter(r=>W.sel.includes(r.mid)):rowsAll,td=tkToday();
+ const base=tkRows().filter(r=>!r.t.can),cls=[...new Map(base.filter(r=>r.t.cl).map(r=>[r.t.cl.id,r.t.cl.name])).entries()].sort((a,b)=>a[1]<b[1]?-1:1),asg=[...new Set(base.map(r=>r.t.asg).filter(Boolean))].sort().map(x=>[x,x]),cats=[...new Map(base.filter(r=>r.t.cat).map(r=>[r.t.cat.id,r.t.cat.name])).entries()].sort((a,b)=>a[1]<b[1]?-1:1);
+ const f=TK.d.firm,sg=tkSuggest(rows),risk=rows.flatMap(o=>o.risk.map(x=>({...x,o}))).sort((a,b)=>b.bad-a.bad||(a.r.t.due<b.r.t.due?-1:1));
+ const mx=Math.max(1,...rows.map(r=>Math.max(r.rem,r.cap)));
+ const lab=l=>`font-size:12px;color:var(--mut)`;
+ const tot=rows.reduce((s,r)=>({n:s.n+r.n,rem:s.rem+r.rem,cap:s.cap+r.cap,late:s.late+r.late,nu:s.nu+(r.stale>0?1:0)}),{n:0,rem:0,cap:0,late:0,nu:0});
+ const trs=rows.map(o=>`<tr><td><a href="#" onclick="tkWlEmp('${o.mid}');return false" style="color:inherit"><b>${esc(o.mid==tkMe()?o.name+" (me)":o.name)}</b></a><br><small style="color:var(--mut)">${esc(o.desig||"")}</small></td><td class="n">${o.n}</td><td class="n">${o.ns}</td><td class="n">${o.ip}</td><td class="n">${o.pend}</td><td class="n">${o.done}</td><td class="n" style="${o.late?"color:var(--bad);font-weight:700":""}">${o.late}</td><td class="n">${tkH(o.est)}</td><td class="n">${tkH(o.act)}</td><td class="n">${tkH(o.rem)}</td><td class="n">${tkH(o.cap)}</td>
+  <td style="min-width:120px">${o.util==null?"\u2013":`<div class="wlb"><i style="width:${Math.min(100,o.util)}%;background:${TKCL[o.cls][2]}"></i></div><small>${o.util>=999?"no capacity":Math.round(o.util)+"%"}</small>`}</td><td>${tkClPill(o.cls)}</td><td class="n">${o.stale?`<span class="pill a">${o.stale} not updated</span>`:"\u2013"}</td></tr>`).join("");
+ const bars=rows.map(o=>`<div style="display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:8px;align-items:center;margin:5px 0;font-size:12px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(o.name)}</span><div class="wlb" title="${tkH(o.rem)} h remaining of ${tkH(o.cap)} h capacity"><i style="width:${o.rem/mx*100}%;background:${TKCL[o.cls][2]}"></i><b style="left:${o.cap/mx*100}%"></b></div><span>${tkH(o.rem)} / ${tkH(o.cap)} h</span></div>`).join("");
+ const stk=rows.map(o=>{const t=Math.max(1,o.n),seg=(n,c,l)=>n?`<i title="${l}: ${n}" style="width:${n/t*100}%;background:${c}"></i>`:"";return `<div style="display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:8px;align-items:center;margin:5px 0;font-size:12px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(o.name)}</span><div class="wlb stk">${seg(o.ns,"#9aa0a6","Not started")}${seg(o.ip,"#3b82c4","In progress")}${seg(o.pend,"#d99a00","Pending")}${seg(o.oh,"#b9a5d6","On hold")}${seg(o.done,"var(--ok)","Completed")}</div><span>${o.n} task${o.n==1?"":"s"}</span></div>`}).join("");
+ const emp=W.emp?rowsAll.find(o=>o.mid==W.emp):null;
+ const det=emp?`<div class="card"><div class="row"><b>${esc(emp.name)} \u2013 task list</b><div><button class="btn ghost sm" onclick="TK.sum.mid='${emp.mid}';tkTab('sum')">Daily work summaries</button> <button class="btn ghost sm" onclick="tkWlEmp('')">Close</button></div></div><div class="note">${emp.n} tasks in this period \u00B7 ${tkH(emp.rem)} h remaining \u00B7 ${tkH(emp.cap)} h capacity \u00B7 ${tkClPill(emp.cls)}${emp.stale?` \u00B7 ${emp.stale} open task(s) not updated for more than ${TK.d.cfg.staleDays} days, so spare capacity cannot be assumed`:""}</div>${tbl(["Client","Assignment","Task","Due","Status","Hrs (spent / est.)"],tkSorted(emp.items).map(r=>tkRowHtml(r,0)).join("")||`<tr><td colspan="6">No tasks.</td></tr>`)}</div>`:"";
+ return `<div class="card"><div class="grid">
+ <label style="${lab()}">From<input type="date" value="${W.from}" onchange="tkWlSet('from',this.value)"></label><label style="${lab()}">To<input type="date" value="${W.to}" onchange="tkWlSet('to',this.value)"></label>
+ <label style="${lab()}">Client<select onchange="tkWlSet('cl',this.value)">${tkOptList([["__none","Internal (no client)"]].concat(cls),W.cl,"All")}</select></label>
+ <label style="${lab()}">Assignment<select onchange="tkWlSet('asg',this.value)">${tkOptList(asg,W.asg,"All")}</select></label>
+ <label style="${lab()}">Category / compliance<select onchange="tkWlSet('cat',this.value)">${tkOptList(cats,W.cat,"All")}</select></label>
+ <label style="${lab()}">Sort by<select onchange="tkWlSet('sort',this.value)">${[["util","Utilisation (highest first)"],["late","Most overdue"],["name","Name"]].map(([k,l])=>`<option value="${k}" ${W.sort==k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+ <div class="wrow" style="margin-top:8px"><button class="btn ghost sm" onclick="tkWlPreset(6)">Next 7 days</button><button class="btn ghost sm" onclick="tkWlPreset(13)">Next 14 days</button><button class="btn ghost sm" onclick="tkWlPreset(29)">Next 30 days</button><button class="btn ghost sm" onclick="tkWlPreset('fy')">Whole financial year</button></div>
+ <div class="note" style="margin-top:10px">Compare employees: tap names to pick several (none picked = everyone).</div><div class="cloud" style="max-height:none">${rowsAll.map(o=>`<span class="ps ${W.sel.includes(o.mid)?"on":""}" onclick="tkWlSel('${o.mid}')">${esc(o.name)}</span>`).join("")}</div>
+ <div class="note">Capacity uses the firm\u2019s working hours (${esc(f.open)}\u2013${esc(f.close)}, ${tkH(tkDayHrs())} h a day) on working days, less firm holidays and approved leave. Load counts estimated <b>remaining</b> hours of open tasks due in the period plus anything overdue; tasks on hold are not counted. Overloaded = load above capacity \u00B7 Moderate = ${TKW.mod}\u2013100% \u00B7 Available = below ${TKW.mod}%. Someone whose open tasks have not been updated for ${TK.d.cfg.staleDays}+ days is shown as <b>Not updated</b>, never as available.</div></div>
+ <div class="grid" style="margin-bottom:16px"><div class="card" style="margin:0"><div class="lbl">Tasks in period</div><div class="big">${tot.n}</div></div><div class="card" style="margin:0"><div class="lbl">Remaining / capacity</div><div class="big">${tkH(tot.rem)} / ${tkH(tot.cap)} h</div></div><div class="card" style="margin:0"><div class="lbl">Overdue</div><div class="big" style="${tot.late?"color:var(--bad)":""}">${tot.late}</div></div><div class="card" style="margin:0"><div class="lbl">Overloaded</div><div class="big">${rows.filter(r=>r.cls=="over").length}</div></div><div class="card" style="margin:0"><div class="lbl">Not updated</div><div class="big">${tot.nu}</div></div></div>
+ ${tbl(["Employee","Total","Not started","In progress","Pending","Completed","Overdue","Est. h","Actual h","Remaining h","Capacity h","Utilisation","Load","Updates"],trs||`<tr><td colspan="14">No employees.</td></tr>`)}
+ <div class="grid" style="margin-top:16px"><div class="card" style="margin:0"><b>Remaining work vs capacity</b><div class="note">The dark line marks each person\u2019s capacity.</div>${bars||""}</div><div class="card" style="margin:0"><b>Task status mix</b><div class="note">Grey not started \u00B7 blue in progress \u00B7 amber pending \u00B7 purple on hold \u00B7 green completed.</div>${stk||""}</div></div>
+ ${det}
+ <h2>Delayed or at risk <small>${risk.length}</small></h2>${risk.length?tbl(["Employee","Client","Task","Due","Why"],risk.slice(0,40).map(x=>`<tr class="${x.bad?"late":""}" style="cursor:pointer" onclick="tkOpen('${x.r.t.id}')"><td>${esc(x.o.name)}</td><td class="cl">${esc(x.r.t.cl?x.r.t.cl.name:"Internal")}</td><td><b>${esc(x.r.t.title)}</b></td><td class="due ${x.bad?"l":""}">${tkDt(x.r.t.due)}</td><td>${esc(x.why)}</td></tr>`).join("")):`<div class="card note">Nothing is overdue or at risk for the people and period selected.</div>`}
+ <h2>Suggested reallocation <small>${sg.length}</small></h2>${sg.length?tbl(["Task","From","To","Hours","Why",""],sg.map(s=>`<tr><td><b>${esc(s.r.t.title)}</b><br><small style="color:var(--mut)">${esc(s.r.t.cl?s.r.t.cl.name:"Internal")} \u00B7 due ${tkDt(s.r.t.due)}</small></td><td>${esc(s.from.name)}<br><small style="color:var(--bad)">${Math.round(s.from.util)}% loaded</small></td><td>${esc(s.to.name)}<br><small style="color:var(--ok)">${Math.round(s.to.util)}% loaded</small></td><td class="n">${tkH(s.rem)}</td><td><small>Not started; ${esc(s.from.name)} is over capacity and ${esc(s.to.name)} has the spare hours.</small></td><td>${s.can?`<button class="btn sm" onclick="tkSugg('${s.r.t.id}','${s.from.mid}','${s.to.mid}')">Review &amp; reassign</button>`:`<small style="color:var(--mut)">Needs someone with permission to reassign</small>`}</td></tr>`).join("")):`<div class="card note">No reallocation is suggested. Suggestions appear only when someone is over capacity and another person who has kept their tasks up to date has enough spare hours. They are suggestions only: you review and approve each move.</div>`}`}
+/* ---- Work Summaries (End-of-Day) ---- */
+async function tkEodLoad(){const r=await fn("tasks",{action:"eod_state"});if(r.data&&r.data.day){TK.eod=r.data;TK.eodErr=""}else if(r.error)TK.eodErr=r.error;tkEodTick();if(cur=="tasks")render();else if(cur=="myday")mdPatch()}
+function tkEodRows(title,list,px){px=px||"sh_";if(!list.length)return "";return `<div style="margin-top:10px"><b>${title}</b> <small style="color:var(--mut)">${list.length}</small>${list.map(x=>`<div class="row" style="padding:5px 0;border-bottom:1px dashed var(--line)"><div style="flex:1 1 240px;cursor:pointer" onclick="tkOpen('${x.id}')"><b>${esc(x.t)}</b><br><small style="color:var(--mut)">${esc(x.c||"Internal")}${x.asg?" \u00B7 "+esc(x.asg):""} \u00B7 ${TKST[x.st]}${x.st!="ok"&&x.pct?" \u00B7 "+x.pct+"%":""}${x.w?" ("+x.w+")":""}</small></div><label style="font-size:12px;color:var(--mut)">Hours ${px=="sh_"?"today":"that day"} <input id="${px}${x.id}" type="number" min="0" max="24" step="0.25" value="${x.h||""}" placeholder="0" style="width:90px"></label></div>`).join("")}</div>`}
+/* an earlier day can be filled in only while the summary is optional (the server enforces this) */
+async function tkPastLoad(){const d=$id("pd_day").value;if(!d)return toast("Choose the day first.",1);TK.past={day:d,data:null,busy:1,msg:""};render();
+ const r=await fn("tasks",{action:"eod_day",day:d});TK.past.busy=0;if(r.error)TK.past.msg=r.error;else if(!r.data.can)TK.past.msg=r.data.reason;else TK.past.data=r.data;render()}
+async function tkPastSubmit(b){const P=TK.past,hours={};document.querySelectorAll("[id^='ph_']").forEach(i=>{hours[i.id.slice(3)]=i.value===""?0:+i.value});
+ for(const v of Object.values(hours))if(!(v>=0&&v<=24)){P.msg="Hours must be between 0 and 24.";return render()}
+ b.disabled=true;b.textContent="Saving to Drive\u2026";const r=await fn("tasks",{action:"eod_submit",day:P.day,remarks:$id("pm_rem").value,hours});
+ if(r.error){P.msg=r.error;return render()}
+ toast("Summary saved for "+tkDt(P.day));TK.past=null;await tkLoad();render()}
+function tkPastCard(){const e=TK.eod;if(!e||e.mandatory||tkMP()&&false)return "";const P=TK.past,t=tkToday();
+ const form=P&&P.data?`<div class="note" style="margin-top:10px"><b>${tkDt(P.day)}</b>: hours and completions recorded that day, plus your other open tasks if you need to add hours.</div>${tkEodRows("Completed that day",P.data.preview.done,"ph_")}${tkEodRows("In progress",P.data.preview.prog,"ph_")}${tkEodRows("Pending (client or internal)",P.data.preview.pend,"ph_")}${tkEodRows("Other open tasks (enter hours only if you worked on them that day)",P.data.preview.oth,"ph_")}<label style="display:block;margin-top:10px;font-size:12px;color:var(--mut)">Difficulties, delays or other remarks<textarea id="pm_rem" rows="2" maxlength="2000" style="width:100%;margin-top:4px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px"></textarea></label><div class="wrow" style="margin-top:8px"><button class="btn" onclick="tkPastSubmit(this)">Save summary for that day</button><button class="btn ghost" onclick="TK.past=null;render()">Cancel</button></div>`:"";
+ return `<div class="card"><b>Missed a day?</b><div class="note">While summaries are optional you can add one for any of the last 7 days on which your attendance was marked, if none was submitted. Days before you were added to the app are not available. It is saved against that day and marked as a late entry.</div><div class="add" style="margin-top:6px"><input id="pd_day" type="date" min="${(TK.d.me.since&&TK.d.me.since>tkAdd(t,-7))?TK.d.me.since:tkAdd(t,-7)}" max="${tkAdd(t,-1)}" value="${P?P.day:tkAdd(t,-1)}"><button class="btn sm" onclick="tkPastLoad()">Load that day</button></div>${P&&P.busy?`<div class="note">Loading\u2026</div>`:""}${P&&P.msg?`<div class="err" style="margin-top:6px">${esc(P.msg)}</div>`:""}${form}</div>`}
+function tkMyEod(){const e=TK.eod;
+ if(!e)return `<div class="card"><b>Today\u2019s End-of-Day Work Summary</b><div class="note">${TK.eodErr?esc(TK.eodErr):"Loading\u2026"}</div></div>`;
+ const pv=e.preview||{done:[],prog:[],pend:[],oth:[],ns:0,oh:0,hrs:0},tm=(MD&&MD.s&&MD.s.me&&MD.s.me.tm)||[];
+ const tsec=tm.reduce((n,x)=>n+(Math.max(0,(Date.parse(x.e)-Date.parse(x.s))/1000)||0),0),state=e.out?`<span class="pill g">Checked out at ${e.out.hm}</span>`:e.sub?`<span class="pill g">Submitted at ${e.sub.hm}</span>`:`<span class="pill a">Not submitted</span>`;
+ if(!e.att)return `<div class="card"><div class="row"><b>Today\u2019s End-of-Day Work Summary</b>${state}</div><div class="note">Mark your attendance in My Day first. After that you can submit your summary and check out when the day ends.</div></div>`;
+ const frozen=!!e.out;
+ return `<div class="card"><div class="row"><b>Today\u2019s End-of-Day Work Summary \u2013 ${tkDt(e.day)}</b>${state}</div>
+ <div class="note">${e.mandatory?"Submitting this summary is <b>required</b> before you can check out.":"Submitting this summary is optional."} It is filled in from your tasks. Update tasks whenever you like during the day; just correct today\u2019s hours below and add remarks.</div>
+ ${tsec>0?`<div class="note">Task timer today: ${tkH(tsec/3600)} h (for reference).</div>`:""}
+ ${frozen?`<div class="note"><b>You have checked out, so this summary is final.</b></div>`:""}
+ ${tkEodRows("Completed today",pv.done)}${tkEodRows("In progress",pv.prog)}${tkEodRows("Pending (client or internal)",pv.pend)}${tkEodRows("Other open tasks (enter hours only if you worked on them today)",pv.oth)}
+ ${!pv.done.length&&!pv.prog.length&&!pv.pend.length&&!pv.oth.length?`<div class="note">You have no tasks in progress or completed today. You can still add remarks.</div>`:""}
+ <div class="note">Total hours today: ${tkH(pv.hrs)}. Only tasks with hours entered are kept under \u201COther\u201D in the saved summary.</div>
+ <label style="display:block;margin-top:10px;font-size:12px;color:var(--mut)">Difficulties, delays or other remarks<textarea id="sm_rem" rows="3" maxlength="2000" ${frozen?"disabled":""} style="width:100%;margin-top:4px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px">${esc(e.sub?e.sub.remarks:"")}</textarea></label>
+ <div id="smmsg" class="err" style="margin-top:8px"></div>${frozen?"":`<button class="btn" onclick="tkEodSubmit(this)">${e.sub?"Update summary":"Submit summary"}</button>`}</div>`}
+async function tkEodSubmit(b){const hours={};document.querySelectorAll("[id^='sh_']").forEach(i=>{hours[i.id.slice(3)]=i.value===""?0:+i.value});
+ for(const v of Object.values(hours))if(!(v>=0&&v<=24)){$id("smmsg").textContent="Hours must be between 0 and 24.";return}
+ b.disabled=true;b.textContent="Saving to Drive\u2026";const r=await fn("tasks",{action:"eod_submit",remarks:$id("sm_rem").value,hours});
+ if(r.error){b.disabled=false;b.textContent="Submit summary";$id("smmsg").textContent=r.error;return}
+ TK.eod=r.data;toast("End-of-Day summary submitted");await tkLoad();if(typeof MD!="undefined")MD.loaded=0;render()}
+async function tkSumLoad(){const S=TK.sum;S.busy=1;S.msg="";const r=await fn("tasks",{action:"eod_list",from:S.from,to:S.to,mid:S.mid||undefined});S.busy=0;if(r.error){S.msg=r.error;S.rows=[]}else S.rows=r.data.rows;if(cur=="tasks"&&TK.tab=="sum")render()}
+function tkSumView(i){const x=TK.sum.rows[i],s=x.sub;let m=$id("tkmodal");if(m)m.remove();m=document.createElement("div");m.className="mdl";m.id="tkmodal";m.onclick=e=>{if(e.target==m)tkClose()};document.body.appendChild(m);
+ const sec=(t,l)=>l&&l.length?`<h2>${t}</h2>${tbl(["Task","Client","Hours"],l.map(y=>`<tr><td>${esc(y.t)}</td><td>${esc(y.c||"Internal")}</td><td class="n">${tkH(y.h)}</td></tr>`).join(""))}`:"";
+ m.innerHTML=`<div class="mdc wide"><div class="row"><b>${esc(x.name)} \u2013 ${tkDt(x.day)}</b><button class="btn ghost sm" onclick="tkClose()">Close</button></div>${s?`<div class="note">Submitted at ${s.hm}${s.rev>1?" (revised "+(s.rev-1)+" time(s))":""}${x.out?" \u00B7 checked out at "+x.out.hm:""} \u00B7 ${tkH(s.hrs)} h in total</div>${sec("Completed",s.done)}${sec("In progress",s.prog)}${sec("Pending",s.pend.map(y=>({...y,t:y.t+" ("+y.w+")"})))}${sec("Other",s.oth)}<h2>Remarks</h2><div class="card note" style="color:var(--ink);white-space:pre-wrap">${esc(s.remarks)||"None"}</div>`:`<div class="note">No summary was submitted${x.out?" (checked out at "+x.out.hm+")":""}.</div>`}</div>`}
+function tkSumTab(){const S=TK.sum,people=tkPeople().slice().sort((a,b)=>a.name<b.name?-1:1);
+ const view=tkLead()?`<h2>Employee summaries</h2><div class="card filters" style="align-items:flex-end"><label style="font-size:12px;color:var(--mut)">Employee<br><select onchange="TK.sum.mid=this.value">${tkOptList(people.map(p=>[p.id,p.name]),S.mid,"Everyone I can see")}</select></label><label style="font-size:12px;color:var(--mut)">From<br><input type="date" value="${S.from}" onchange="TK.sum.from=this.value"></label><label style="font-size:12px;color:var(--mut)">To<br><input type="date" value="${S.to}" onchange="TK.sum.to=this.value"></label><button class="btn sm" onclick="tkSumLoad();render()">Show</button></div>
+ ${S.msg?`<div class="err">${esc(S.msg)}</div>`:""}${S.busy?`<div class="note">Loading\u2026</div>`:S.rows?tbl(["Date","Employee","Submitted","Check-out","Hours","Done","In progress","Pending","Remarks",""],S.rows.map((x,i)=>`<tr><td>${tkDt(x.day)}</td><td><b>${esc(x.name)}</b></td><td>${x.sub?x.sub.hm+(x.sub.late?` <span class="pill a">late entry</span>`:""):`<span class="pill a">None</span>`}</td><td>${x.out?x.out.hm:"\u2013"}</td><td class="n">${x.sub?tkH(x.sub.hrs):"\u2013"}</td><td class="n">${x.sub?x.sub.done.length:"\u2013"}</td><td class="n">${x.sub?x.sub.prog.length:"\u2013"}</td><td class="n">${x.sub?x.sub.pend.length:"\u2013"}</td><td>${x.sub?esc(x.sub.remarks.slice(0,70))+(x.sub.remarks.length>70?"\u2026":""):""}</td><td><button class="btn ghost sm" onclick="tkSumView(${i})">View</button></td></tr>`).join("")||`<tr><td colspan="10">No summaries or check-outs in this period.</td></tr>`):""}`:"";
+ return tkMyEod()+tkPastCard()+view}
+/* ---- Reports ---- */
+const TKREP=[["emp","Employee-wise workload"],["cl","Client-wise task allocation"],["asg","Assignment-wise task allocation"],["po","Pending and overdue tasks"],["dn","Completed tasks"],["eh","Estimated vs actual hours"],["wd","Workload distribution"],["tr","Task completion trends"],["eod","End-of-Day summaries: submitted and pending"]];
+function tkGroup(rows,keyf,label){const m=new Map();for(const r of rows){const k=keyf(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)}
+ return [...m.entries()].sort((a,b)=>a[0]<b[0]?-1:1).map(([k,l])=>{const op=l.filter(tkOpenR),dn=l.filter(r=>r.a.st=="ok");return [k,l.length,op.length,dn.length,l.filter(tkLate).length,Math.round(l.reduce((s,r)=>s+r.t.est,0)*100)/100,Math.round(l.reduce((s,r)=>s+r.a.spent,0)*100)/100,new Set(l.map(r=>r.a.mid)).size]})}
+function tkBars(items,fmt){const mx=Math.max(1,...items.map(x=>x[1]));return items.map(([l,v,v2])=>`<div style="display:grid;grid-template-columns:minmax(90px,170px) 1fr auto;gap:8px;align-items:center;margin:5px 0;font-size:12px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l)}</span><div class="wlb"><i style="width:${v/mx*100}%;background:var(--gold)"></i>${v2!=null?`<i style="width:${v2/mx*100}%;background:var(--ok);height:5px;position:absolute;bottom:0;left:0"></i>`:""}</div><span>${fmt?fmt(v,v2):v}</span></div>`).join("")}
+function tkRepBuild(){const k=TK.rep.k,td=tkToday(),all=tkRows().filter(r=>!r.t.can),R=(x)=>Math.round(x*100)/100;
+ const emp=r=>r.a.mid==tkMe()?r.a.name+" (me)":r.a.name,cl=r=>r.t.cl?r.t.cl.name:"Internal";
+ if(k=="emp"){const rows=tkPeople().map(p=>{const l=all.filter(r=>r.a.mid==p.id),c=s=>l.filter(r=>r.a.st==s).length;return [p.name,l.length,c("ns"),c("ip"),c("pc")+c("pi"),c("oh"),c("ok"),l.filter(tkLate).length,R(l.reduce((s,r)=>s+r.t.est,0)),R(l.reduce((s,r)=>s+r.a.spent,0)),R(l.filter(r=>tkOpenR(r)&&r.a.st!="oh").reduce((s,r)=>s+tkRemain(r.t,r.a),0))]});
+  return {h:["Employee","Assigned","Not started","In progress","Pending","On hold","Completed","Overdue","Est. hours","Actual hours","Remaining hours"],r:rows}}
+ if(k=="cl")return {h:["Client","Tasks","Open","Completed","Overdue","Est. hours","Actual hours","People"],r:tkGroup(all,cl)};
+ if(k=="asg")return {h:["Assignment","Tasks","Open","Completed","Overdue","Est. hours","Actual hours","People"],r:tkGroup(all,r=>r.t.asg||"(none)")};
+ if(k=="po"){const l=all.filter(tkOpenR).sort((a,b)=>a.t.due<b.t.due?-1:1);return {h:["Client","Assignment","Task","Employee","Due","Days overdue","Status","Priority"],r:l.map(r=>[cl(r),r.t.asg||"",r.t.title,emp(r),tkDt(r.t.due),Math.max(0,tkDiff(td,r.t.due)),TKST[r.a.st],TKPR[r.t.prio]])}}
+ if(k=="dn"){const l=all.filter(r=>r.a.st=="ok").sort((a,b)=>(a.a.done<b.a.done?1:-1));return {h:["Client","Assignment","Task","Employee","Completed on","Est. hours","Actual hours","Variance"],r:l.map(r=>[cl(r),r.t.asg||"",r.t.title,emp(r),tkDt(r.a.done.slice(0,10)),r.t.est,R(r.a.spent),R(r.a.spent-r.t.est)])}}
+ if(k=="eh"){const l=all.filter(r=>r.a.spent>0||r.a.st=="ok").sort((a,b)=>(b.a.spent-b.t.est)-(a.a.spent-a.t.est));return {h:["Client","Task","Employee","Status","Est. hours","Actual hours","Variance (h)","Variance %"],r:l.map(r=>[cl(r),r.t.title,emp(r),TKST[r.a.st],r.t.est,R(r.a.spent),R(r.a.spent-r.t.est),Math.round((r.a.spent-r.t.est)/r.t.est*100)+"%"])}}
+ if(k=="wd"){const l=tkPeople().map(p=>[p.name,all.filter(r=>r.a.mid==p.id&&tkOpenR(r)).length,R(all.filter(r=>r.a.mid==p.id&&tkOpenR(r)&&r.a.st!="oh").reduce((s,r)=>s+tkRemain(r.t,r.a),0))]),tot=l.reduce((s,x)=>s+x[2],0)||1;
+  return {h:["Employee","Open tasks","Remaining hours","Share of total"],r:l.map(x=>[x[0],x[1],x[2],Math.round(x[2]/tot*100)+"%"]),chart:tkBars(l.map(x=>[x[0],x[2]]),v=>tkH(v)+" h")}}
+ if(k=="tr"){const fy=TK.d.fy,ms=[];for(let d=fy.from.slice(0,7);d<=fy.to.slice(0,7);){ms.push(d);const y=+d.slice(0,4),m=+d.slice(5,7);d=m==12?(y+1)+"-01":y+"-"+String(m+1).padStart(2,"0")}
+  const l=ms.map(m=>{const asg=all.filter(r=>r.t.at.slice(0,7)==m||(r.t.at.slice(0,7)<m&&false)),dn=all.filter(r=>r.a.done&&r.a.done.slice(0,7)==m);return [MON3[+m.slice(5,7)-1]+" "+m.slice(0,4),asg.length,dn.length,R(dn.reduce((s,r)=>s+r.a.spent,0))]});
+  return {h:["Month","Tasks assigned","Tasks completed","Hours on completed tasks"],r:l,chart:tkBars(l.map(x=>[x[0],x[1],x[2]]),(a,b)=>a+" assigned, "+b+" completed")+`<div class="note">Gold bar: assigned that month. Green line: completed that month.</div>`}}
+ return null}
+function tkRepSet(k){TK.rep.k=k;if(k=="eod"&&!TK.rep.data&&!TK.rep.busy){TK.rep.month=TK.rep.month||tkToday().slice(0,7);tkRepEod()}render()}
+async function tkRepEod(){const R=TK.rep;R.busy=1;R.err="";const r=await fn("tasks",{action:"eod_report",month:R.month});R.busy=0;if(r.error){R.err=r.error;R.data=null}else R.data=r.data;if(cur=="tasks"&&TK.tab=="rep")render()}
+function tkRepEodRows(){const D=TK.rep.data;if(!D)return null;return {h:["Employee"].concat(D.days.map(x=>x.d.slice(8)+(x.w?"":"*")),["Submitted","Pending"]),r:D.rows.map(o=>[o.name].concat(D.days.map(x=>o.cells[x.d]=="s"?"Submitted":o.cells[x.d]=="p"?"Pending":"\u2013"),[o.sub,o.pend]))}}
+function tkRepTab(){const R=TK.rep;let body="",rep=null;
+ if(R.k=="eod"){rep=tkRepEodRows();
+  body=`<div class="card filters" style="align-items:flex-end"><label style="font-size:12px;color:var(--mut)">Month<br><input type="month" value="${R.month||tkToday().slice(0,7)}" onchange="TK.rep.month=this.value;TK.rep.data=null;tkRepEod();render()"></label><div class="note" style="margin:0">\u201CPending\u201D = attendance marked but no summary submitted. * marks non-working days. ${TK.rep.data&&TK.rep.data.mandatory?"Summaries are currently mandatory.":"Summaries are currently optional."}</div></div>${R.err?`<div class="err">${esc(R.err)}</div>`:""}${R.busy?`<div class="note">Loading\u2026</div>`:rep?`<div class="tbl"><table><tr>${rep.h.map(x=>`<th>${x}</th>`).join("")}</tr>${rep.r.map(r=>`<tr><td><b>${esc(r[0])}</b></td>${r.slice(1,-2).map(c=>`<td style="text-align:center;${c=="Submitted"?"color:var(--ok)":c=="Pending"?"color:var(--bad);font-weight:700":"color:var(--mut)"}">${c=="Submitted"?"\u2713":c=="Pending"?"P":"\u2013"}</td>`).join("")}<td class="n">${r[r.length-2]}</td><td class="n" style="${r[r.length-1]?"color:var(--bad);font-weight:700":""}">${r[r.length-1]}</td></tr>`).join("")||`<tr><td colspan="${rep.h.length}">No employees with a login.</td></tr>`}</table></div>`:""}`}
+ else{rep=tkRepBuild();body=(rep.chart?`<div class="card">${rep.chart}</div>`:"")+tbl(rep.h,rep.r.map(r=>`<tr>${r.map((c,i)=>`<td class="${typeof c=="number"?"n":""}" ${i==0?`style="font-weight:600"`:""}>${esc(c)}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="${rep.h.length}">Nothing to report for this financial year yet.</td></tr>`)}
+ return `<div class="card row"><label style="margin:0;font-size:12px;color:var(--mut)">Report<br><select onchange="tkRepSet(this.value)">${TKREP.map(([k,l])=>`<option value="${k}" ${k==R.k?"selected":""}>${l}</option>`).join("")}</select></label><div class="note" style="margin:0;flex:1 1 260px">${R.k=="eod"?"Shows only people you can see.":`Covers ${tkFyLbl(TK.d.fy.sel)} and the tasks you can see.`}</div><button class="btn ghost sm" onclick="tkRepXlsx()">Download Excel</button></div>${body}`}
+function tkRepXlsx(){const rep=TK.rep.k=="eod"?tkRepEodRows():tkRepBuild();if(!rep)return toast("Nothing to download yet.",1);if(typeof XLSX=="undefined")return toast("The Excel library did not load. Check your internet connection and try again.",1);
+ const ws=XLSX.utils.aoa_to_sheet([rep.h].concat(rep.r)),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Report");XLSX.writeFile(wb,"WorkTrack-"+TK.rep.k+"-"+tkToday()+".xlsx")}
+/* ---- Task Settings ---- */
+async function tkCfg(set,msg){TK.cfgBusy=1;const r=await fn("tasks",{action:"cfg_set",set});TK.cfgBusy=0;if(r.error){toast(r.error,1);return false}toast(msg||"Saved");await tkLoad();return true}
+function tkSc(){if(!TK.sc){const c=TK.d.cfg;TK.sc={hol:c.holidays.map(x=>({...x})),lv:c.leaves.map(x=>({...x})),stale:c.staleDays}}return TK.sc}
+async function tkCoLoad(){if(!TK.d||!TK.d.cfg.coAdmin)return;const r=await fn("tasks",{action:"co_list"});TK.co=r.data?r.data.rows:[];if(cur=="tasks"&&TK.tab=="set")render()}
+function tkSetTab(){const c=TK.d.cfg,mp=tkMP();let h="";
+ if(c.eodAdmin)h+=`<div class="card"><b>End-of-Day Work Summary</b><div class="note">Decides whether employees must submit a summary before they can check out. The Managing Partner is not held to it.</div><div class="chk" style="margin-top:8px"><label><input type="radio" name="eodm" ${c.eodMandatory?"checked":""} onchange="tkCfg({eodMandatory:true},'Summary is now mandatory')"> Mandatory (Check Out stays locked until it is submitted)</label><label><input type="radio" name="eodm" ${!c.eodMandatory?"checked":""} onchange="tkCfg({eodMandatory:false},'Summary is now optional')"> Optional</label></div></div>`;
+ if(c.coAdmin){const ppl=(mp?(wt.hier||[]):(wt.hier||[]).filter(x=>tkTeam().has(x.id))).filter(x=>x.user_id).map(x=>({v:x.id,l:x.name,sub:x.designation}));
+  h+=`<div class="card"><b>Early check-out</b><div class="note">Check Out normally opens at the firm\u2019s closing time (${esc(TK.d.firm.close)}). Authorise an earlier time for a half-day leave or early departure.</div>
+  <div class="grid" style="margin-top:8px"><label style="font-size:12px;color:var(--mut)">Employee${ss("co_m",{opts:ppl,val:"",ph:"Choose an employee"})}</label><label style="font-size:12px;color:var(--mut)">Date<input id="co_d" type="date" min="${tkToday()}" value="${tkToday()}"></label><label style="font-size:12px;color:var(--mut)">Can check out from<input id="co_t" type="time" value="13:00"></label><label style="font-size:12px;color:var(--mut)">Reason<input id="co_w" maxlength="120" placeholder="Half-day leave"></label></div><div class="wrow"><button class="btn sm" onclick="tkCoSet()">Authorise</button></div>
+  ${TK.co?tbl(["Date","Employee","From","Reason","By",""],TK.co.map(x=>`<tr><td>${tkDt(x.day)}</td><td>${esc(x.name)}</td><td>${x.from}</td><td>${esc(x.why)}</td><td>${esc(x.byName)}</td><td><button class="btn ghost sm" onclick="tkCoDel('${x.mid}','${x.day}')">Remove</button></td></tr>`).join("")||`<tr><td colspan="6">No early check-outs are authorised.</td></tr>`):`<div class="note">Loading\u2026</div>`}</div>`}
+ if(mp){const hier=wt.hier||[],all=hier.map(x=>({v:x.id,l:x.name,sub:x.designation})),leaders=hier.filter(x=>hier.some(y=>y.parent_id==x.id)&&x.parent_id);
+  const pm=c.permMap||{},sel=(m,k,def)=>{const v=pm[m]&&typeof pm[m][k]=="boolean"?(pm[m][k]?"1":"0"):"";return `<select data-m="${m}" data-k="${k}"><option value="" ${v==""?"selected":""}>${def}</option><option value="1" ${v=="1"?"selected":""}>Allowed</option><option value="0" ${v=="0"?"selected":""}>Not allowed</option></select>`};
+  h+=`<div class="card"><b>Who can change tasks</b><div class="note">Everyone can see their own tasks and their team\u2019s, but seeing is not changing. Employees can always update their own tasks. For people with a team, choose what they may do with their <b>team\u2019s</b> tasks. You, as Managing Partner, can do everything.</div>
+  ${leaders.length?tbl(["Person","Assign tasks to team","Update team progress","Edit, reassign or cancel team tasks","Delete team tasks"],leaders.map(x=>`<tr><td><b>${esc(x.name)}</b><br><small style="color:var(--mut)">${esc(x.designation||"")}</small></td><td>${sel(x.id,"assign","Default (partners and managers)")}</td><td>${sel(x.id,"upd","Default (not allowed)")}</td><td>${sel(x.id,"edit","Default (not allowed)")}</td><td>${sel(x.id,"del","Default (not allowed)")}</td></tr>`).join("")):`<div class="note">No one has a team yet.</div>`}<div class="wrow"><button class="btn sm" onclick="tkSavePerm()">Save permissions</button></div></div>
+  <div class="card"><b>Delegation</b><div class="note">Let selected people manage the End-of-Day setting, or authorise early check-out for their team.</div><div class="grid"><label style="font-size:12px;color:var(--mut)">Can change the End-of-Day setting${ss("dl_eod",{opts:all,multi:1,val:(c.eodAdmins||[]).slice(),ph:"Nobody"})}</label><label style="font-size:12px;color:var(--mut)">Can authorise early check-out${ss("dl_co",{opts:all,multi:1,val:(c.coAdmins||[]).slice(),ph:"Nobody"})}</label></div><div class="wrow"><button class="btn sm" onclick="tkCfg({eodAdmins:SS.dl_eod.val,coAdmins:SS.dl_co.val},'Delegation saved')">Save delegation</button></div></div>`;
+  const S=tkSc();
+  h+=`<div class="card"><b>Capacity: holidays and approved leave</b><div class="note">Used by the Employee Workload view together with the firm\u2019s working days and hours (Settings). Weekly off days are already excluded.</div>
+  <div class="add" style="margin-top:8px"><input id="hl_d" type="date"><input id="hl_n" maxlength="80" placeholder="Holiday name"><button class="btn sm" onclick="tkHolAdd()">Add holiday</button></div>
+  <div class="cloud" style="max-height:none">${S.hol.map((x,i)=>`<span class="chip">${tkDt(x.d)} ${esc(x.name)} <button onclick="TK.sc.hol.splice(${i},1);render()">\u00D7</button></span>`).join("")||`<span class="note">No firm holidays added.</span>`}</div>
+  <div class="grid" style="margin-top:12px"><label style="font-size:12px;color:var(--mut)">Employee${ss("lv_m",{opts:all,val:"",ph:"Choose an employee"})}</label><label style="font-size:12px;color:var(--mut)">From<input id="lv_f" type="date"></label><label style="font-size:12px;color:var(--mut)">To<input id="lv_t" type="date"></label><label style="font-size:12px;color:var(--mut)">Note<input id="lv_n" maxlength="100" placeholder="Optional"></label></div>
+  <div class="chk"><label><input type="checkbox" id="lv_h"> Half-day (counts as half the day\u2019s capacity)</label></div><div class="wrow"><button class="btn ghost sm" onclick="tkLvAdd()">Add leave</button></div>
+  ${S.lv.length?tbl(["Employee","From","To","Half-day","Note",""],S.lv.map((x,i)=>`<tr><td>${esc(tkNm(x.mid))}</td><td>${tkDt(x.from)}</td><td>${tkDt(x.to)}</td><td>${x.half?"Yes":""}</td><td>${esc(x.note||"")}</td><td><button class="btn ghost sm" onclick="TK.sc.lv.splice(${i},1);render()">Remove</button></td></tr>`).join("")):""}
+  <div class="grid" style="margin-top:12px"><label style="font-size:12px;color:var(--mut)">Treat an open task as \u201CNot updated\u201D after (days)<input id="st_d" type="number" min="1" max="30" value="${S.stale}"></label></div>
+  <div class="wrow"><button class="btn sm" onclick="tkSaveCap()">Save holidays, leave and threshold</button></div></div>`}
+ return h||`<div class="card note">You have no settings to manage here.</div>`}
+async function tkSavePerm(){const o={};document.querySelectorAll("select[data-m]").forEach(s=>{if(s.value==="")return;(o[s.dataset.m]||(o[s.dataset.m]={}))[s.dataset.k]=s.value=="1"});await tkCfg({perm:o},"Permissions saved")}
+function tkHolAdd(){const d=$id("hl_d").value,n=$id("hl_n").value.trim();if(!d)return toast("Choose the holiday date.",1);const S=tkSc();if(S.hol.some(x=>x.d==d))return toast("That date is already listed.",1);S.hol.push({d,name:n||"Holiday"});S.hol.sort((a,b)=>a.d<b.d?-1:1);render()}
+function tkLvAdd(){const m=SS.lv_m.val,f=$id("lv_f").value,t=$id("lv_t").value;if(!m)return toast("Choose the employee.",1);if(!f||!t||t<f)return toast("Enter the leave dates (the end date cannot be before the start).",1);tkSc().lv.push({id:uuid(),mid:m,from:f,to:t,half:$id("lv_h").checked?1:0,note:$id("lv_n").value.trim()});render()}
+async function tkSaveCap(){const S=tkSc(),d=+$id("st_d").value;if(!(d>=1&&d<=30))return toast("Enter a number of days between 1 and 30.",1);S.stale=d;const ok=await tkCfg({holidays:S.hol,leaves:S.lv,staleDays:d},"Saved");if(ok)TK.sc=null}
+async function tkCoSet(){const m=SS.co_m.val,d=$id("co_d").value,t=$id("co_t").value;if(!m)return toast("Choose the employee.",1);if(!d||!t)return toast("Enter the date and time.",1);
+ const r=await fn("tasks",{action:"co_set",mid:m,day:d,from:t,why:$id("co_w").value});if(r.error)return toast(r.error,1);toast("Early check-out authorised");tkCoLoad()}
+async function tkCoDel(m,d){if(!confirm("Remove this early check-out authorisation?"))return;const r=await fn("tasks",{action:"co_del",mid:m,day:d});if(r.error)return toast(r.error,1);tkCoLoad()}
+/* ---- My Day integration: task appointments, Check Out, pending-summary banner ----
+   An appointment is not a separate record: it is worked out from the task's own due date and time on the server,
+   so editing, moving, cancelling or deleting a task changes its appointment automatically and no duplicate can exist. */
+async function mdTkDay(){if(!MD.s||!MD.day||!wt.live)return;const r=await fn("tasks",{action:"day",day:MD.day});if(r.data&&r.data.items)MD.tk=r.data.items;else if(!MD.tk)MD.tk=[];mdPatch()}
+function mdPatch(){if(cur!="myday"||!MD.s||!MD.s.drive)return;
+ const w=$id("mdtlwrap");if(w){w.innerHTML=mdTimeline();const e=$id("mdscroll");if(e&&MD.sl!=null){e.scrollLeft=MD.sl;}if(e)e.onscroll=()=>{MD.sl=e.scrollLeft}}
+ const t=$id("mdteam");if(t&&MD.s.team&&MD.s.team.lead)t.innerHTML=mdTeamHtml();
+ const b=$id("mdbn");if(b)b.innerHTML=mdBanner();const c=$id("mdco");if(c)c.innerHTML=mdCoHtml();nav()}
+function mdTlRefresh(){const w=$id("mdtlwrap");if(w){w.innerHTML=mdTimeline();const e=$id("mdscroll");if(e){if(MD.sl!=null)e.scrollLeft=MD.sl;e.onscroll=()=>{MD.sl=e.scrollLeft}}}}
+function mdBanner(){let h="";const ep=typeof tkEodPending=="function"?tkEodPending():"";
+ if(ep)h+=`<div class="card" style="border-color:var(--bad)"><div class="row"><div><b>End-of-Day Work Summary pending</b><div class="sub" style="margin:2px 0 0">${esc(ep)}</div></div><button class="btn" onclick="go('tasks');tkTab('sum')">Write summary</button></div></div>`;
+ if(TK.d&&TK.d.me){const late=tkRows().filter(r=>tkLate(r)&&r.a.mid==tkMe()).length;if(late)h+=`<div class="card" style="border-color:var(--bad)"><div class="row"><div><b style="color:var(--bad)">${late} of your tasks ${late==1?"is":"are"} overdue</b></div><button class="btn ghost sm" onclick="TK.f.view='late';TK.tab='list';go('tasks')">Show</button></div></div>`}
+ return h}
+function mdCoHtml(){const e=TK.eod;if(!e||!e.att)return "";
+ if(e.out)return `<div class="note" style="margin-top:8px"><b>Checked out at ${esc(e.out.hm)}</b>${e.sub?" \u00B7 End-of-Day summary submitted at "+esc(e.sub.hm):""}</div>`;
+ const mp=wt.profile.app_role=="managing_partner";let why="";
+ if(!mp&&lHM()<e.from)why=`Check Out opens at ${e.from}${e.early?" (early check-out authorised"+(e.auth&&e.auth.why?": "+esc(e.auth.why):"")+")":""}.`;
+ else if(e.mandatory&&!e.sub)why="Submit your End-of-Day Work Summary to check out.";
+ return `<div class="wrow" style="margin-top:10px"><button class="btn" id="cobtn" ${why?"disabled":""} onclick="mdCheckout(this)">Check Out</button><button class="btn ghost" onclick="go('tasks');tkTab('sum')">${e.sub?"View or update summary":"Write today\u2019s summary"}</button></div>${why?`<div class="note">${why}</div>`:e.mandatory&&!e.sub?"":`<div class="note">${e.sub?"Summary submitted. ":e.mandatory?"":"The summary is optional. "}You can check out now.</div>`}`}
+async function mdCheckout(b){if(!confirm("Check out for today?\n\nYou will not be able to change today\u2019s End-of-Day summary afterwards."))return;b.disabled=true;
+ const r=await fn("tasks",{action:"checkout"});if(r.error){toast(r.error,1);await tkEodLoad();return}
+ TK.eod=r.data;toast("Checked out at "+r.data.out.hm);mdPatch()}
+function tkEodTick(){if(!TK.coTick)TK.coTick=setInterval(()=>{if(document.hidden||!wt.live)return;if(cur=="myday"&&$id("mdco")){$id("mdco").innerHTML=mdCoHtml();const b=$id("mdbn");if(b)b.innerHTML=mdBanner()}},30000)}
+
+function tkOpenFromDay(id){tkOpen(id)}
+
 async function boot(){
  applyAccent("blue-green");
  SB.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY"){RECOVERING=true;setTimeout(recoverUI,0)}});
