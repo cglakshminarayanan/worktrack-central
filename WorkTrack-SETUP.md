@@ -132,3 +132,23 @@ After you save the new password, the app signs you out and signs you in again wi
 - Workload: load = estimated remaining hours of open tasks due in the chosen period (plus overdue), capacity = firm hours on working days less holidays and approved leave. Overloaded above 100%, Moderate 60 to 100%, Available below 60%. Open tasks not updated for 3+ days (adjustable) show as "Not updated", never as available. Reallocation is suggestion-only.
 
 First real test (not possible from here, needs your Google Drive): sign in as Managing Partner, My Tasks, assign a task, update it, open My Day, then check that `wt-tasks-<year>.json` appears in Work Records.
+
+## Team Chat (live)
+- Menu: Team Chat. All Employees (everyone with a login), personal chats and groups. Messages, reactions, polls and read receipts are kept only in the Managing Partner's Drive (Employee Records / Work Records, files `wt-chat-*`, `wt-chatcfg.json`, `wt-chat-rc.json`). They are encrypted with the existing `TOKEN_ENC_KEY` secret, so they cannot be read by opening Drive.
+- Function: `chat` (verify_jwt on). The server decides who sees what: selective messages in All Employees are invisible to everyone not chosen (including the Managing Partner), poll results are for the creator only, and no files can be sent (links are fine).
+- Online status uses `profiles.last_seen_at`, refreshed every minute while the app is open (`touch_presence`). Availability icons: green tick online, gold clock away from the app but present today, red cross on leave (appears once the Leave menu exists), question mark otherwise.
+- Message deletion timer (1 month / 3 months / 6 months / 1 year): set in Chat settings by people given that right. A database scheduler (`chat-retention-sweep`, hourly, pg_cron + pg_net) calls `chat` with the private key in table `chat_cron`, so old messages go even when nobody is signed in. Drive's old file versions are removed too.
+- Joiners and leavers appear as notices in All Employees.
+- Everyone picks their own avatar colour (13 starburst colours) under Chat settings.
+
+## Users & Roles: access rights (live)
+- Function: `rbac`. Rights are set by designation and by employee (several people at once, any place in the hierarchy). Order: Managing Partner, then the employee's own setting, then the designation's, then the built-in default.
+- Three-state toggle: green tick allow, blue question mark default, red cross deny.
+- Firm details and Employees rights are stored in Supabase table `rbac_grants` and checked by the database (`has_right`). All other rights (clients, leave, tasks, team chat) and the full change log are kept in Drive (`wt-rbac.json`).
+- The Managing Partner can name people who may grant and revoke; they can pass on only rights they hold and never change their own or the creator's.
+- Not yet enforced: Clients, Tasks and Leave rights are saved but those menus still use the old rules (next step). Payslips and salary rows stay locked until those menus exist. "Viewing firm hierarchy" hides the screen; the hierarchy data itself stays readable inside the app because tasks, clients and chat depend on it.
+- Deleting an employee's credentials (function `create-employee`, action `delete`): login blocked for good and email freed, the person leaves the hierarchy (a "Removed employee" placeholder stays while people still report to it), records stay. A notice appears in Settings > Firm hierarchy.
+
+## Working hours day by day
+- Settings > Working hours and days: each weekday has opens, forenoon ends, afternoon starts, closes. Saved in `firms.work_schedule`.
+- Other modules (check-out time, task capacity) still read the single opening and closing time (earliest open, latest close). Moving them to the day-wise times is a next step.

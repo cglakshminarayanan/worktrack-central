@@ -90,6 +90,73 @@ tr.late{background:var(--badbg)}td.cl{color:var(--gold)}td.due.l{color:var(--bad
 .wlb{height:14px;background:var(--bg);border:1px solid var(--line);border-radius:7px;position:relative;overflow:hidden;display:flex}.wlb i{display:block;height:100%}.wlb b{position:absolute;top:0;bottom:0;width:2px;background:var(--ink)}
 .mdappt.mdtask{background:var(--blue);color:var(--blueink);border:1px solid var(--blueink)}.mdappt.mdtask.done{opacity:.6;text-decoration:line-through}
 .fysel{font:inherit}
+/* Team Chat, Users & Roles rights, hierarchy placeholder (added Nov 2026) */
+.tcwrap{display:grid;grid-template-columns:320px 1fr;height:calc(100vh - 120px);min-height:420px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative}
+.tclist{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tchd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;font-size:16px}
+.tcib{background:none;border:0;color:var(--ink);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:8px;font-family:inherit}.tcib:hover{background:var(--bg)}
+.tcq{width:calc(100% - 24px);margin:0 12px 8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.tclst{overflow-y:auto;flex:1}
+.tci{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;border-bottom:1px solid var(--line)}
+.tci:hover,.tci.on{background:var(--bg)}
+.tcit{flex:1;min-width:0;display:flex;flex-direction:column}.tcit b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tcit small{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tcmt{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:11px;color:var(--mut)}.tcmt em{background:var(--gold);color:var(--goldink);border-radius:99px;font-style:normal;font-weight:700;min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px}
+.tcsh{font-size:11px;color:var(--mut);padding:10px 14px 4px;text-transform:uppercase;letter-spacing:.04em}
+.tcem{padding:20px;color:var(--mut);text-align:center}
+.tcav{position:relative;display:inline-block;width:var(--s);height:var(--s);flex:none}.tcav svg{width:100%;height:100%;display:block}
+.tcst{position:absolute;right:-3px;bottom:-3px;width:42%;height:42%;display:block;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.35))}.tcst svg{width:100%;height:100%}
+.tcpane{display:flex;flex-direction:column;min-width:0;min-height:0}
+.tcph{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}.tcbk{display:none;font-size:26px;line-height:1}
+.tcms{flex:1;overflow-y:auto;padding:12px 16px;background:var(--bg)}
+.tcnone{margin:auto;text-align:center;color:var(--mut);display:flex;flex-direction:column;gap:8px;align-items:center;padding:20px}
+.tcdate{text-align:center;margin:12px 0 8px}.tcdate span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:2px 12px;font-size:11px;color:var(--mut)}
+.tcsys{text-align:center;margin:8px 0}.tcsys span{background:var(--amber);color:var(--amberink);border-radius:8px;padding:3px 12px;font-size:12px}
+.tcm{display:flex;flex-direction:column;align-items:flex-start;margin:3px 0}.tcm.me{align-items:flex-end}
+.tcb{max-width:min(78%,560px);background:var(--card);border:1px solid var(--line);border-radius:12px 12px 12px 3px;padding:6px 10px;position:relative;cursor:pointer;word-wrap:break-word;overflow-wrap:anywhere}
+.tcm.me .tcb{background:color-mix(in srgb,var(--gold) 20%,var(--card));border-radius:12px 12px 3px 12px}
+.tcb.del{color:var(--mut);font-style:italic}.tcb a{color:var(--blueink)}
+.tcwho{font-size:12px;font-weight:700;margin-bottom:2px}.tcq2{border-left:3px solid var(--gold);background:var(--bg);padding:3px 8px;margin-bottom:4px;font-size:12px;color:var(--mut);border-radius:4px}
+.tclock{font-size:11px;color:var(--amberink);background:var(--amber);border-radius:6px;padding:2px 8px;margin-bottom:4px}
+.tcmeta{display:inline-flex;gap:4px;align-items:center;float:right;margin:6px 0 0 12px;font-size:10px;color:var(--mut)}
+.tick{width:16px;height:11px;color:var(--mut)}.tk.r .tick{color:#2b8cff}
+.tcrx{display:flex;gap:4px;margin:-4px 8px 0;position:relative;z-index:1;flex-wrap:wrap}.tcrx button{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:0 7px;font-size:13px;cursor:pointer;color:var(--ink)}.tcrx button.on{border-color:var(--gold)}
+.tcpoll{min-width:230px}.po{display:block;position:relative;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:7px 10px;margin:5px 0;font:inherit;cursor:pointer;overflow:hidden}.po.mine{border-color:var(--gold);font-weight:600}
+div.po i{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--gold) 28%,transparent);z-index:0}div.po span,div.po em{position:relative;z-index:1}div.po em{float:right;font-style:normal;font-size:12px;color:var(--mut)}
+.tcmut{font-size:11px;color:var(--mut);margin-top:4px}.tcvr{font-size:12px;padding:2px 0}.tcvr.mut{color:var(--mut)}.tcpoll details{margin-top:6px;font-size:12px}
+.tcbar{display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--amber);color:var(--amberink);font-size:12px}.tcbar button{margin-left:auto;border:0;background:none;color:inherit;cursor:pointer;font-size:14px}
+.tccm{display:flex;align-items:flex-end;gap:4px;padding:8px 10px;border-top:1px solid var(--line);background:var(--card)}
+.tccm textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:8px 12px;background:var(--bg);color:var(--ink);font:inherit;max-height:120px}
+.tcsend{border:0;background:var(--gold);color:var(--goldink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px}.tcib.on{background:var(--amber)}
+.tcov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:14px}
+.tcdl{background:var(--card);color:var(--ink);border-radius:14px;padding:16px;width:min(420px,100%);max-height:86vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px}.tcdl.tcwide{width:min(520px,100%)}
+.tcdl label{display:block;font-size:12px;color:var(--mut)}.tcdl input:not([type=checkbox]),.tcdl select{width:100%;margin-top:4px}
+.tcmenu{background:var(--card);border-radius:14px;padding:8px;width:min(300px,100%);display:flex;flex-direction:column}.tcmenu button{border:0;background:none;color:var(--ink);padding:12px;text-align:left;font:inherit;cursor:pointer;border-radius:8px}.tcmenu button:hover{background:var(--bg)}.tcmenu .danger{color:var(--bad)}
+.tcqr{display:flex;justify-content:space-around;padding:4px 0 8px;border-bottom:1px solid var(--line);margin-bottom:4px}.tcqr button{font-size:22px;padding:4px 6px}
+.tceg{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}.tceg button{border:0;background:none;font-size:22px;padding:5px;cursor:pointer;border-radius:8px}.tceg button:hover{background:var(--bg)}
+.tcseg{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:3px;margin-bottom:8px}.tcseg button{flex:1;border:0;background:none;color:var(--ink);padding:8px;border-radius:8px;font:inherit;cursor:pointer}.tcseg button.on{background:var(--gold);color:var(--goldink);font-weight:600}
+.tcpick{max-height:44vh;overflow-y:auto;border:1px solid var(--line);border-radius:8px}.tcrow{display:flex;align-items:center;gap:10px;padding:7px 10px;width:100%;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;cursor:pointer;text-align:left}
+.tcrowh{display:flex;justify-content:space-between;align-items:center}.tcsh2{margin-top:8px}
+.tcsw{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px}.tcsw button{border:2px solid transparent;background:none;border-radius:10px;padding:4px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:2px}.tcsw button.on{border-color:var(--gold);background:var(--bg)}.tcsw small{font-size:10px}
+.tcmem{display:flex;flex-direction:column;gap:2px;max-height:52vh;overflow-y:auto}.tcmr{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--line)}.tcmr a{color:var(--blueink)}
+.tclegend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--mut);padding-top:6px}.tclegend span{display:flex;align-items:center;gap:5px}.tcst2{display:inline-block;width:16px;height:16px}.tcst2 svg{width:100%;height:100%}
+.tcit2{width:100%;min-width:0;font-size:13px}.tcit2 th,.tcit2 td{padding:6px 4px;text-align:left;border-bottom:1px solid var(--line)}
+.tcold{align-self:center;margin:4px auto 10px;display:block}
+@media(max-width:760px){.tcwrap{grid-template-columns:1fr;height:calc(100vh - 150px)}.tcpane{display:none}.tcwrap.open .tclist{display:none}.tcwrap.open .tcpane{display:flex}.tcbk{display:block}.tcb{max-width:88%}}
+/* three-state switch: green tick = allow, blue question mark = default, red cross = deny */
+.tri{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;flex:none;background:var(--card)}
+.tri-s{border:0;width:42px;height:34px;display:grid;place-items:center;cursor:pointer;padding:0;opacity:.45;filter:grayscale(.7);transition:.12s}.tri-s svg{width:22px;height:22px}
+.tri-s.ok{background:#eafbe9}.tri-s.df{background:#e9f1fd;border-left:1px solid #c9d9f1;border-right:1px solid #f0cfcf}.tri-s.no{background:#fbe7e7}
+.tri-s.on{opacity:1;filter:none;box-shadow:inset 0 0 0 2px currentColor}.tri-s.ok.on{color:#0aa826}.tri-s.df.on{color:#0a76f5}.tri-s.no.on{color:#e82424}
+.tri.mixed .tri-s{opacity:.7;filter:none}.tri.dis{opacity:.5}.tri.dis .tri-s{cursor:not-allowed}
+.rbwrap{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}.rbpick{position:sticky;top:12px}.rblist{max-height:56vh;overflow-y:auto;border:1px solid var(--line);border-radius:8px}.rblist.short{max-height:240px}
+.rbrow{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer}.rbrow small{margin-left:auto;color:var(--mut)}
+.rbbar{display:flex;gap:8px;position:sticky;top:0;z-index:3;background:var(--bg);padding:6px 0 10px}
+.rbit{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.rbit:last-child{border:0}.rbit.staged{background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.rbtx{flex:1;min-width:0;display:flex;flex-direction:column}.rbtx small{color:var(--mut);font-size:12px}.rbl{font-size:10px;background:var(--amber);color:var(--amberink);border-radius:99px;padding:1px 7px;font-style:normal}
+.rbef.on{color:var(--ok)}.rbef.off{color:var(--bad)}.rbmx{color:var(--mut);font-size:11px}.rbtabs{max-width:460px}
+@media(max-width:860px){.rbwrap{grid-template-columns:1fr}.rbpick{position:static}}
+/* hierarchy: employees removed from the firm */
+.hcard.hrm{border-style:dashed;opacity:.85;background:var(--bg)}.hcard.hrm b{color:var(--mut)}.hro .hbt button:not([title^="Expand"]):not([title^="Collapse"]){display:none}.hro .card{display:none}
 </style>
 </head>
 <body>
@@ -108,7 +175,7 @@ tr.late{background:var(--badbg)}td.cl{color:var(--gold)}td.due.l{color:var(--bad
 </div>
 <div id="wt-ov"></div>
 <script>
-const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉"],["time","Timesheets","⏱"],["leave","Leave","✈"],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Master Calendar","▦"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺"],["settings","Settings","⚙"]];
+const NAV1=[["myday","My Day","☀"],["tasks","My Tasks","✉"],["chat","Team Chat","✆"],["time","Timesheets","⏱"],["leave","Leave","✈"],["clients","Clients","▦"],["docs","Documents","▭"],["inv","Invoices","▤"],["cal","Compliance Calendar","▣"],["master","Master Compliance","▣"],["upload","Master Calendar","▦"],["mon","Work Monitor","▥"],["rates","Rates & Fees","₹"],["log","Activity Log","∿"],["users","Users & Roles","☺"],["settings","Settings","⚙"]];
 const NAV2=[["home","Home","▦"],["dws","Daily Worksheet","▤"],["ts","Task Sheet","☰"]];
 let TODAY=new Date(2026,10,7);
 const staff=[["Anjali T",2],["CA Priya Nair",""],["Divya M",4],["Gopika N",3],["Meera K",3],["Nisha R",""],["Suresh Pillai",""],["Vineeth KS",3]];
@@ -126,7 +193,7 @@ const days=d=>Math.round((new Date(d)-TODAY)/864e5);
 const inr=n=>"₹"+n.toLocaleString("en-IN");
 const pc=s=>({"In Progress":"","On Hold":"a","Accepted":"","Pending Acceptance":"a"}[s]||"");
 /* Sidebar badges: shown only when there is something waiting; computed from real data, never hardcoded */
-function badgeOf(id){try{const mgr=canSee("clients");
+function badgeOf(id){try{const mgr=canSee("clients");if(id=="chat")return TC.unread;
  if(id=="tasks")return tasks.filter(t=>t[0]==ME&&t[5]!=STAT[4]).length;
  if(id=="time")return mgr?approvals.filter(a=>a[3]=="Submitted").length:0;
  if(id=="leave")return mgr?lv.filter(r=>r[0]!=ME&&r[6]=="Pending").length:0;
@@ -263,7 +330,7 @@ function inv(){const dueRows=ledger.filter(r=>balOf(r)>0),od=r=>-days(dueOf(r));
  <h2>Payment reminders <small>overdue invoices</small></h2><div class="card">${rem||"No overdue invoices."}</div>`}
 let users=[["CA Arjun Menon","arjun@example.com","Partner","Active"],["CA Priya Nair","priya@example.com","Manager","Active"],["Divya M","divya@example.com","Staff","Active"],["Meera K","meera@example.com","Staff","Active"],["Gopika N","gopika@example.com","Staff","Invited"]],umsg="",uD={name:"",email:"",role:"Staff"},viewAs="Partner";
 const ROLES=["Partner","Manager","Staff"],PR={rates:["Partner"],users:["Partner"],inv:["Partner","Manager"],mon:["Partner","Manager"],log:["Partner","Manager"],clients:["Partner","Manager"]};
-const canSee=id=>id=="settings"?!!(wt.live&&wt.profile&&wt.profile.app_role=="managing_partner"):(!PR[id]||PR[id].includes(viewAs));
+const canSee=id=>id=="settings"?!!(wt.live&&wt.profile&&(wt.profile.app_role=="managing_partner"||rbFirmAny())):(id=="users"&&wt.live&&wt.profile)?(wt.profile.app_role=="managing_partner"||rbUsersAny()):(!PR[id]||PR[id].includes(viewAs));
 const PM=[["See all clients",1,1,0],["Raise invoices and record receipts",1,1,0],["Approve timesheets and leave",1,1,0],["Upload the master compliance calendar",1,0,0],["See rates and fees",1,0,0],["Manage users and roles",1,0,0],["Enter own timesheet, leave and tasks",1,1,1]];
 function setView(r){viewAs=r;if(!canSee(cur))cur="myday";nav();render()}
 const partners=()=>users.filter(u=>u[2]=="Partner"&&u[3]=="Active").length;
@@ -398,14 +465,14 @@ async function wtSignOut(){try{await SB.auth.signOut()}catch(_){}location.reload
 
 /* ---------- load session data ---------- */
 async function loadFirm(){const {data}=await SB.from("firms").select("*").maybeSingle();wt.firm=data}
-async function loadHier(){const {data}=await SB.from("hierarchy_members").select("id,name,designation,parent_id,user_id,email").order("created_at");wt.hier=data||[]}
+async function loadHier(){const {data}=await SB.from("hierarchy_members").select("id,name,designation,parent_id,user_id,email,removed_at").order("created_at");wt.hier=data||[]}
 async function enter(session){
  wt.user=session.user;
  const {data:p,error}=await SB.from("profiles").select("*").eq("user_id",session.user.id).maybeSingle();
  if(error)return authUI("Could not load your account. Please try again.");
  if(!p){loadDraft();W.f.email=session.user.email;W.signed=true;W.step=(W.hadDraft&&W.f.name&&W.f.pname)?5:0;return wiz()}
  if(p.status!=="active"){await SB.auth.signOut();return authUI("This account has been disabled. Please contact your Managing Partner.")}
- wt.profile=p;await loadFirm();await loadHier();wt.live=true;wipeSample();goLive()}
+ wt.profile=p;await loadFirm();await loadHier();wt.live=true;wipeSample();goLive();rbBoot()}
 function wipeSample(){
  CL.list=[];CL.loaded=0;CL.seeded=1;CL.msg="";CL.err="";CL.show=0;
  const n=new Date();TODAY=new Date(n.getFullYear(),n.getMonth(),n.getDate());TOD=TODAY.getFullYear()+"-"+z2(TODAY.getMonth()+1)+"-"+z2(TODAY.getDate());
@@ -500,10 +567,10 @@ function locGps(){if(!navigator.geolocation||!MAP)return toast("Location is not 
 const HS={nodes:[],col:{},zoom:1,edit:null,addUnder:null,init:0};
 const kids=id=>HS.nodes.filter(n=>n.parent_id===id);
 function desc(id){const o=new Set([id]);let c=true;while(c){c=false;HS.nodes.forEach(n=>{if(n.parent_id&&o.has(n.parent_id)&&!o.has(n.id)){o.add(n.id);c=true}})}return o}
-function hNode(n){const k=kids(n.id),c=HS.col[n.id];return `<div class="hn"><div class="hcard ${HS.edit==n.id?"sel":""} ${!n.parent_id?"root":""}"><b>${esc(n.name)}</b><span>${esc(n.designation)}</span>${n.parent_id&&n.email?`<small class="hem">${esc(n.email)}${n.user_id?" ✓":" · login pending"}</small>`:""}<div class="hbt">${k.length?`<button title="${c?"Expand":"Collapse"}" onclick="hTog('${n.id}')">${c?"▸ "+k.length:"▾"}</button>`:""}<button title="Add a report" onclick="hAddUnder('${n.id}')">＋</button><button title="Edit" onclick="hEdit('${n.id}')">✎</button>${n.parent_id?`<button title="Delete" onclick="hDel('${n.id}')">✕</button>`:""}</div></div>${k.length&&!c?`<div class="hc">${k.map(x=>`<div class="hw">${hNode(x)}</div>`).join("")}</div>`:""}</div>`}
+function hNode(n){const k=kids(n.id),c=HS.col[n.id];return `<div class="hn"><div class="hcard ${HS.edit==n.id?"sel":""} ${!n.parent_id?"root":""} ${n.removed_at?"hrm":""}"><b>${n.removed_at?"Removed employee":esc(n.name)}</b><span>${n.removed_at?esc(n.name)+" · ":""}${esc(n.designation)}</span>${n.parent_id&&n.email?`<small class="hem">${esc(n.email)}${n.user_id?" ✓":" · login pending"}</small>`:""}<div class="hbt">${k.length?`<button title="${c?"Expand":"Collapse"}" onclick="hTog('${n.id}')">${c?"▸ "+k.length:"▾"}</button>`:""}<button title="Add a report" onclick="hAddUnder('${n.id}')">＋</button><button title="Edit" onclick="hEdit('${n.id}')">✎</button>${n.parent_id?`<button title="Delete" onclick="hDel('${n.id}')">✕</button>`:""}</div></div>${k.length&&!c?`<div class="hc">${k.map(x=>`<div class="hw">${hNode(x)}</div>`).join("")}</div>`:""}</div>`}
 function hRender(){const m=$id("hmount");if(!m)return;const root=HS.nodes.find(n=>!n.parent_id),e=HS.nodes.find(n=>n.id===HS.edit),bad=new Set(e?desc(e.id):[]);
  m.innerHTML=`<div class="hbar"><button class="btn ghost sm" onclick="hZoom(-.1)">−</button><span id="hz">${Math.round(HS.zoom*100)}%</span><button class="btn ghost sm" onclick="hZoom(.1)">+</button><button class="btn ghost sm" onclick="hZoom(0)">Reset</button><button class="btn ghost sm" onclick="hAll(1)">Collapse all</button><button class="btn ghost sm" onclick="hAll(0)">Expand all</button></div><div class="hscroll"><div class="hview" id="hview" style="zoom:${HS.zoom}">${root?hNode(root):""}</div></div>
- <div class="card" style="margin-top:10px"><b>${e?"Edit member":"Add a member"}</b><div class="grid" style="margin-top:8px"><label>Name<input id="h_name" value="${e?esc(e.name):""}"></label><label>Designation<select id="h_des">${DESIG.map(d=>`<option ${e&&e.designation==d?"selected":""}>${d}</option>`).join("")}</select></label><label>Reports to<select id="h_par" ${e&&!e.parent_id?"disabled":""}>${HS.nodes.filter(n=>!bad.has(n.id)).map(n=>`<option value="${n.id}" ${(e?e.parent_id:(HS.addUnder||(root&&root.id)))===n.id?"selected":""}>${esc(n.name)} (${esc(n.designation)})</option>`).join("")}</select></label>${(e&&!e.parent_id)?"":`<label>Login email<input id="h_email" type="email" value="${e?esc(e.email||""):""}" ${e&&e.user_id?"disabled":""} placeholder="name@example.com" autocomplete="off"></label>${HS.wiz&&!(e&&e.user_id)?`<label>Temporary password<input id="h_pw" type="password" autocomplete="new-password" placeholder="At least 8 characters"><span class="sub" style="cursor:pointer" onclick="const i=$id('h_pw');i.type=i.type=='password'?'text':'password'">Show / hide</span></label>`:""}`}</div>${(e&&!e.parent_id)?"":`<div class="sub" style="margin-top:6px">${HS.wiz?"Optional. If you give an email, set a temporary password and tell the employee yourself: no email is sent. The password is never shown again.":"Add the email to create this person’s login when you save. No email is sent: tell them, and they set their own password with “Forgot password” on the sign-in page."}</div>`}<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="hSave()">${e?"Save changes":"Add member"}</button>${e?`<button class="btn ghost sm" onclick="HS.edit=null;hRender()">Cancel</button>`:""}</div><div id="h_err" class="err"></div></div>`;
+ <div class="card" style="margin-top:10px"><b>${e?"Edit member":"Add a member"}</b><div class="grid" style="margin-top:8px"><label>Name<input id="h_name" value="${e?esc(e.name):""}"></label><label>Designation<select id="h_des">${DESIG.map(d=>`<option ${e&&e.designation==d?"selected":""}>${d}</option>`).join("")}</select></label><label>Reports to<select id="h_par" ${e&&!e.parent_id?"disabled":""}>${HS.nodes.filter(n=>!bad.has(n.id)&&!n.removed_at).map(n=>`<option value="${n.id}" ${(e?e.parent_id:(HS.addUnder||(root&&root.id)))===n.id?"selected":""}>${esc(n.name)} (${esc(n.designation)})</option>`).join("")}</select></label>${(e&&!e.parent_id)?"":`<label>Login email<input id="h_email" type="email" value="${e?esc(e.email||""):""}" ${e&&e.user_id?"disabled":""} placeholder="name@example.com" autocomplete="off"></label>${HS.wiz&&!(e&&e.user_id)?`<label>Temporary password<input id="h_pw" type="password" autocomplete="new-password" placeholder="At least 8 characters"><span class="sub" style="cursor:pointer" onclick="const i=$id('h_pw');i.type=i.type=='password'?'text':'password'">Show / hide</span></label>`:""}`}</div>${(e&&!e.parent_id)?"":`<div class="sub" style="margin-top:6px">${HS.wiz?"Optional. If you give an email, set a temporary password and tell the employee yourself: no email is sent. The password is never shown again.":"Add the email to create this person’s login when you save. No email is sent: tell them, and they set their own password with “Forgot password” on the sign-in page."}</div>`}<div class="wrow" style="margin-top:10px"><button class="btn sm" onclick="hSave()">${e?"Save changes":"Add member"}</button>${e?`<button class="btn ghost sm" onclick="HS.edit=null;hRender()">Cancel</button>`:""}</div><div id="h_err" class="err"></div></div>`;
  m.onwheel=ev=>{if(ev.ctrlKey){ev.preventDefault();hZoom(ev.deltaY<0?.1:-.1)}}}
 function hZoom(d){HS.zoom=d===0?1:Math.min(1.6,Math.max(.4,+(HS.zoom+d).toFixed(2)));$id("hview").style.zoom=HS.zoom;$id("hz").textContent=Math.round(HS.zoom*100)+"%"}
 function hTog(id){HS.col[id]=!HS.col[id];hRender()}
@@ -540,8 +607,8 @@ async function dDisc(){if(!confirm("Disconnect Google Drive? WorkTrack will revo
 async function dBackup(){toast("Backing up to Drive…");const r=await fn("drive-manage",{action:"backup"});r.error?toast(r.error,1):toast("Backup uploaded and verified ("+r.data.bytes+" bytes, checksum matched).");loadBackups()}
 async function loadBackups(){const el=$id("bk");if(!el)return;const {data}=await SB.from("backup_runs").select("*").order("created_at",{ascending:false}).limit(10);
  el.innerHTML=(data&&data.length)?tbl(["When","Type","Result","Size"],data.map(b=>`<tr><td>${new Date(b.created_at).toLocaleString("en-IN")}</td><td>${b.kind}</td><td><span class="pill ${b.status=="verified"?"g":b.status=="failed"?"r":"a"}">${b.status=="verified"?"Verified":b.status=="failed"?"Failed":"Running"}</span>${b.error?` <small>${esc(b.error)}</small>`:""}</td><td>${b.bytes?(b.bytes/1024).toFixed(1)+" KB":"–"}</td></tr>`).join("")):`<div class="note">No backups yet.</div>`}
-function settingsHtml(){
- if(!wt.firm||wt.profile.app_role!=="managing_partner")return `<h1>Settings</h1><div class="card">Only the Managing Partner can open Settings.</div>`;
+function _settingsOldFn(){
+ if(!wt.firm||(wt.profile.app_role!=="managing_partner"&&!rbFirmAny()))return `<h1>Settings</h1><div class="card">Only the Managing Partner can open Settings.</div>`;
  const f=wt.firm;if(!HS.init){HS.nodes=JSON.parse(JSON.stringify(wt.hier));HS.wiz=0;HS.init=1;HS.edit=null;HS.col={};HS.addUnder=null}
  LOC={lat:f.office_lat,lng:f.office_lng,r:f.geofence_m};setTimeout(()=>{mapInit("loc_map",LOC,locSync);locSync();hRender();loadBackups()},0);
  const vt=f.drive_verified_at?new Date(f.drive_verified_at).toLocaleString("en-IN"):"never";
@@ -560,11 +627,11 @@ const _usersDemo=V.users;
 V.users=()=>wt.live?usersLive():_usersDemo();
 async function loadUsers(){const {data}=await SB.from("profiles").select("*").order("created_at");wt.users=data||[];wt.usersLoaded=1}
 const ACCESS={managing_partner:"Managing Partner",partner:"Partner",manager:"Manager",staff:"Staff"};
-function usersLive(){if(!wt.usersLoaded){loadUsers().then(render)}const mp=wt.profile.app_role==="managing_partner";
- const rows=wt.users.map(u=>{const me=u.user_id===wt.user.id,fixed=u.app_role==="managing_partner";return `<tr><td><b>${esc(u.full_name)}</b></td><td>${esc(u.email)}</td><td>${esc(u.designation||"–")}</td><td>${fixed||!mp?ACCESS[u.app_role]:`<select onchange="uRole('${u.user_id}',this.value)">${["partner","manager","staff"].map(r=>`<option value="${r}" ${u.app_role==r?"selected":""}>${ACCESS[r]}</option>`).join("")}</select>`}</td><td><span class="pill ${u.status=="active"?"g":"r"}">${u.status=="active"?"Active":"Disabled"}</span></td><td>${mp&&!fixed&&!me?`<button class="btn ghost sm" onclick="uToggle('${u.user_id}','${u.status}')">${u.status=="active"?"Disable":"Enable"}</button> <button class="btn ghost sm" onclick="uReset('${u.user_id}')">Reset password</button>`:""}</td></tr>`}).join("");
+function usersLive(){if(!wt.usersLoaded){loadUsers().then(render)}const mp=wt.profile.app_role==="managing_partner";const cAdd=rbHas("emp_add"),cPause=rbHas("emp_pause"),cEdit=rbHas("emp_edit"),cDel=rbHas("emp_delete");
+ const rows=wt.users.map(u=>{const me=u.user_id===wt.user.id,fixed=u.app_role==="managing_partner";return `<tr><td><b>${esc(u.full_name)}</b></td><td>${esc(u.email)}</td><td>${esc(u.designation||"–")}</td><td>${fixed||!cEdit||u.removed_at?ACCESS[u.app_role]:`<select onchange="uRole('${u.user_id}',this.value)">${(mp?["partner","manager","staff"]:["manager","staff"]).map(r=>`<option value="${r}" ${u.app_role==r?"selected":""}>${ACCESS[r]}</option>`).join("")}</select>`}</td><td><span class="pill ${u.status=="active"&&!u.removed_at?"g":"r"}">${u.removed_at?"Removed":u.status=="active"?"Active":"Disabled"}</span></td><td>${!fixed&&!me&&!u.removed_at?`${cPause?`<button class="btn ghost sm" onclick="uToggle('${u.user_id}','${u.status}')">${u.status=="active"?"Disable":"Enable"}</button> `:""}${cEdit?`<button class="btn ghost sm" onclick="uReset('${u.user_id}')">Reset password</button> `:""}${cDel?`<button class="btn ghost sm" style="color:var(--bad)" onclick="uDel('${u.user_id}','${esc(u.full_name).replace(/'/g,"\\'")}')">Delete</button>`:""}`:""}</td></tr>`}).join("");
  const pm=PM.map(p=>`<tr><td>${p[0]}</td>${[1,2,3].map(k=>`<td>${p[k]?"✓":"–"}</td>`).join("")}</tr>`).join("");
  return `<h1>Users & Roles</h1><div class="sub">Employees sign in with their registered email and the password you set. No Google account is needed.</div>
- ${mp?`<div class="card"><b>Create an employee login</b><div class="grid" style="margin-top:10px"><label>Name<input id="u_name"></label><label>Work email<input id="u_email" type="email"></label><label>Temporary password (8+)<input id="u_pw" type="text" autocomplete="off"></label><label>Designation (optional)<select id="u_des"><option value="">None</option>${DESIG.map(d=>`<option>${d}</option>`).join("")}</select></label><label>App access<select id="u_role"><option value="staff">Staff</option><option value="manager">Manager</option><option value="partner">Partner</option></select></label></div><div style="margin-top:12px"><button class="btn" id="u_go" onclick="uCreate()">Create login</button></div><div class="note">Share the email and temporary password with the employee yourself; they can change it with “Forgot password”. App access decides what they can open; designation is only their title.</div></div>`:""}
+ ${cAdd?`<div class="card"><b>Create an employee login</b><div class="grid" style="margin-top:10px"><label>Name<input id="u_name"></label><label>Work email<input id="u_email" type="email"></label><label>Temporary password (8+)<input id="u_pw" type="text" autocomplete="off"></label><label>Designation (optional)<select id="u_des"><option value="">None</option>${DESIG.map(d=>`<option>${d}</option>`).join("")}</select></label><label>App access<select id="u_role"><option value="staff">Staff</option><option value="manager">Manager</option>${mp?`<option value="partner">Partner</option>`:""}</select></label></div><div style="margin-top:12px"><button class="btn" id="u_go" onclick="uCreate()">Create login</button></div><div class="note">Share the email and temporary password with the employee yourself; they can change it with “Forgot password”. App access decides what they can open; designation is only their title.</div></div>`:""}
  ${tbl(["Name","Email","Designation","App access","Status",""],rows||`<tr><td colspan="6">Loading…</td></tr>`)}
  <h2>What each access level can do</h2>${tbl(["Permission","Partner","Manager","Staff"],pm)}
  <div class="note">Access rules are enforced on the server for settings, Drive and employee accounts. The sample-data work pages still hide menu items by role in the browser only.</div>`}
@@ -1610,6 +1677,236 @@ async function mdCheckout(b){if(!confirm("Check out for today?\n\nYou will not b
 function tkEodTick(){if(!TK.coTick)TK.coTick=setInterval(()=>{if(document.hidden||!wt.live)return;if(cur=="myday"&&$id("mdco")){$id("mdco").innerHTML=mdCoHtml();const b=$id("mdbn");if(b)b.innerHTML=mdBanner()}},30000)}
 
 function tkOpenFromDay(id){tkOpen(id)}
+
+/* ===== Team Chat (added Nov 2026). Messages live only in the firm's Google Drive; the server decides who may see what. ===== */
+const WTC={"blue-green":["Blue and Green","#024a68"],red:["Red","#9b0008"],green:["Green","#065606"],blue:["Blue","#021993"],teal:["Teal","#007c80"],pink:["Pink","#dc4274"],purple:["Purple","#590c7b"],black:["Black","#0a0a0a"],gray:["Grey","#5f5f61"],gold:["Gold","#cb9116"],maroon:["Maroon","#5f0019"],navy:["Navy","#021d4f"],deepteal:["Deep Teal","#024c53"]};
+const TC_STAR=(()=>{let d="";for(let i=0;i<=120;i++){const a=i/120*Math.PI*2,r=47*(0.8+0.2*Math.cos(6*a)),x=50+r*Math.sin(a),y=50-r*Math.cos(a);d+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)}return d+"Z"})();
+const TC_ST={
+ L:`<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#b80c0f"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`,
+ G:`<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#85b84a"/><path d="M6 12.5l4 4 8-8.5" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ C:`<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#d9ac30"/><circle cx="12" cy="12" r="7.3" fill="none" stroke="#fff" stroke-width="2"/><path d="M12 7.8V12l3 1.8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+ q:`<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6" fill="#fff" stroke="#bdbdbd" stroke-width="1.6"/><path d="M9 9.4c0-1.8 1.3-3 3-3s3 1.1 3 2.8c0 2.2-3 2.3-3 4.4" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="12" cy="18" r="1.5" fill="#000"/></svg>`};
+const TC_STT={L:"On leave",G:"Online",C:"Away from the app",q:"Not available"};
+function tcAv(p,size,st){const c=(WTC[p&&p.color]||WTC["blue-green"])[1],n=String(p&&p.name||"?").trim().split(/\s+/),ini=((n[0]||"?")[0]+(n.length>1?n[n.length-1][0]:"")).toUpperCase();
+ return `<span class="tcav" style="--s:${size||40}px"><svg viewBox="0 0 100 100"><path d="${TC_STAR}" fill="${c}"/><text x="50" y="52" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="${ini.length>1?33:40}" font-weight="700" font-family="system-ui,sans-serif">${esc(ini)}</text></svg>${st?`<i class="tcst" title="${TC_STT[st]}">${TC_ST[st]}</i>`:""}</span>`}
+const TC_TICK={s:`<svg class="tick" viewBox="0 0 16 11"><path d="M1.5 5.8l3.7 3.7L14 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ d:`<svg class="tick" viewBox="0 0 22 11"><path d="M1.5 5.8l3.7 3.7L14 1.5M8.5 9.2l.6.4L19 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`};
+const TC_EMO="😀 😃 😄 😁 😆 😅 😂 🤣 😊 🙂 😉 😍 🥰 😘 😎 🤩 🤔 🤨 😐 😑 😶 🙄 😏 😣 😥 😮 😯 😪 😫 😴 😌 😛 😜 🤪 😒 😓 😔 😕 🙃 🤑 😲 🙁 😖 😞 😟 😤 😢 😭 😦 😧 😨 😩 🤯 😬 😰 😱 🥵 🥶 😳 🤪 😵 😡 😠 🤬 😷 🤒 🤕 🤢 🤮 🥳 😇 🤠 🤓 🧐 👍 👎 👌 ✌️ 🤞 🤝 🙏 👏 🙌 👋 🤚 ✋ 💪 👀 🧠 ❤️ 🧡 💛 💚 💙 💜 🖤 💔 💕 💯 🔥 ✨ ⭐ 🎉 🎊 🎂 🎁 ☕ 🍵 🍕 🍔 🍎 📌 📎 📅 📊 📈 📉 💼 🏆 ✅ ❌ ⚠️ ❓ ❗ 💡 ⏰ 🕒 📞 🚀".split(" ");
+const TC_QUICK=["👍","❤️","😂","😮","😢","🙏"];
+const TC={convs:[],people:{},me:null,cur:null,msgs:[],more:false,members:[],reply:null,sel:null,st:{},off:"",ret:null,unread:0,q:"",sres:null,stick:true,sig:"",ts:0,tick:0,mounted:false,conv:null};
+const tcIst=d=>new Date(d).toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"});
+const tcT=d=>new Date(d).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit"});
+const tcDL=d=>{const a=tcIst(d),n=tcIst(new Date()),y=tcIst(new Date(Date.now()-864e5));return a==n?"Today":a==y?"Yesterday":new Date(d).toLocaleDateString("en-IN",{timeZone:"Asia/Kolkata",day:"numeric",month:"short",year:"numeric"})};
+const tcLink=s=>esc(s).replace(/(https?:\/\/[^\s<]+)/g,u=>`<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`).replace(/\n/g,"<br>");
+async function tcApi(a,b){const r=await fn("chat",Object.assign({action:a},b||{}));if(r.error)return {error:r.error};const d=r.data;if(d&&d.drive===false)return {error:d.reason||"Google Drive is not connected yet, so Team Chat is not available.",off:1};return {d}}
+async function tcSync(){if(!wt.live)return;const r=await tcApi("sync");TC.ts=Date.now();if(r.error){TC.off=r.error;if(cur=="chat")tcPaintAll();return}
+ TC.off="";const d=r.d;TC.convs=d.convs;TC.people={};d.people.forEach(p=>TC.people[p.mid]=p);TC.me=d.me;TC.ret=d.retention||null;
+ const u=d.convs.reduce((a,c)=>a+c.unread,0);if(u!==TC.unread){TC.unread=u;nav()}
+ if(cur=="chat"){if(!TC.mounted)tcPaintAll();else{tcPaintTop();tcPaintList()}}}
+V.chat=()=>{if(!wt.live)return `<h1>Team Chat</h1><div class="card">Team Chat is available once your firm is signed in with Google Drive connected.</div>`;setTimeout(tcMount,0);return `<div id="tcroot" class="tc"></div>`};
+function tcMount(){if(!$id("tcroot"))return;TC.mounted=false;tcPaintAll();tcSync().then(()=>{if(TC.cur)tcLoad(true)});clearInterval(TC.timer);TC.tick=0;
+ TC.timer=setInterval(()=>{if(cur!="chat"||document.hidden||!$id("tcroot")){if(cur!="chat")clearInterval(TC.timer);return}TC.tick++;if(TC.cur)tcLoad(false);if(TC.tick%3==0)tcSync();if(TC.tick%4==0&&TC.cur&&TC.conv&&(TC.conv.type!="group"))tcStatus()},5000)}
+function tcPaintAll(){const el=$id("tcroot");if(!el)return;
+ if(TC.off){el.innerHTML=`<h1>Team Chat</h1><div class="card"><b>Team Chat is not available right now</b><div class="sub" style="margin-top:6px">${esc(TC.off)}</div></div>`;TC.mounted=false;return}
+ el.innerHTML=`<div class="tcwrap ${TC.cur?"open":""}"><aside class="tclist"><div class="tchd"><b>Team Chat</b><span id="tctop">${tcTop()}</span></div><input id="tcq" class="tcq" placeholder="Search people and messages" oninput="tcSearchIn(this.value)" value="${esc(TC.q)}"><div id="tclst" class="tclst"></div></aside><section class="tcpane" id="tcpane"></section><div id="tcdlg"></div></div>`;
+ TC.mounted=true;tcPaintList();tcPaintPane()}
+function tcTop(){return `<button class="tcib" title="Chat settings" onclick="tcSettings()">⚙</button>${TC.me&&TC.me.can.start?`<button class="tcib" title="New chat" onclick="tcNew()">＋</button>`:""}`}
+function tcPaintTop(){const e=$id("tctop");if(e)e.innerHTML=tcTop()}
+function tcPaintList(){const el=$id("tclst");if(!el)return;
+ if(TC.q&&TC.q.length>1){const s=TC.sres;el.innerHTML=!s?`<div class="tcem">Searching…</div>`:(s.people.length||s.msgs.length)?`${s.people.length?`<div class="tcsh">People</div>`+s.people.map(p=>`<button class="tci" onclick="tcPick('${p.mid}')">${tcAv(p,40)}<span class="tcit"><b>${esc(p.name)}</b><small>${TC.me&&TC.me.can.start?"Start or open a chat":"Open your chat with this person"}</small></span></button>`).join(""):""}${s.msgs.length?`<div class="tcsh">Messages</div>`+s.msgs.map(m=>`<button class="tci" onclick="tcOpen('${m.conv}')"><span class="tcit"><b>${esc(m.cname)}</b><small>${esc(m.name)}: ${esc(m.text)}</small></span><time>${tcDL(m.at)}</time></button>`).join(""):""}`:`<div class="tcem">No matches.</div>`;return}
+ el.innerHTML=TC.convs.map(c=>{const p=c.type=="dm"?c.with:null,av=c.type=="dm"?tcAv(p,44,TC.st[p&&p.mid]):c.type=="all"?tcAv({name:"All Employees",color:TC.me&&TC.me.color},44):tcAv({name:c.name,color:"gray"},44);
+  return `<button class="tci ${TC.cur==c.id?"on":""}" onclick="tcOpen('${c.id}')">${av}<span class="tcit"><b>${esc(c.name)}</b><small>${c.last?(c.last.name?esc(c.last.name)+": ":"")+esc(c.last.text):"No messages yet"}</small></span><span class="tcmt">${c.last?`<time>${tcDL(c.last.at)=="Today"?tcT(c.last.at):tcDL(c.last.at)}</time>`:""}${c.unread?`<em>${c.unread}</em>`:""}</span></button>`}).join("")||`<div class="tcem">No chats yet.</div>`}
+let tcSearchT;
+function tcSearchIn(v){TC.q=v.trim();TC.sres=null;tcPaintList();clearTimeout(tcSearchT);if(TC.q.length<2)return;tcSearchT=setTimeout(async()=>{const q=TC.q,r=await tcApi("search",{q});if(q!=TC.q)return;TC.sres=r.error?{people:[],msgs:[]}:r.d;tcPaintList()},400)}
+async function tcPick(mid){TC.q="";const dm=TC.convs.find(c=>c.type=="dm"&&c.with&&c.with.mid==mid);if(dm){const i=$id("tcq");if(i)i.value="";return tcOpen(dm.id)}
+ if(!TC.me.can.start)return toast("You do not have permission to start new chats. You can message everyone in All Employees.",1);
+ const r=await tcApi("start",{type:"dm",to:[mid]});if(r.error)return toast(r.error,1);await tcSync();const i=$id("tcq");if(i)i.value="";tcOpen(r.d.id)}
+function tcOpen(id){TC.cur=id;TC.msgs=[];TC.more=false;TC.sig="";TC.reply=null;TC.sel=null;TC.stick=true;TC.conv=TC.convs.find(c=>c.id==id)||null;TC.q="";TC.sres=null;
+ const w=document.querySelector(".tcwrap");if(w)w.classList.add("open");const i=$id("tcq");if(i)i.value="";tcPaintList();tcPaintPane();tcLoad(true);tcStatus()}
+function tcBack(){TC.cur=null;const w=document.querySelector(".tcwrap");if(w)w.classList.remove("open");tcPaintPane();tcPaintList()}
+async function tcStatus(){if(!TC.cur)return;const r=await tcApi("status");if(r.error)return;TC.st=r.d.st;tcPaintHead();tcPaintList();if($id("tcinfo"))tcInfoPaint()}
+function tcPaintPane(){const p=$id("tcpane");if(!p)return;
+ if(!TC.cur){p.innerHTML=`<div class="tcnone"><div>${tcAv({name:"Team Chat",color:TC.me&&TC.me.color},96)}</div><b>Team Chat</b><div class="sub">Pick a chat on the left, or open All Employees to message everyone.</div></div>`;return}
+ const c=TC.convs.find(x=>x.id==TC.cur),can=TC.me&&TC.me.can;
+ p.innerHTML=`<div class="tcph" id="tcph"></div><div class="tcms" id="tcms" onscroll="tcScroll(this)"></div><div id="tcrp"></div><div class="tccm" id="tccm"><button class="tcib" title="Emoji" onclick="tcEmoji(tcIns)">😊</button>${can&&can.poll?`<button class="tcib" title="Create a poll" onclick="tcPoll()">📊</button>`:""}${c&&c.type=="all"&&can&&can.sel?`<button class="tcib" id="tcselb" title="Send to selected employees only" onclick="tcSelPick()">🔒</button>`:""}<textarea id="tcta" rows="1" placeholder="Type a message" onkeydown="tcKey(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea><button class="tcsend" onclick="tcSend()" title="Send">➤</button></div>`;
+ tcPaintHead();tcPaintMsgs();tcPaintReply()}
+function tcPaintHead(){const h=$id("tcph");if(!h||!TC.cur)return;const c=TC.convs.find(x=>x.id==TC.cur)||TC.conv;if(!c)return;let sub="",av;
+ if(c.type=="dm"){const p=c.with||{},s=TC.st[p.mid];av=tcAv(p,42,s);sub=s?TC_STT[s]:""}
+ else if(c.type=="all"){av=tcAv({name:"All Employees",color:TC.me&&TC.me.color},42);sub=Object.keys(TC.people).length+" employees"}
+ else{av=tcAv({name:c.name,color:"gray"},42);sub=(TC.members||[]).map(m=>m.name).slice(0,6).join(", ")}
+ h.innerHTML=`<button class="tcib tcbk" onclick="tcBack()">‹</button>${av}<span class="tcit"><b>${esc(c.name)}</b><small>${esc(sub)}</small></span><button class="tcib" title="Details" onclick="tcInfo()">ⓘ</button>`}
+function tcScroll(el){TC.stick=el.scrollHeight-el.scrollTop-el.clientHeight<80}
+async function tcLoad(first){if(!TC.cur)return;const id=TC.cur,r=await tcApi("msgs",{conv:id,read:!document.hidden&&cur=="chat"});if(id!=TC.cur)return;
+ if(r.error){if(first){const m=$id("tcms");if(m)m.innerHTML=`<div class="tcem">${esc(r.error)}</div>`}return}
+ const d=r.d,sig=JSON.stringify(d.msgs.map(m=>[m.id,m.tick,m.rx,m.del,m.poll]));TC.members=d.conv.members;TC.conv=Object.assign(TC.conv||{},d.conv);
+ if(sig!=TC.sig||first){const keep=TC.older||[];TC.sig=sig;TC.msgs=keep.concat(d.msgs);TC.more=d.more;tcPaintMsgs();tcPaintHead()}}
+async function tcOlder(){const o=TC.msgs[0];if(!o)return;const r=await tcApi("msgs",{conv:TC.cur,before:o.at});if(r.error)return toast(r.error,1);const ids=new Set(TC.msgs.map(m=>m.id));TC.older=r.d.msgs.filter(m=>!ids.has(m.id)).concat(TC.older||[]);TC.msgs=r.d.msgs.filter(m=>!ids.has(m.id)).concat(TC.msgs);TC.more=r.d.more;const el=$id("tcms"),h=el.scrollHeight;tcPaintMsgs(true);el.scrollTop=el.scrollHeight-h}
+function tcPaintMsgs(keepPos){const el=$id("tcms");if(!el)return;const c=TC.convs.find(x=>x.id==TC.cur)||TC.conv||{};let last="",h=TC.more?`<button class="btn ghost sm tcold" onclick="tcOlder()">Load earlier messages</button>`:"";
+ for(const m of TC.msgs){const d=tcIst(m.at);if(d!=last){h+=`<div class="tcdate"><span>${tcDL(m.at)}</span></div>`;last=d}h+=tcMsg(m,c)}
+ if(!TC.msgs.length)h+=`<div class="tcem">${c.type=="all"?"No messages yet. Say hello to everyone.":"No messages yet."}</div>`;
+ el.innerHTML=h;if(!keepPos&&TC.stick)el.scrollTop=el.scrollHeight}
+function tcMsg(m,c){
+ if(m.sys)return `<div class="tcsys"><span>${esc(m.sys.name)} ${m.sys.k=="join"?"joined the firm chat":"left the firm chat"}</span></div>`;
+ const who=!m.mine&&c.type!="dm"?`<div class="tcwho" style="color:${(WTC[(TC.people[m.mid]||{}).color]||WTC["blue-green"])[1]}">${esc(m.name)}</div>`:"";
+ if(m.del)return `<div class="tcm ${m.mine?"me":""}"><div class="tcb del" onclick="tcMenu('${m.id}')">${who}🚫 This message was deleted<span class="tcmeta">${tcT(m.at)}</span></div></div>`;
+ const rq=m.re?`<div class="tcq2">${m.re.del?"Deleted message":`<b>${esc(m.re.name)}</b> ${esc(m.re.text)}`}</div>`:"";
+ const lock=m.sel?`<div class="tclock">🔒 ${m.mine?"Only visible to: "+esc(m.sel.map(x=>x.name).join(", ")):"Sent only to selected employees"}</div>`:"";
+ const body=m.poll?tcPollHtml(m):`<div class="tctx">${tcLink(m.text)}</div>`;
+ const rx=(m.rx&&m.rx.length)?`<div class="tcrx">${m.rx.map(r=>`<button class="${r.mine?"on":""}" title="${esc(r.who.join(", "))}" onclick="tcReact('${m.id}','${r.e}')">${r.e}${r.n>1?" "+r.n:""}</button>`).join("")}</div>`:"";
+ const tk=m.mine?`<span class="tk ${m.tick}">${TC_TICK[m.tick=="s"?"s":"d"]}</span>`:"";
+ return `<div class="tcm ${m.mine?"me":""}"><div class="tcb" onclick="tcMenu('${m.id}',event)">${who}${lock}${rq}${body}<span class="tcmeta">${tcT(m.at)} ${tk}</span></div>${rx}</div>`}
+function tcPollHtml(m){const p=m.poll,tot=p.total||0;
+ return `<div class="tcpoll"><b>📊 ${esc(p.q)}</b>${p.opts.map((o,i)=>{if(p.creator){const n=p.counts[i],pc=tot?Math.round(n*100/tot):0;return `<div class="po ${p.mine===i?"mine":""}" onclick="event.stopPropagation();tcVote('${m.id}',${i})"><i style="width:${pc}%"></i><span>${esc(o)}</span><em>${n} · ${pc}%</em></div>`}return `<button class="po ${p.mine===i?"mine":""}" onclick="event.stopPropagation();tcVote('${m.id}',${i})"><span>${p.mine===i?"● ":"○ "}${esc(o)}</span></button>`}).join("")}
+ ${p.creator?`<details onclick="event.stopPropagation()"><summary>${tot} vote${tot==1?"":"s"} · ${p.pending.length} yet to vote</summary>${p.voters.map(v=>`<div class="tcvr">${esc(v.name)} → ${esc(p.opts[v.opt])}</div>`).join("")}${p.pending.length?`<div class="tcvr mut">Yet to vote: ${esc(p.pending.join(", "))}</div>`:""}</details><div class="tcmut">Only you can see these results.</div>`:`<div class="tcmut">${p.mine==null?"Tap an option to vote. The results are visible to the poll creator only.":"Your vote is recorded. You can change it."}</div>`}</div>`}
+function tcMenu(id,ev){if(ev&&ev.target.closest("a"))return;const m=TC.msgs.find(x=>x.id==id);if(!m)return;const can=TC.me.can;
+ tcModal(`<div class="tcmenu">${m.del?"":`<div class="tcqr">${TC_QUICK.map(e=>`<button onclick="tcClose();tcReact('${id}','${e}')">${e}</button>`).join("")}<button onclick="tcClose();tcEmoji(e=>tcReact('${id}',e))">＋</button></div><button onclick="tcClose();tcReplyTo('${id}')">↩ Reply</button>`}${m.mine&&!m.del?`<button onclick="tcClose();tcInfoMsg('${id}')">ⓘ Message info</button>`:""}${!m.del&&can.delall&&(m.mine||TC.me.mp)?`<button class="danger" onclick="tcClose();tcDel('${id}')">🗑 Delete for everyone</button>`:""}<button onclick="tcClose()">Cancel</button></div>`)}
+function tcReplyTo(id){const m=TC.msgs.find(x=>x.id==id);if(!m)return;TC.reply={id,name:m.name,text:m.poll?m.poll.q:m.text};tcPaintReply();const t=$id("tcta");if(t)t.focus()}
+function tcPaintReply(){const el=$id("tcrp");if(!el)return;let h="";
+ if(TC.reply)h+=`<div class="tcbar">↩ Replying to <b>${esc(TC.reply.name)}</b>: ${esc(String(TC.reply.text).slice(0,60))}<button onclick="TC.reply=null;tcPaintReply()">✕</button></div>`;
+ if(TC.sel)h+=`<div class="tcbar">🔒 Only ${TC.sel.length} selected employee${TC.sel.length==1?"":"s"} will see this message<button onclick="TC.sel=null;tcPaintReply()">✕</button></div>`;
+ el.innerHTML=h;const b=$id("tcselb");if(b)b.classList.toggle("on",!!TC.sel)}
+function tcKey(e){if(e.key=="Enter"&&!e.shiftKey){e.preventDefault();tcSend()}}
+function tcIns(e){const t=$id("tcta");if(!t)return;const s=t.selectionStart||t.value.length;t.value=t.value.slice(0,s)+e+t.value.slice(t.selectionEnd||s);t.focus();t.selectionStart=t.selectionEnd=s+e.length}
+async function tcSend(){const t=$id("tcta");if(!t||TC.busy)return;const text=t.value.trim();if(!text)return;TC.busy=true;
+ const r=await tcApi("send",{conv:TC.cur,text,sel:TC.sel||undefined,re:TC.reply?TC.reply.id:undefined});TC.busy=false;if(r.error)return toast(r.error,1);
+ t.value="";t.style.height="auto";TC.reply=null;TC.sel=null;TC.stick=true;TC.older=TC.older||[];TC.msgs.push(r.d.msg);TC.sig="";tcPaintMsgs();tcPaintReply();tcSync()}
+async function tcReact(id,e){const r=await tcApi("react",{conv:TC.cur,id,e});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}}
+async function tcVote(id,opt){const r=await tcApi("vote",{conv:TC.cur,id,opt});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}}
+async function tcDel(id){if(!confirm("Delete this message for everyone? Nobody will be able to read it again."))return;const r=await tcApi("delete",{conv:TC.cur,id});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}tcSync()}
+async function tcInfoMsg(id){const r=await tcApi("info",{conv:TC.cur,id});if(r.error)return toast(r.error,1);const f=t=>t?tcDL(t)+" "+tcT(t):"–";
+ tcModal(`<div class="tcdl"><b>Message info</b><table class="tcit2"><tr><th>Person</th><th>Delivered</th><th>Read</th></tr>${r.d.rows.map(x=>`<tr><td>${esc(x.name)}</td><td>${f(x.d)}</td><td>${f(x.r)}</td></tr>`).join("")||`<tr><td colspan="3">Nobody else is in this chat.</td></tr>`}</table><div class="wrow"><button class="btn" onclick="tcClose()">Close</button></div></div>`)}
+function tcModal(h){const d=$id("tcdlg");if(!d)return;d.innerHTML=`<div class="tcov" onclick="if(event.target==this)tcClose()">${h}</div>`}
+function tcClose(){const d=$id("tcdlg");if(d)d.innerHTML=""}
+function tcEmoji(cb){TC.ecb=cb;tcModal(`<div class="tcdl tcemo"><div class="tceg">${TC_EMO.map(e=>`<button onclick="tcClose();TC.ecb('${e}')">${e}</button>`).join("")}</div></div>`)}
+function tcPoll(){tcModal(`<div class="tcdl"><b>Create a poll</b><label>Question<input id="pq" maxlength="200"></label><div id="pos"><input class="po_" placeholder="Option 1" maxlength="100"><input class="po_" placeholder="Option 2" maxlength="100"></div><button class="btn ghost sm" onclick="tcPollAdd()">＋ Add option</button><div class="note">Everyone in this chat can vote once and change their vote. Only you will see the results.</div><div class="wrow"><button class="btn" onclick="tcPollSend()">Send poll</button><button class="btn ghost" onclick="tcClose()">Cancel</button></div></div>`)}
+function tcPollAdd(){const n=document.querySelectorAll(".po_").length;if(n>=10)return;const i=document.createElement("input");i.className="po_";i.placeholder="Option "+(n+1);i.maxLength=100;$id("pos").appendChild(i)}
+async function tcPollSend(){const q=$id("pq").value.trim(),opts=[...document.querySelectorAll(".po_")].map(x=>x.value.trim()).filter(Boolean);if(!q)return toast("Enter the poll question.",1);if(opts.length<2)return toast("Give at least two options.",1);
+ const r=await tcApi("send",{conv:TC.cur,poll:{q,opts},sel:TC.sel||undefined});if(r.error)return toast(r.error,1);tcClose();TC.sel=null;TC.stick=true;TC.msgs.push(r.d.msg);TC.sig="";tcPaintMsgs();tcPaintReply();tcSync()}
+function tcSelPick(){const cur=new Set(TC.sel||[]);tcModal(`<div class="tcdl"><b>Send to selected employees</b><div class="sub">Only the people you tick (and you) will see the next message. Everyone else will not see it, or know it exists.</div><input class="tcq" placeholder="Search" oninput="tcSelFilter(this.value)"><div class="tcpick" id="tcpk">${Object.values(TC.people).filter(p=>p.mid!=TC.me.mid).sort((a,b)=>a.name<b.name?-1:1).map(p=>`<label class="tcrow" data-n="${esc(p.name.toLowerCase())}"><input type="checkbox" value="${p.mid}" ${cur.has(p.mid)?"checked":""}>${tcAv(p,30)}<span>${esc(p.name)}</span></label>`).join("")}</div><div class="wrow"><button class="btn" onclick="tcSelDone()">Done</button><button class="btn ghost" onclick="TC.sel=null;tcClose();tcPaintReply()">Send to everyone</button></div></div>`)}
+function tcSelFilter(v){v=v.toLowerCase();document.querySelectorAll("#tcpk .tcrow").forEach(r=>r.style.display=r.dataset.n.includes(v)?"":"none")}
+function tcSelDone(){const v=[...document.querySelectorAll("#tcpk input:checked")].map(x=>x.value);TC.sel=v.length?v:null;tcClose();tcPaintReply()}
+function tcNew(){TC.nt="dm";tcNewPaint()}
+function tcNewPaint(){const g=TC.nt=="group";tcModal(`<div class="tcdl"><b>New chat</b><div class="tcseg"><button class="${!g?"on":""}" onclick="TC.nt='dm';tcNewPaint()">Personal chat</button><button class="${g?"on":""}" onclick="TC.nt='group';tcNewPaint()">Group</button></div>${g?`<label>Group name<input id="tcgn" maxlength="60"></label>`:""}<input class="tcq" placeholder="Search people" oninput="tcSelFilter(this.value)"><div class="tcpick" id="tcpk">${Object.values(TC.people).filter(p=>p.mid!=TC.me.mid).sort((a,b)=>a.name<b.name?-1:1).map(p=>g?`<label class="tcrow" data-n="${esc(p.name.toLowerCase())}"><input type="checkbox" value="${p.mid}">${tcAv(p,30)}<span>${esc(p.name)}</span></label>`:`<button class="tcrow" data-n="${esc(p.name.toLowerCase())}" onclick="tcStart('dm',['${p.mid}'])">${tcAv(p,30)}<span>${esc(p.name)}</span></button>`).join("")}</div>${g?`<div class="wrow"><button class="btn" onclick="tcStartGroup()">Create group</button><button class="btn ghost" onclick="tcClose()">Cancel</button></div>`:""}</div>`)}
+async function tcStart(type,to,name){const r=await tcApi("start",{type,to,name});if(r.error)return toast(r.error,1);tcClose();await tcSync();tcOpen(r.d.id)}
+function tcStartGroup(){const to=[...document.querySelectorAll("#tcpk input:checked")].map(x=>x.value),name=($id("tcgn").value||"").trim();if(!name)return toast("Give the group a name.",1);if(to.length<2)return toast("Choose at least two people.",1);tcStart("group",to,name)}
+async function tcInfo(){const c=TC.convs.find(x=>x.id==TC.cur)||TC.conv;if(!c)return;const r=await tcApi("members");if(r.error)return toast(r.error,1);TC.dir=r.d.rows;TC.infoQ="";
+ tcModal(`<div class="tcdl tcwide" id="tcinfo"></div>`);tcInfoPaint();tcStatus()}
+function tcInfoPaint(){const el=$id("tcinfo");if(!el)return;const c=TC.convs.find(x=>x.id==TC.cur)||TC.conv,ids=c.type=="all"?null:new Set((TC.members||[]).map(m=>m.mid));
+ const rows=(TC.dir||[]).filter(p=>(!ids||ids.has(p.mid))&&p.name.toLowerCase().includes((TC.infoQ||"").toLowerCase()));
+ el.innerHTML=`<div class="tcrowh"><b>${c.type=="dm"?"Contact":"Members"} (${rows.length})</b><button class="tcib" onclick="tcClose()">✕</button></div><input class="tcq" placeholder="Search" value="${esc(TC.infoQ||"")}" oninput="TC.infoQ=this.value;tcInfoPaint();const i=document.querySelector('#tcinfo .tcq');i.focus();i.setSelectionRange(i.value.length,i.value.length)">
+ <div class="tcmem">${rows.map(p=>`<div class="tcmr">${tcAv(p,44,TC.st[p.mid])}<span class="tcit"><b>${esc(p.name)}</b><small>${esc(p.designation||"")}${TC.st[p.mid]?" · "+TC_STT[TC.st[p.mid]]:""}</small><small>${p.phone?`<a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:""}${p.phone&&p.email?" · ":""}${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:""}</small></span></div>`).join("")||`<div class="tcem">No one found.</div>`}</div>
+ <div class="tclegend">${["G","C","L","q"].map(k=>`<span><i class="tcst2">${TC_ST[k]}</i>${TC_STT[k]}</span>`).join("")}</div>`}
+async function tcSettings(){const cf=await tcApi("cfg");if(cf.error)return toast(cf.error,1);const d=cf.d,me=TC.me;
+ tcModal(`<div class="tcdl tcwide"><div class="tcrowh"><b>Chat settings</b><button class="tcib" onclick="tcClose()">✕</button></div><b class="tcsh2">My avatar colour</b><div class="tcsw">${Object.entries(WTC).map(([k,v])=>`<button class="${me.color==k?"on":""}" onclick="tcColor('${k}')" title="${v[0]}">${tcAv({name:me.name,color:k},46)}<small>${v[0]}</small></button>`).join("")}</div>
+ ${d.ret?`<b class="tcsh2">Message deletion timer</b><div class="sub">Messages older than this are deleted automatically from every chat, even when nobody is signed in. Currently: <b>${({"1m":"1 month","3m":"3 months","6m":"6 months","1y":"1 year"})[d.ret]}</b>.</div><div class="add"><select id="tcret">${[["1m","1 month"],["3m","3 months"],["6m","6 months"],["1y","1 year"]].map(o=>`<option value="${o[0]}" ${d.ret==o[0]?"selected":""}>${o[1]}</option>`).join("")}</select><button class="btn" onclick="tcRet('${d.ret}')">Apply</button></div>
+ <div class="note">Choosing a shorter period deletes the older messages straight away and for good. Choosing a longer period does not bring anything back.</div>${(d.audit&&d.audit.length)?`<details><summary>Change log</summary>${d.audit.map(a=>`<div class="tcvr">${new Date(a.at).toLocaleString("en-IN")} · ${esc(a.by)}: ${a.from} → ${a.to}</div>`).join("")}</details>`:""}`:""}</div>`)}
+async function tcColor(k){const r=await tcApi("color",{color:k});if(r.error)return toast(r.error,1);toast("Colour saved");await tcSync();tcPaintAll();tcSettings()}
+async function tcRet(from){const v=$id("tcret").value;if(v==from)return toast("That is already the active period.");const nm={"1m":"1 month","3m":"3 months","6m":"6 months","1y":"1 year"};
+ if(!confirm("Delete every message older than "+nm[v]+" from all chats?\n\nThis cannot be undone."))return;const r=await tcApi("retention",{value:v,ack:true});if(r.error)return toast(r.error,1);toast(r.d.removed?r.d.removed+" old message"+(r.d.removed==1?"":"s")+" deleted":"Timer updated");tcClose();tcSync();if(TC.cur)tcLoad(true)}
+/* presence: tells teammates the app is open, so they see the green tick */
+function tcBeat(){if(wt.live&&!document.hidden)SB.rpc("touch_presence").then(()=>{},()=>{})}
+
+/* ===== Users & Roles: access rights by designation and by employee (added Nov 2026) ===== */
+const RB={data:null,mode:"des",sel:{},stage:{},tab:"rights",q:"",fd:"",audit:null,err:"",mgr:null,loading:0};
+const rbMe=()=>{const m=(wt.hier||[]).find(x=>x.user_id===(wt.user&&wt.user.id));return m&&m.id};
+const rbIsMP=()=>!!(wt.profile&&wt.profile.app_role==="managing_partner");
+const rbHas=k=>rbIsMP()||!!(wt.rb&&wt.rb.mine&&wt.rb.mine[k]);
+const rbFirmAny=()=>["firm_name","firm_address","firm_location","firm_geofence","hier_view","hier_edit","firm_regno","firm_timings"].some(rbHas);
+const rbUsersAny=()=>!!(wt.rb&&wt.rb.canManage)||["emp_add","emp_edit","emp_pause","emp_delete"].some(rbHas);
+async function rbBoot(){if(!wt.live)return;wt.rb={mine:{},canManage:false};
+ const r=await fn("rbac",{action:"mine"});if(!r.error&&r.data&&r.data.drive!==false)wt.rb=r.data;nav();if(cur=="users"||cur=="settings")render();
+ tcBeat();clearInterval(rbBoot.t);rbBoot.t=setInterval(tcBeat,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)tcBeat()});
+ setTimeout(tcSync,1500);clearInterval(rbBoot.s);rbBoot.s=setInterval(()=>{if(wt.live&&!document.hidden&&cur!="chat")tcSync()},60000)}
+const RB_OK=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#0aa826"/><path d="M6.5 12.5l3.8 3.8 7.2-7.6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const RB_Q=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#0a76f5"/><path d="M9 9.4c0-1.7 1.2-2.9 3-2.9s3 1 3 2.7c0 2-3 2.2-3 4.3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="17.8" r="1.6" fill="#fff"/></svg>`;
+const RB_X=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#e82424"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`;
+/* the three-state switch: green tick = allow, blue question mark = default (inherit), red cross = deny */
+function rbTri(v,key,dis,mixed){const s=(val,cls,svg,tip)=>`<button type="button" class="tri-s ${cls} ${!mixed&&v===val?"on":""}" ${dis?"disabled":""} title="${tip}" aria-label="${tip}" onclick="rbSet('${key}',${val===null?"null":val})">${svg}</button>`;
+ return `<span class="tri ${mixed?"mixed":""} ${dis?"dis":""}">${s(1,"ok",RB_OK,"Allow")}${s(null,"df",RB_Q,"Default: follow the designation or built-in rule")}${s(0,"no",RB_X,"Deny")}</span>`}
+async function rbLoad(){if(RB.loading)return;RB.loading=1;const r=await fn("rbac",{action:"get"});RB.loading=0;
+ if(r.error){RB.err=r.error;RB.data=null}else if(r.data.drive===false){RB.err=r.data.reason||"Google Drive is not connected, so access rights cannot be loaded yet.";RB.data=null}else{RB.err="";RB.data=r.data;if(!RB.mgr)RB.mgr=new Set(r.data.mgr||[])}
+ if(cur=="users")render()}
+async function rbAuditLoad(){const r=await fn("rbac",{action:"audit"});RB.audit=r.error?[]:r.data.rows;if(cur=="users")render()}
+const rbDefTxt={none:"Not allowed unless granted",sub:"Allowed for people who have subordinates",own:"Allowed for everyone"};
+function rbTargets(){return Object.keys(RB.sel).filter(k=>RB.sel[k])}
+function rbCur(k){if(k in RB.stage)return {v:RB.stage[k],mixed:false,staged:true};const ids=rbTargets();if(!ids.length)return {v:null,mixed:false};const src=RB.mode=="emp"?RB.data.emp:RB.data.des;const vals=ids.map(id=>{const x=src[id]&&src[id][k];return x===1||x===0?x:null});return new Set(vals).size==1?{v:vals[0],mixed:false}:{v:null,mixed:true}}
+function rbSet(k,v){if(!rbTargets().length)return toast("Choose who this applies to first.",1);
+ const c=(()=>{const ids=rbTargets(),src=RB.mode=="emp"?RB.data.emp:RB.data.des;const vals=ids.map(id=>{const x=src[id]&&src[id][k];return x===1||x===0?x:null});return new Set(vals).size==1?vals[0]:"mixed"})();
+ if(c===v)delete RB.stage[k];else RB.stage[k]=v;rbPaintRights()}
+function rbPick(id,on){if(on)RB.sel[id]=true;else delete RB.sel[id];RB.stage={};rbPaintRights();rbPaintList()}
+function rbMode(m){RB.mode=m;RB.sel={};RB.stage={};RB.q="";RB.fd="";render()}
+function rbAll(on){const ids=rbVisibleIds();ids.forEach(id=>{if(on)RB.sel[id]=true;else delete RB.sel[id]});RB.stage={};rbPaintRights();rbPaintList()}
+function rbVisibleIds(){const d=RB.data;if(RB.mode=="des")return d.designations.filter(x=>x.toLowerCase().includes(RB.q.toLowerCase()));
+ return d.people.filter(p=>(rbIsMP()||p.mid!==rbMe())&&(!RB.fd||p.designation==RB.fd)&&p.name.toLowerCase().includes(RB.q.toLowerCase())).map(p=>p.mid)}
+function rbPaintList(){const el=$id("rbl");if(!el||!RB.data)return;const d=RB.data;
+ el.innerHTML=RB.mode=="des"?rbVisibleIds().map(x=>{const n=d.people.filter(p=>p.designation==x).length;return `<label class="rbrow"><input type="checkbox" ${RB.sel[x]?"checked":""} onchange="rbPick('${esc(x)}',this.checked)"><span>${esc(x)}</span><small>${n} ${n==1?"person":"people"}</small></label>`}).join("")
+ :rbVisibleIds().map(id=>{const p=d.people.find(x=>x.mid==id);return `<label class="rbrow"><input type="checkbox" ${RB.sel[id]?"checked":""} onchange="rbPick('${id}',this.checked)"><span>${esc(p.name)}</span><small>${esc(p.designation)}</small></label>`}).join("")||`<div class="note">Nobody found.</div>`;
+ const c=$id("rbc");if(c)c.textContent=rbTargets().length}
+function rbPaintRights(){const el=$id("rbr");if(!el||!RB.data)return;const d=RB.data,n=rbTargets().length,one=RB.mode=="emp"&&n==1?rbTargets()[0]:null,mp=rbIsMP();
+ el.innerHTML=d.cat.map(g=>`<div class="card rbg"><b>${esc(g.g)}</b>${g.note?`<div class="note" style="margin:2px 0 8px">${esc(g.note)}</div>`:""}${g.items.map(it=>{const c=rbCur(it.k),lockedRow=!!it.locked,noHold=!mp&&!d.mine[it.k],dis=lockedRow||noHold||!n;
+  const eff=one?d.effAll[one][it.k]:null,from={emp:"set for this person",des:"from the designation",def:"built-in default",mp:"Managing Partner"};
+  return `<div class="rbit ${c.staged?"staged":""}"><div class="rbtx"><span>${esc(it.l)}${it.later?` <em class="rbl">takes effect when the menu is built</em>`:""}</span>${it.note?`<small>${esc(it.note)}</small>`:""}<small class="rbdf">Default: ${rbDefTxt[it.def]}${it.dep?" · needs “"+esc(((d.cat.flatMap(x=>x.items).find(z=>z.k==it.dep))||{}).l||it.dep)+"”":""}</small>${eff?`<small class="rbef ${eff.on?"on":"off"}">Now: ${eff.on?"Allowed":"Not allowed"} (${from[eff.from]})</small>`:""}${lockedRow?`<small class="rbef off">Locked until this menu exists</small>`:noHold?`<small class="rbef off">You can pass on only rights you hold yourself</small>`:""}</div>${rbTri(c.v,it.k,dis,c.mixed)}${c.mixed?`<small class="rbmx">Mixed</small>`:""}</div>`}).join("")}</div>`).join("");
+ const b=$id("rbapply");if(b){const k=Object.keys(RB.stage).length;b.disabled=!k||!n;b.textContent=k?`Apply ${k} change${k>1?"s":""} to ${n} selected`:"Apply changes"}}
+async function rbApply(){const ids=rbTargets(),keys=Object.keys(RB.stage);if(!ids.length||!keys.length)return;
+ const names=RB.mode=="des"?ids:ids.map(i=>(RB.data.people.find(p=>p.mid==i)||{}).name);
+ if(!confirm(`Apply ${keys.length} change${keys.length>1?"s":""} to ${ids.length} ${RB.mode=="des"?"designation":"employee"}${ids.length>1?"s":""}?\n\n${names.slice(0,8).join(", ")}${names.length>8?" and "+(names.length-8)+" more":""}`))return;
+ const b=$id("rbapply");b.disabled=true;const r=await fn("rbac",{action:"set",targets:ids.map(id=>({kind:RB.mode,id})),changes:RB.stage});if(r.error){b.disabled=false;return toast(r.error,1)}
+ toast("Access rights saved");RB.stage={};RB.audit=null;await rbLoad();const m=await fn("rbac",{action:"mine"});if(!m.error&&m.data.drive!==false){wt.rb=m.data;nav()}}
+function rbMgrTog(id,on){on?RB.mgr.add(id):RB.mgr.delete(id)}
+async function rbMgrSave(){const r=await fn("rbac",{action:"managers",mids:[...RB.mgr]});r.error?toast(r.error,1):toast("Saved: these people can now grant and revoke access rights");RB.audit=null;rbLoad()}
+function rbTab(t){RB.tab=t;if(t=="audit"&&!RB.audit)rbAuditLoad();render()}
+function usersRights(){const d=RB.data;
+ if(!d){if(!RB.err&&!RB.loading)rbLoad();return `<div class="card">${RB.err?esc(RB.err):"Loading access rights…"}</div>`}
+ const mp=rbIsMP();setTimeout(()=>{rbPaintList();rbPaintRights()},0);
+ return `<div class="sub">Choose designations or employees, then set each right. Employee settings override the designation, and the designation overrides the built-in default. <b>Green tick</b> allows, <b>blue question mark</b> keeps the default, <b>red cross</b> denies. You can pick any number of employees, whatever their place in the hierarchy.</div>
+ <div class="rbwrap"><div class="card rbpick"><div class="tcseg"><button class="${RB.mode=="des"?"on":""}" onclick="rbMode('des')">By designation</button><button class="${RB.mode=="emp"?"on":""}" onclick="rbMode('emp')">By employee</button></div>
+  <input class="tcq" placeholder="Search" value="${esc(RB.q)}" oninput="RB.q=this.value;rbPaintList()">${RB.mode=="emp"?`<select style="width:100%;margin-bottom:6px" onchange="RB.fd=this.value;rbPaintList()"><option value="">All designations</option>${d.designations.map(x=>`<option ${RB.fd==x?"selected":""}>${esc(x)}</option>`).join("")}</select>`:""}
+  <div class="wrow" style="margin:6px 0"><button class="btn ghost sm" onclick="rbAll(1)">Select all shown</button><button class="btn ghost sm" onclick="rbAll(0)">Clear</button><span class="note" style="margin:0"><b id="rbc">0</b> selected</span></div><div id="rbl" class="rblist"></div></div>
+ <div class="rbmain"><div class="rbbar"><button class="btn" id="rbapply" onclick="rbApply()" disabled>Apply changes</button><button class="btn ghost" onclick="RB.stage={};rbPaintRights()">Clear changes</button></div><div id="rbr"></div>
+ ${mp?`<div class="card"><b>Who can grant and revoke access rights</b><div class="note" style="margin:2px 0 8px">The creator always can. People you tick can change rights for others, but only rights they hold themselves, and never their own or yours.</div><div class="rblist short">${d.people.filter(p=>p.login).map(p=>`<label class="rbrow"><input type="checkbox" ${RB.mgr&&RB.mgr.has(p.mid)?"checked":""} onchange="rbMgrTog('${p.mid}',this.checked)"><span>${esc(p.name)}</span><small>${esc(p.designation)}</small></label>`).join("")||`<div class="note">Nobody has a login yet.</div>`}</div><div style="margin-top:10px"><button class="btn" onclick="rbMgrSave()">Save</button></div></div>`:""}</div></div>`}
+function usersAudit(){const a=RB.audit;if(!a)return `<div class="card">Loading…</div>`;const w=v=>v===1?"Allowed":v===0?"Denied":"Default";
+ return tbl(["When","Changed by","For","Right","Change"],a.map(x=>`<tr><td>${new Date(x.at).toLocaleString("en-IN")}</td><td>${esc(x.by)}</td><td>${esc(x.target)} <small>${x.kind=="des"?"(designation)":x.kind=="mgr"?"(manages rights)":""}</small></td><td>${esc(x.right)}</td><td>${w(x.from)} → ${w(x.to)}</td></tr>`).join("")||`<tr><td colspan="5">No changes yet.</td></tr>`)}
+V.users=()=>{if(!wt.live)return _usersDemo();const mg=!!(wt.rb&&wt.rb.canManage);if(!mg&&RB.tab!="logins")RB.tab="logins";if(rbIsMP()||mg){if(!RB.data&&!RB.err&&RB.tab!="logins")rbLoad()}
+ const tabs=mg?`<div class="tcseg rbtabs"><button class="${RB.tab=="rights"?"on":""}" onclick="rbTab('rights')">Access rights</button><button class="${RB.tab=="logins"?"on":""}" onclick="rbTab('logins')">Logins</button><button class="${RB.tab=="audit"?"on":""}" onclick="rbTab('audit')">Change log</button></div>`:"";
+ const body=RB.tab=="rights"?usersRights():RB.tab=="audit"?usersAudit():usersLive().replace(/^<h1>Users & Roles<\/h1>/,"");
+ return `<h1>Users & Roles</h1>${tabs}${body}`};
+async function uDel(id,name){if(!confirm(`Delete the login of ${name}?\n\n• They can never sign in again.\n• They leave the firm hierarchy. Anyone who reported to them will show under “Removed employee” until you move them.\n• Everything they recorded (attendance, tasks, clients, chat history) stays exactly as it is.\n\nThis cannot be undone.`))return;
+ const r=await fn("create-employee",{action:"delete",user_id:id,confirm:true});if(r.error)return toast(r.error,1);toast(name+" was removed"+(r.data.subordinates?". "+r.data.subordinates+" person"+(r.data.subordinates>1?"s":"")+" now report to “Removed employee”.":"."));wt.usersLoaded=0;await loadHier();HS.init=0;render()}
+/* ===== Settings: only what each person has been given; working hours day by day ===== */
+function hrsState(){const f=wt.firm,sc=(f.work_schedule&&f.work_schedule.days)||{},o=(f.work_open||"09:30").slice(0,5),c=(f.work_close||"18:00").slice(0,5);
+ const mid=(()=>{const a=+o.slice(0,2)*60+ +o.slice(3,5),b=+c.slice(0,2)*60+ +c.slice(3,5),x=Math.round((a+b)/2);return String(Math.floor(x/60)).padStart(2,"0")+":"+String(x%60).padStart(2,"0")})();
+ const d={};DAYN.forEach(([n])=>{const s=sc[n];d[n]={on:(f.work_days||[]).includes(n),open:s?s.open:o,fnEnd:s?s.fnEnd:mid,anStart:s?s.anStart:mid,close:s?s.close:c}});return d}
+function hrsCard(){const d=hrsState(),ok=rbHas("firm_timings");
+ return `<div class="card"><b>Working hours and days</b><div class="sub" style="margin:4px 0 10px">Set each weekday separately. The forenoon runs from opening to the forenoon end, the afternoon from its start to closing, and the gap between them is the break. Team Chat and attendance use these to show who is available.</div>
+ <div class="tbl"><table style="min-width:560px"><tr><th>Day</th><th>Works</th><th>Opens</th><th>Forenoon ends</th><th>Afternoon starts</th><th>Closes</th></tr>${DAYN.map(([n,l])=>{const s=d[n];return `<tr><td><b>${l}</b></td><td><input type="checkbox" id="hw${n}" ${s.on?"checked":""} ${ok?"":"disabled"}></td>${["open","fnEnd","anStart","close"].map(k=>`<td><input type="time" id="h${k}${n}" value="${s[k]}" ${ok?"":"disabled"}></td>`).join("")}</tr>`}).join("")}</table></div>
+ <div class="wrow" style="margin-top:12px"><button class="btn" onclick="hrsSave()" ${ok?"":"disabled"}>Save hours and days</button><button class="btn ghost" onclick="hrsCopy()" ${ok?"":"disabled"}>Copy Monday to all working days</button></div>${ok?"":`<div class="note">You can see these but not change them.</div>`}</div>`}
+function hrsCopy(){const g=(k,n)=>$id("h"+k+n).value;DAYN.forEach(([n])=>{if(n==1)return;if(!$id("hw"+n).checked)return;["open","fnEnd","anStart","close"].forEach(k=>$id("h"+k+n).value=g(k,1))});toast("Copied. Press Save to keep it.")}
+function hrsSave(){const days={},on=[];let bad="";
+ DAYN.forEach(([n,l])=>{if(!$id("hw"+n).checked)return;const v={};["open","fnEnd","anStart","close"].forEach(k=>v[k]=$id("h"+k+n).value);
+  if(!v.open||!v.fnEnd||!v.anStart||!v.close)bad=bad||`Fill all four times for ${l}.`;else if(!(v.open<v.fnEnd&&v.fnEnd<=v.anStart&&v.anStart<v.close))bad=bad||`${l}: the order must be opens, forenoon ends, afternoon starts, closes (the forenoon cannot end before it opens).`;days[n]=v;on.push(n)});
+ if(bad)return toast(bad,1);if(!on.length)return toast("Select at least one working day.",1);
+ const open=on.map(n=>days[n].open).sort()[0],close=on.map(n=>days[n].close).sort().reverse()[0];
+ saveFirm({work_open:open,work_close:close,work_days:on,work_schedule:{mode:"diff",days}},"Working hours and days saved")}
+function sDetails(){const p={},msg="Firm details saved";const n=$id("s_name"),a=$id("s_addr"),r=$id("s_reg");
+ if(n&&!n.disabled){if(n.value.trim().length<2)return toast("Enter the firm name.",1);p.name=n.value.trim()}if(a&&!a.disabled)p.address=a.value.trim();if(r&&!r.disabled)p.reg_no=r.value.trim();
+ if(!Object.keys(p).length)return toast("You can see these details but not change them.",1);saveFirm(p,msg)}
+function sLoc(){if(LOC.lat==null)return toast("Pin the office on the map first.",1);const p={};if(rbHas("firm_location")){p.office_lat=LOC.lat;p.office_lng=LOC.lng}if(rbHas("firm_geofence"))p.geofence_m=LOC.r;if(!Object.keys(p).length)return toast("You can see this but not change it.",1);saveFirm(p,"Office location and geofence saved")}
+const _settingsOld=_settingsOldFn;
+function settingsHtml(){const mp=rbIsMP();let h=_settingsOld();if(!wt.firm||(!mp&&!rbFirmAny()))return h;
+ const parts=h.split('\n <div class="card">'),head=parts.shift(),map={};parts.forEach(p=>{const m=/^<b>([^<]+)<\/b>/.exec(p);if(m)map[m[1]]='<div class="card">'+p});
+ const f=wt.firm,nm=rbHas("firm_name"),ad=rbHas("firm_address"),rg=rbHas("firm_regno");
+ const det=`<div class="card"><b>Firm details</b><div class="grid" style="margin-top:10px"><label>Firm name<input id="s_name" value="${esc(f.name)}" ${nm?"":"disabled"}></label><label>Registration number<input id="s_reg" value="${esc(f.reg_no||"")}" ${rg?"":"disabled"}></label><label>Address<textarea id="s_addr" rows="2" ${ad?"":"disabled"}>${esc(f.address||"")}</textarea></label></div><div style="margin-top:12px"><button class="btn" onclick="sDetails()" ${nm||ad||rg?"":"disabled"}>Save details</button></div></div>`;
+ let hier=map["Firm hierarchy"]||"";const ro=!rbHas("hier_edit")&&!mp;
+ if(hier){hier=hier.replace('<div id="hmount" style="margin-top:10px">','<div id="hrem"></div><div id="hmount" class="'+(ro?"hro":"")+'" style="margin-top:10px">');if(ro)hier=hier.replace(/<div style="margin-top:12px"><button class="btn" onclick="sHier\(\)">Save hierarchy<\/button><\/div>/,'<div class="note">You can view the hierarchy but not change it.</div>')}
+ const show=[];if(nm||ad||rg||mp)show.push(det);if(mp||rbHas("firm_timings")){show.push(hrsCard())}
+ if(mp||rbHas("firm_location")||rbHas("firm_geofence"))map["Office location and geofence"]&&show.push(map["Office location and geofence"]);
+ if(mp&&map["Accent colour"])show.push(map["Accent colour"]);if(hier&&(mp||rbHas("hier_view")))show.push(hier);
+ if(mp)["Google Drive","Backup schedule and archives","Firm database connection"].forEach(t=>map[t]&&show.push(map[t]));
+ setTimeout(rbRemovals,0);
+ return head.replace("Only the Managing Partner can see and change these.",mp?"Only the Managing Partner can see and change these, unless access rights have been given to others.":"You can see and change only the settings you have been given.")+show.join("\n ")}
+async function rbRemovals(){const el=$id("hrem");if(!el)return;const {data}=await SB.from("staff_removals").select("*").is("handled_at",null).order("removed_at",{ascending:false});if(!data||!data.length){el.innerHTML="";return}
+ const can=rbHas("hier_edit");el.innerHTML=`<div class="card" style="border-color:#d9ac30;background:#fff8e1;color:#4a3a00"><b>Employees removed from the firm</b>${data.map(x=>`<div class="sub" style="color:inherit;margin-top:6px">${esc(x.name)} (${esc(x.designation||"")}) was removed by ${esc(x.removed_by)} on ${new Date(x.removed_at).toLocaleDateString("en-IN")}.${x.subs?` ${x.subs} ${x.subs==1?"person reported":"people reported"} to them and now appear under <b>Removed employee</b> below. Move them to a new manager, then save.`:""}</div>`).join("")}${can?`<div style="margin-top:10px"><button class="btn sm" onclick="rbRemDone()">Mark as handled</button></div>`:""}</div>`}
+async function rbRemDone(){const {error}=await SB.rpc("mark_removals_handled");if(error)return toast(rpcErr(error),1);toast("Marked as handled");rbRemovals()}
 
 async function boot(){
  applyAccent("blue-green");
