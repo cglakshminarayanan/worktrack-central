@@ -152,3 +152,24 @@ First real test (not possible from here, needs your Google Drive): sign in as Ma
 ## Working hours day by day
 - Settings > Working hours and days: each weekday has opens, forenoon ends, afternoon starts, closes. Saved in `firms.work_schedule`.
 - Other modules (check-out time, task capacity) still read the single opening and closing time (earliest open, latest close). Moving them to the day-wise times is a next step.
+
+## Registration number, firm logo, invitations and first-time sign-in (live)
+
+### One-time Google setup (needed for sending invitation emails)
+1. Google Cloud Console, the project used for WorkTrack: enable the **Gmail API** (APIs & Services > Library > Gmail API > Enable).
+2. APIs & Services > OAuth consent screen > Data access (Scopes) > add `https://www.googleapis.com/auth/gmail.send`. Keep the app **In production** (testing mode makes refresh tokens expire after 7 days). Google may show "Google has not verified this app" to the person connecting; they can continue. WorkTrack only sends mail; it cannot read any.
+3. In WorkTrack: Settings > Google Drive > connect again with the **same Google account**, and keep the "Send email on your behalf" box ticked. Invitation mails are then sent from that account, one separate message per person.
+Until step 3 is done, Employee invitations shows "Email sending is not connected". New registrations ask for this permission in the Drive step.
+
+### Registration number
+Accepted: FRN = 6 digits + one of W, N, S, E, C (for example 123456W), or, for a sole proprietor, only the 6-digit ICAI membership number. Required at registration, checked again by the database. Settings can change it later.
+
+### Firm logo
+Wide (rectangular) PNG, JPEG or WebP, up to 20 MB, picked in the last registration step (after Drive is connected) or in Settings. The browser shrinks it (max 1200 x 400) and the `logo` function saves ONE file named "WorkTrack firm logo" in the firm's Drive folder. Nothing is stored in Supabase. The browser keeps a copy only to display it quickly. It replaces the old "Signed in as ..." box at the top of every menu.
+
+### Inviting employees (no passwords)
+- The hierarchy and the Users page take only the employee's email. "Send invitation mail" per person, or "Send mail to all new employees" (Settings > Employee invitations, also at the end of registration). Function `invite`.
+- The mail starts "Dear <name>", says what WorkTrack is, gives the link (it always uses the address the app is open at, so it follows you to Netlify), the designation, the sign-in steps, a one-time access code, "if you are not the intended recipient please ignore", and thanks.
+- First time sign-in (login page): email, Next (only if registered and invited), access code + new password (WorkTrack and firm logos shown), choose WorkTrack colour, then normal sign-in. Function `onboard`; codes are stored only as a keyed hash, last 14 days, allow 5 wrong tries.
+- The colour is stored on the person's profile (`profiles.avatar_color`) and is used for the Team Chat avatar.
+- "Try with sample data" was removed from the login page.
