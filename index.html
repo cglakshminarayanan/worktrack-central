@@ -127,6 +127,11 @@ div.po i{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,va
 .tccm{display:flex;align-items:flex-end;gap:4px;padding:8px 10px;border-top:1px solid var(--line);background:var(--card)}
 .tccm textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:8px 12px;background:var(--bg);color:var(--ink);font:inherit;max-height:120px}
 .tcsend{border:0;background:var(--gold);color:var(--goldink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px}.tcib.on{background:var(--amber)}
+@font-face{font-family:"WTFlag";src:url(data:font/woff2;base64,d09GMgABAAAAAASMABAAAAAACfAAAAQ1AACZmQAAAAAAAAAAAAAAAAAAAAAAAAAAIoEOI04aIhxeBmAAPAgEEQgKiUCGFgE2AiQDOgs6AAQgBYIEByAb8QYAjtMVdyBJVn5BPLH5OW+BQIwQ1TMXruLOb51UTH15eNu9+xSJlEwVNFE0VTDXounZJnQXkp9fm5XfqJdwi9RGJL1D/+HWXeZpeXEpLZpL6JbRTYY7VkDSPvU/7QkwgQv6qhCgeCcJJltFXIrBlGRoVF0pIspiscU44hUIlMjGmSJ9Iiv5XSw5EXmiwFVkK0kpc7kgRfE40iDDAh7hARez+/f099eu0WfljibhI0dP0t8/vb5t76snnbShXvKs1s7RWT3qLK0D6Fvy1nrxA1fp3967R1/wfawRkAAAikEoIuGEqCD5dhDTMJjMcxevxmECtEaAHFvstCsOECBMJhAO0aDE5AhTgqIIU4WOCxWrm4HcWJBFtgbm6YX5jbLDQbEaiKGgujzP2ZJA/0ce1A8yNL3HBkBQskU2IjObY4hp7QSA/sgqUr6fNUFI+eXBQUmn2YD8GgWgBmA8aEMGkBMAMI2xEWeAMGzisPqrdZ4ZizlOy8lE4tGEibRjGKan4eqlUnOz4N5YIrxfjJ4H4snufWxR62O0uElStJLbuOL4DQ0XNHCIy76me1VwZejXq6VB/fv1HjO6T98BA8uVWqNU7T+od7+x4/r2GTigUn6j54zuacGp4QZ7cDwBUobgylh4+ibEz+dzhcIW4am5XPGMeD5/egwH7ACAt/pxYlusUBwwleZX95Z+5Zx5/L56uVrfYp9PgnvD+3se6Pr+GtRV55X9Yp5hu0rvsHdfPx/I54IcGIMyJHDjPNMK0ZzkAheMNONPtlyWXxOXnjPOyBxX/Wy0sDamJw6vFh0pUbrmFD1tWNDXdjxMH5lQTKEjX03J41cMhzmvXtf76F5Cf+29e96e8956TuS5t+bted67Xi3LT3cl9rFpeX+Kl07Ztxy92Pknod961GnRT6fNXlkTXrBObqf7HWG/OnY1vJDcOnea/Uvuvml1mW3t5pFZ+St0XVf2ji066ZbNpz04d+1ot7Pe7xM/3U3lYjNvtdfrzfRn7BoIeenCIcuEvH5J/7mknPzEBy/i/Ru+2Wbt7NGrZz9XuW2mZazYle/uPNvyH9q7Nebkrb01J2W5WeUE/Vpi/w1uu+LBBy+/bYP9k27OuvzFF6/YGvtNXtu1ndHdu+WK+MFfxNy290+1NX1d9065zEvXn7MDgADOOmtgJvhsk9Tk35ymAuA955FX9FGP1p/py6Iu7wEOBUAgr77M0GAF7b9xEKSDBKRFn+A11/4Z+ID/+E71fh7gZd6g3qu81Q/A/gTUqk9YD4ACQsB0QwFAxFIGqaOIBnKZ4mrIDKsNHm2uk1kqgq1G1JzNavvYyk52sb3ttCx50f7Ujty9mZW2so29RnR3c/vxne2poUJtg5/TMtJQw7VM1DrPtC49xhDjZmKk4ekR1toK8T1sdz7VsvhQY88dHiPBbyD99DuUgQAA) format("woff2");unicode-range:U+1F1EE,U+1F1F3}
+.tcwrap{font-family:"WTFlag","Inter","Segoe UI",system-ui,sans-serif}.tcwrap{grid-template-rows:minmax(0,1fr)}.tcwrap button,.tcwrap textarea,.tcwrap input{font-family:inherit}.tcm.pend .tcmeta,.tcm.pend .tk{white-space:nowrap;overflow-wrap:normal;word-break:normal}.tcm.pend .tk{flex:none;display:block;line-height:14px;height:14px}
+.tk.snd{font-style:italic;color:var(--mut)}.tk.snd .dots{display:inline-block;width:1.5em;text-align:left}.tk.snd .dots::after{content:".";animation:tcdots 1.2s steps(1,end) infinite}
+@keyframes tcdots{0%{content:"."}34%{content:".."}67%{content:"..."}}
+.tcm.pend .tcb{opacity:.88;cursor:default}.tcm.fail .tcb{border-color:var(--bad);cursor:pointer}.tcfail{color:var(--bad);font-size:11px;margin:2px 4px 0;cursor:pointer;text-align:right}
 .tcov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:14px}
 .tcdl{background:var(--card);color:var(--ink);border-radius:14px;padding:16px;width:min(420px,100%);max-height:86vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px}.tcdl.tcwide{width:min(520px,100%)}
 .tcdl label{display:block;font-size:12px;color:var(--mut)}.tcdl input:not([type=checkbox]),.tcdl select{width:100%;margin-top:4px}
@@ -414,7 +419,7 @@ function hook(n,pre,ok){const o=window[n];window[n]=function(...a){const s=pre(.
 const D=id=>{const e=document.getElementById(id);return e?e.value:''};
 [['send',(k,i)=>['Opened a WhatsApp reminder for '+(k=='inv'?invs:comp)[i][0],Object.keys(sent).length],n=>Object.keys(sent).length>n],['submitWk',()=>[tsStatus=='Draft'?'Submitted the timesheet for 02–08 Nov':'Withdrew the timesheet for 02–08 Nov']],['decide',(i,s)=>[s+' the timesheet of '+approvals[i][0]]],['decideLv',(i,s)=>[s+' leave for '+lv[i][0]]],['submitLeave',()=>['Requested '+D('l_type')+' leave from '+D('l_from')+' to '+D('l_to')],()=>lvMsg==''],['addClient',()=>['Onboarded client '+D('c_name')],()=>cmsg==''],['raiseInv',()=>['Raised an invoice for '+D('i_cl')],()=>invMsg==''],['recRcpt',()=>['Recorded a receipt on '+D('r_inv')],()=>invMsg==''],['invite',()=>['Invited '+D('u_email')+' as '+D('u_role')],()=>umsg==''],['setRole',(i,v)=>[users[i][0]+' is now '+v],()=>umsg==''],['toggleUser',i=>[(users[i][3]=='Disabled'?'Enabled':'Disabled')+' the account of '+users[i][0]],()=>umsg==''],['applyUp',r=>[(r?'Replaced':'Added to')+' the master compliance calendar',!!(upRes&&upRes.ok.length)],s=>s],['setTask',(i,k)=>['Moved “'+tasks[i][3]+'” to '+STAT[k]]],['assignTask',()=>['Assigned a task to '+D('t_who')],()=>tkMsg==''],['setRate',i=>['Changed the hourly rate of '+PEOPLE[i]],()=>rmsg==''],['addFee',()=>['Added the fee item '+D('f_n')],()=>rmsg==''],['upDocs',inp=>['Added '+inp.files.length+' document(s) for '+D('d_cl'),inp.files.length],n=>n>0]].forEach(h=>hook(...h));
 const V={myday:()=>wt.live?mdLive():myday(),cal:()=>cal(),inv:()=>inv(),time:()=>times(),clients:()=>clView(),master:()=>wt.live?mcLive():masterView(),upload:()=>calView(),leave:()=>leaveView(),users:()=>usersView(),tasks:()=>wt.live?tkLive():tasksView(),docs:()=>docsView(),mon:()=>monitorView(),rates:()=>ratesView(),log:()=>logView(),home:()=>homeView(),dws:()=>dwsView(),ts:()=>tsheetView(),settings:()=>settingsHtml()};
-function render(){let h;try{h=(V[cur]||(()=>stub(cur)))()}catch(e){console.error(e);h=`<h1>${esc(String(cur))}</h1><div class="card"><b>This page could not be displayed</b><div class="sub" style="margin:8px 0">${esc(e&&e.message||String(e))}</div><button class="btn" onclick="render()">Try again</button></div>`}view.innerHTML=h;nav()}
+function render(){try{if(cur!="chat"&&TC.cur){TC.cur=null;TC.conv=null;TC.msgs=[];TC.older=[];TC.reply=null;TC.sel=null}}catch(e){}let h;try{h=(V[cur]||(()=>stub(cur)))()}catch(e){console.error(e);h=`<h1>${esc(String(cur))}</h1><div class="card"><b>This page could not be displayed</b><div class="sub" style="margin:8px 0">${esc(e&&e.message||String(e))}</div><button class="btn" onclick="render()">Try again</button></div>`}view.innerHTML=h;nav()}
 /* ===== WorkTrack: sign-in, firm registration, hierarchy, settings, Drive ===== */
 const SB_URL="https://ozbfdawgrfdlnrvdneoi.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96YmZkYXdncmZkbG5ydmRuZW9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1Nzk0MjksImV4cCI6MjExMDE1NTQyOX0.oVztx6MQkpHUpeJtDe7-bi_O3c8rC9MZGgPZ6OTvjxk";
@@ -1699,9 +1704,9 @@ function tcAv(p,size,st){const c=(WTC[p&&p.color]||WTC["blue-green"])[1],n=Strin
  return `<span class="tcav" style="--s:${size||40}px"><svg viewBox="0 0 100 100"><path d="${TC_STAR}" fill="${c}"/><text x="50" y="52" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="${ini.length>1?33:40}" font-weight="700" font-family="system-ui,sans-serif">${esc(ini)}</text></svg>${st?`<i class="tcst" title="${TC_STT[st]}">${TC_ST[st]}</i>`:""}</span>`}
 const TC_TICK={s:`<svg class="tick" viewBox="0 0 16 11"><path d="M1.5 5.8l3.7 3.7L14 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
  d:`<svg class="tick" viewBox="0 0 22 11"><path d="M1.5 5.8l3.7 3.7L14 1.5M8.5 9.2l.6.4L19 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`};
-const TC_EMO="😀 😃 😄 😁 😆 😅 😂 🤣 😊 🙂 😉 😍 🥰 😘 😎 🤩 🤔 🤨 😐 😑 😶 🙄 😏 😣 😥 😮 😯 😪 😫 😴 😌 😛 😜 🤪 😒 😓 😔 😕 🙃 🤑 😲 🙁 😖 😞 😟 😤 😢 😭 😦 😧 😨 😩 🤯 😬 😰 😱 🥵 🥶 😳 🤪 😵 😡 😠 🤬 😷 🤒 🤕 🤢 🤮 🥳 😇 🤠 🤓 🧐 👍 👎 👌 ✌️ 🤞 🤝 🙏 👏 🙌 👋 🤚 ✋ 💪 👀 🧠 ❤️ 🧡 💛 💚 💙 💜 🖤 💔 💕 💯 🔥 ✨ ⭐ 🎉 🎊 🎂 🎁 ☕ 🍵 🍕 🍔 🍎 📌 📎 📅 📊 📈 📉 💼 🏆 ✅ ❌ ⚠️ ❓ ❗ 💡 ⏰ 🕒 📞 🚀".split(" ");
+const TC_EMO="😀 😃 😄 😁 😆 😅 😂 🤣 😊 🙂 😉 😍 🥰 😘 😎 🤩 🤔 🤨 😐 😑 😶 🙄 😏 😣 😥 😮 😯 😪 😫 😴 😌 😛 😜 🤪 😒 😓 😔 😕 🙃 🤑 😲 🙁 😖 😞 😟 😤 😢 😭 😦 😧 😨 😩 🤯 😬 😰 😱 🥵 🥶 😳 🤪 😵 😡 😠 🤬 😷 🤒 🤕 🤢 🤮 🥳 😇 🤠 🤓 🧐 👍 👎 👌 ✌️ 🤞 🤝 🙏 👏 🙌 👋 🤚 ✋ 💪 👀 🧠 ❤️ 🧡 💛 💚 💙 💜 🖤 💔 💕 💯 🔥 ✨ ⭐ 🎉 🎊 🎂 🎁 ☕ 🍵 🍕 🍔 🍎 📌 📎 📅 📊 📈 📉 💼 🏆 ✅ ❌ ⚠️ ❓ ❗ 💡 ⏰ 🕒 📞 🚀".split(" ").concat(["🇮🇳"]);
 const TC_QUICK=["👍","❤️","😂","😮","😢","🙏"];
-const TC={convs:[],people:{},me:null,cur:null,msgs:[],more:false,members:[],reply:null,sel:null,st:{},off:"",ret:null,unread:0,q:"",sres:null,stick:true,sig:"",ts:0,tick:0,mounted:false,conv:null};
+const TC={pend:[],sq:Promise.resolve(),act:0,convs:[],people:{},me:null,cur:null,msgs:[],more:false,members:[],reply:null,sel:null,st:{},off:"",ret:null,unread:0,q:"",sres:null,stick:true,sig:"",ts:0,tick:0,mounted:false,conv:null};
 const tcIst=d=>new Date(d).toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"});
 const tcT=d=>new Date(d).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit"});
 const tcDL=d=>{const a=tcIst(d),n=tcIst(new Date()),y=tcIst(new Date(Date.now()-864e5));return a==n?"Today":a==y?"Yesterday":new Date(d).toLocaleDateString("en-IN",{timeZone:"Asia/Kolkata",day:"numeric",month:"short",year:"numeric"})};
@@ -1729,7 +1734,7 @@ function tcSearchIn(v){TC.q=v.trim();TC.sres=null;tcPaintList();clearTimeout(tcS
 async function tcPick(mid){TC.q="";const dm=TC.convs.find(c=>c.type=="dm"&&c.with&&c.with.mid==mid);if(dm){const i=$id("tcq");if(i)i.value="";return tcOpen(dm.id)}
  if(!TC.me.can.start)return toast("You do not have permission to start new chats. You can message everyone in All Employees.",1);
  const r=await tcApi("start",{type:"dm",to:[mid]});if(r.error)return toast(r.error,1);await tcSync();const i=$id("tcq");if(i)i.value="";tcOpen(r.d.id)}
-function tcOpen(id){TC.cur=id;TC.msgs=[];TC.more=false;TC.sig="";TC.reply=null;TC.sel=null;TC.stick=true;TC.conv=TC.convs.find(c=>c.id==id)||null;TC.q="";TC.sres=null;
+function tcOpen(id){TC.act=Date.now();TC.cur=id;TC.msgs=[];TC.more=false;TC.sig="";TC.reply=null;TC.sel=null;TC.stick=true;TC.conv=TC.convs.find(c=>c.id==id)||null;TC.q="";TC.sres=null;
  const w=document.querySelector(".tcwrap");if(w)w.classList.add("open");const i=$id("tcq");if(i)i.value="";tcPaintList();tcPaintPane();tcLoad(true);tcStatus()}
 function tcBack(){TC.cur=null;const w=document.querySelector(".tcwrap");if(w)w.classList.remove("open");tcPaintPane();tcPaintList()}
 async function tcStatus(){if(!TC.cur)return;const r=await tcApi("status");if(r.error)return;TC.st=r.d.st;tcPaintHead();tcPaintList();if($id("tcinfo"))tcInfoPaint()}
@@ -1744,15 +1749,18 @@ function tcPaintHead(){const h=$id("tcph");if(!h||!TC.cur)return;const c=TC.conv
  else{av=tcAv({name:c.name,color:"gray"},42);sub=(TC.members||[]).map(m=>m.name).slice(0,6).join(", ")}
  h.innerHTML=`<button class="tcib tcbk" onclick="tcBack()">‹</button>${av}<span class="tcit"><b>${esc(c.name)}</b><small>${esc(sub)}</small></span><button class="tcib" title="Details" onclick="tcInfo()">ⓘ</button>`}
 function tcScroll(el){TC.stick=el.scrollHeight-el.scrollTop-el.clientHeight<80}
-async function tcLoad(first){if(!TC.cur)return;const id=TC.cur,r=await tcApi("msgs",{conv:id,read:!document.hidden&&cur=="chat"});if(id!=TC.cur)return;
+const tcSeen=()=>!!TC.cur&&!document.hidden&&cur=="chat"&&document.hasFocus()&&Date.now()-TC.act<120000;
+["pointerdown","pointermove","keydown","touchstart","wheel","scroll"].forEach(ev=>document.addEventListener(ev,()=>{const n=Date.now(),idle=n-TC.act>120000;TC.act=n;if(idle&&TC.cur&&cur=="chat"&&!document.hidden)tcLoad(false)},{passive:true,capture:true}));
+window.addEventListener("focus",()=>{if(TC.cur&&cur=="chat"){TC.act=Date.now();tcLoad(false)}});
+async function tcLoad(first){if(!TC.cur)return;const id=TC.cur,r=await tcApi("msgs",{conv:id,read:tcSeen()});if(id!=TC.cur)return;
  if(r.error){if(first){const m=$id("tcms");if(m)m.innerHTML=`<div class="tcem">${esc(r.error)}</div>`}return}
  const d=r.d,sig=JSON.stringify(d.msgs.map(m=>[m.id,m.tick,m.rx,m.del,m.poll]));TC.members=d.conv.members;TC.conv=Object.assign(TC.conv||{},d.conv);
  if(sig!=TC.sig||first){const keep=TC.older||[];TC.sig=sig;TC.msgs=keep.concat(d.msgs);TC.more=d.more;tcPaintMsgs();tcPaintHead()}}
 async function tcOlder(){const o=TC.msgs[0];if(!o)return;const r=await tcApi("msgs",{conv:TC.cur,before:o.at});if(r.error)return toast(r.error,1);const ids=new Set(TC.msgs.map(m=>m.id));TC.older=r.d.msgs.filter(m=>!ids.has(m.id)).concat(TC.older||[]);TC.msgs=r.d.msgs.filter(m=>!ids.has(m.id)).concat(TC.msgs);TC.more=r.d.more;const el=$id("tcms"),h=el.scrollHeight;tcPaintMsgs(true);el.scrollTop=el.scrollHeight-h}
 function tcPaintMsgs(keepPos){const el=$id("tcms");if(!el)return;const c=TC.convs.find(x=>x.id==TC.cur)||TC.conv||{};let last="",h=TC.more?`<button class="btn ghost sm tcold" onclick="tcOlder()">Load earlier messages</button>`:"";
  for(const m of TC.msgs){const d=tcIst(m.at);if(d!=last){h+=`<div class="tcdate"><span>${tcDL(m.at)}</span></div>`;last=d}h+=tcMsg(m,c)}
- if(!TC.msgs.length)h+=`<div class="tcem">${c.type=="all"?"No messages yet. Say hello to everyone.":"No messages yet."}</div>`;
- el.innerHTML=h;if(!keepPos&&TC.stick)el.scrollTop=el.scrollHeight}
+ const pn=TC.pend.filter(x=>x.conv==TC.cur);if(!TC.msgs.length&&!pn.length)h+=`<div class="tcem">${c.type=="all"?"No messages yet. Say hello to everyone.":"No messages yet."}</div>`;
+ h+=pn.map(tcPendHtml).join("");el.innerHTML=h;if(!keepPos&&TC.stick)el.scrollTop=el.scrollHeight}
 function tcMsg(m,c){
  if(m.sys)return `<div class="tcsys"><span>${esc(m.sys.name)} ${m.sys.k=="join"?"joined the firm chat":"left the firm chat"}</span></div>`;
  const who=!m.mine&&c.type!="dm"?`<div class="tcwho" style="color:${(WTC[(TC.people[m.mid]||{}).color]||WTC["blue-green"])[1]}">${esc(m.name)}</div>`:"";
@@ -1775,9 +1783,20 @@ function tcPaintReply(){const el=$id("tcrp");if(!el)return;let h="";
  el.innerHTML=h;const b=$id("tcselb");if(b)b.classList.toggle("on",!!TC.sel)}
 function tcKey(e){if(e.key=="Enter"&&!e.shiftKey){e.preventDefault();tcSend()}}
 function tcIns(e){const t=$id("tcta");if(!t)return;const s=t.selectionStart||t.value.length;t.value=t.value.slice(0,s)+e+t.value.slice(t.selectionEnd||s);t.focus();t.selectionStart=t.selectionEnd=s+e.length}
-async function tcSend(){const t=$id("tcta");if(!t||TC.busy)return;const text=t.value.trim();if(!text)return;TC.busy=true;
- const r=await tcApi("send",{conv:TC.cur,text,sel:TC.sel||undefined,re:TC.reply?TC.reply.id:undefined});TC.busy=false;if(r.error)return toast(r.error,1);
- t.value="";t.style.height="auto";TC.reply=null;TC.sel=null;TC.stick=true;TC.older=TC.older||[];TC.msgs.push(r.d.msg);TC.sig="";tcPaintMsgs();tcPaintReply();tcSync()}
+function tcSend(){const t=$id("tcta");if(!t||!TC.cur)return;const text=t.value.trim();if(!text)return;
+ const p={pid:"p"+Date.now()+Math.random().toString(36).slice(2,6),conv:TC.cur,text,sel:TC.sel||null,re:TC.reply?TC.reply.id:null,reName:TC.reply?TC.reply.name:"",reTxt:TC.reply?String(TC.reply.text).slice(0,80):"",at:new Date().toISOString(),failed:false,err:""};
+ t.value="";t.style.height="auto";TC.reply=null;TC.sel=null;TC.stick=true;TC.act=Date.now();TC.pend.push(p);tcPaintReply();tcPaintMsgs();tcQueue(p)}
+function tcQueue(p){TC.sq=TC.sq.then(()=>tcDo(p)).catch(()=>{})}
+async function tcDo(p){const r=await tcApi("send",{conv:p.conv,text:p.text,sel:p.sel||undefined,re:p.re||undefined});
+ if(r.error){p.failed=true;p.err=r.error;if(TC.cur==p.conv){TC.stick=true;tcPaintMsgs()}return}
+ TC.pend=TC.pend.filter(x=>x!==p);
+ if(TC.cur==p.conv){TC.stick=true;TC.older=TC.older||[];if(!TC.msgs.some(m=>m.id==r.d.msg.id))TC.msgs.push(r.d.msg);TC.sig="";tcPaintMsgs()}
+ tcSync()}
+function tcRetry(pid){const p=TC.pend.find(x=>x.pid==pid);if(!p||!p.failed)return;p.failed=false;if(TC.cur==p.conv)tcPaintMsgs();tcQueue(p)}
+function tcDiscard(pid){TC.pend=TC.pend.filter(x=>x.pid!=pid);tcPaintMsgs()}
+function tcPendHtml(p){const lock=p.sel?`<div class="tclock">🔒 Only visible to selected employees</div>`:"",rq=p.re&&p.reName?`<div class="tcq2"><b>${esc(p.reName)}</b> ${esc(p.reTxt)}</div>`:"";
+ const tk=p.failed?"":`<span class="tk snd">Sending<span class="dots"></span></span>`;
+ return `<div class="tcm me pend ${p.failed?"fail":""}"><div class="tcb" ${p.failed?`onclick="tcRetry('${p.pid}')"`:""}>${lock}${rq}<div class="tctx">${tcLink(p.text)}</div><span class="tcmeta">${tcT(p.at)} ${tk}</span></div>${p.failed?`<div class="tcfail" onclick="tcRetry('${p.pid}')">Not sent: ${esc(p.err)} Tap to retry, or <u onclick="event.stopPropagation();tcDiscard('${p.pid}')">discard</u>.</div>`:""}</div>`}
 async function tcReact(id,e){const r=await tcApi("react",{conv:TC.cur,id,e});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}}
 async function tcVote(id,opt){const r=await tcApi("vote",{conv:TC.cur,id,opt});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}}
 async function tcDel(id){if(!confirm("Delete this message for everyone? Nobody will be able to read it again."))return;const r=await tcApi("delete",{conv:TC.cur,id});if(r.error)return toast(r.error,1);const i=TC.msgs.findIndex(x=>x.id==id);if(i>=0&&r.d.msg){TC.msgs[i]=r.d.msg;TC.sig="";tcPaintMsgs(true)}tcSync()}
