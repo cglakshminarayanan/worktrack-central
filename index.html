@@ -1716,7 +1716,7 @@ function tcMount(){if(!$id("tcroot"))return;TC.mounted=false;tcPaintAll();tcSync
  TC.timer=setInterval(()=>{if(cur!="chat"||document.hidden||!$id("tcroot")){if(cur!="chat")clearInterval(TC.timer);return}TC.tick++;if(TC.cur)tcLoad(false);if(TC.tick%3==0)tcSync();if(TC.tick%4==0&&TC.cur&&TC.conv&&(TC.conv.type!="group"))tcStatus()},5000)}
 function tcPaintAll(){const el=$id("tcroot");if(!el)return;
  if(TC.off){el.innerHTML=`<h1>Team Chat</h1><div class="card"><b>Team Chat is not available right now</b><div class="sub" style="margin-top:6px">${esc(TC.off)}</div></div>`;TC.mounted=false;return}
- el.innerHTML=`<div class="tcwrap ${TC.cur?"open":""}"><aside class="tclist"><div class="tchd"><b>Team Chat</b><span id="tctop">${tcTop()}</span></div><input id="tcq" class="tcq" placeholder="Search people and messages" oninput="tcSearchIn(this.value)" value="${esc(TC.q)}"><div id="tclst" class="tclst"></div></aside><section class="tcpane" id="tcpane"></section><div id="tcdlg"></div></div>`;
+ el.innerHTML=`<div class="tcwrap ${TC.cur?"open":""}"><div class="tclist"><div class="tchd"><b>Team Chat</b><span id="tctop">${tcTop()}</span></div><input id="tcq" class="tcq" placeholder="Search people and messages" oninput="tcSearchIn(this.value)" value="${esc(TC.q)}"><div id="tclst" class="tclst"></div></div><section class="tcpane" id="tcpane"></section><div id="tcdlg"></div></div>`;
  TC.mounted=true;tcPaintList();tcPaintPane()}
 function tcTop(){return `<button class="tcib" title="Chat settings" onclick="tcSettings()">⚙</button>${TC.me&&TC.me.can.start?`<button class="tcib" title="New chat" onclick="tcNew()">＋</button>`:""}`}
 function tcPaintTop(){const e=$id("tctop");if(e)e.innerHTML=tcTop()}
